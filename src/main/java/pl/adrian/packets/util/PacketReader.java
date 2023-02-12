@@ -51,7 +51,7 @@ public class PacketReader {
     }
 
     public int readWord() {
-        return readByte() + (readByte() << 2);
+        return readByte() + (readByte() << 8);
     }
 
     public String readCharArray(int length) {

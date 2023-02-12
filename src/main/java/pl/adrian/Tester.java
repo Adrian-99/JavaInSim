@@ -6,12 +6,11 @@ import pl.adrian.packets.flags.Flags;
 import pl.adrian.packets.flags.ISF;
 
 import java.io.IOException;
+import java.util.Date;
 
 public class Tester {
     public static void main(String[] args) throws IOException {
         var initPacket = new IS_INI(
-                1,
-                0,
                 new Flags<>(ISF.LOCAL, ISF.CON, ISF.MCI),
                 null,
                 200,
@@ -19,7 +18,7 @@ public class Tester {
                 "Tester"
         );
         try (var connection = new InSimConnection("localhost", 29999, initPacket)) {
-            var mst = new IS_MST(0, "Hello world");
+            var mst = new IS_MST(0, "Hello world - " + new Date());
             connection.send(mst);
             Thread.sleep(5000);
         } catch (InterruptedException e) {

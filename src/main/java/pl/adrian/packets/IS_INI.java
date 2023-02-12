@@ -29,15 +29,13 @@ public class IS_INI extends Packet implements SendablePacket {
     @CharArray(maxLength = 16)
     private final String iName;
 
-    public IS_INI(int reqI,
-                  int udpPort,
-                  Flags<ISF> flags,
+    public IS_INI(Flags<ISF> flags,
                   Character prefix,
                   int interval,
                   String admin,
                   String iName) throws PacketValidationException {
-        super(44, PacketType.ISP_ISI, reqI);
-        this.udpPort = udpPort;
+        super(44, PacketType.ISP_ISI, 1);
+        this.udpPort = 0;
         this.flags = flags;
         this.inSimVer = Constants.INSIM_VERSION;
         this.prefix = prefix;

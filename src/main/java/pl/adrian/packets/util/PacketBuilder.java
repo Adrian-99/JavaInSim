@@ -50,7 +50,7 @@ public class PacketBuilder {
 
     public PacketBuilder writeWord(int value) {
         return writeByte(value)
-                .writeByte(value >> 2);
+                .writeByte(value >> 8);
     }
 
     public PacketBuilder writeCharArray(String value, int length) {
