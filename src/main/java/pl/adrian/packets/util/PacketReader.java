@@ -19,7 +19,7 @@ public class PacketReader {
 
             switch (type) {
                 case ISP_VER -> packet = new IS_VER(reqI);
-                default -> throw new PacketReadingException("Unrecognized packet type");
+                default -> throw new PacketReadingException("Unrecognized readable packet type");
             }
         } else {
             throw new PacketReadingException(
@@ -55,8 +55,16 @@ public class PacketReader {
     }
 
     public String readCharArray(int length) {
-        byte[] stringBytes = new byte[length];
-        System.arraycopy(dataBytes, dataBytesReaderIndex, stringBytes, 0, length);
+        var stringLength = length;
+        for (int i = 0; i < length; i++) {
+            if (dataBytes[dataBytesReaderIndex + i] == 0) {
+                stringLength = i;
+                break;
+            }
+        }
+        byte[] stringBytes = new byte[stringLength];
+        System.arraycopy(dataBytes, dataBytesReaderIndex, stringBytes, 0, stringLength);
+        dataBytesReaderIndex += length;
         return new String(stringBytes);
     }
 
