@@ -19,6 +19,7 @@ public class PacketValidator {
 
     private PacketValidator() {}
 
+    @SuppressWarnings("java:S3011")
     public static void validate(SendablePacket packet) throws PacketValidationException {
         if (packet != null) {
             for (var field : getAllPacketFields(packet.getClass())) {
