@@ -1,7 +1,6 @@
-package packets;
+package pl.adrian.packets;
 
 import org.junit.jupiter.api.Test;
-import pl.adrian.packets.IS_INI;
 import pl.adrian.packets.flags.Flags;
 import pl.adrian.packets.flags.ISF;
 

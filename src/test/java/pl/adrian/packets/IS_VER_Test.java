@@ -1,7 +1,6 @@
-package packets;
+package pl.adrian.packets;
 
 import org.junit.jupiter.api.Test;
-import pl.adrian.packets.IS_VER;
 import pl.adrian.packets.enums.PacketType;
 import pl.adrian.packets.enums.Product;
 import pl.adrian.packets.util.PacketReader;

@@ -18,6 +18,8 @@ public class InSimConnection implements Closeable {
     private final InputStream in;
     private final ExecutorService readingExecutor;
 
+    private boolean isConnected = false;
+
     public InSimConnection(String hostname, int port, IS_INI initializationPacket) throws IOException {
         socket = new Socket(hostname, port);
         out = socket.getOutputStream();
@@ -27,17 +29,22 @@ public class InSimConnection implements Closeable {
         send(initializationPacket);
     }
 
-    public void send(SendablePacket packet) throws IOException {
-        var bytes = packet.getBytes();
-        out.write(bytes);
-    }
-
     @Override
     public void close() throws IOException {
+        isConnected = false;
         readingExecutor.shutdownNow();
         in.close();
         out.close();
         socket.close();
+    }
+
+    public boolean isConnected() {
+        return isConnected;
+    }
+
+    public void send(SendablePacket packet) throws IOException {
+        var bytes = packet.getBytes();
+        out.write(bytes);
     }
 
     private void readIncomingPackets() {
@@ -53,8 +60,13 @@ public class InSimConnection implements Closeable {
                     in.skipNBytes(packetReader.getDataBytesCount());
                 }
             }
+            isConnected = false;
         } catch (IOException exception) {
-            throw new PacketReadingException("Error occurred while reading packet bytes", exception);
+            if (exception.getMessage().equals("Socket closed")) {
+                isConnected = false;
+            } else {
+                throw new PacketReadingException("Error occurred while reading packet bytes", exception);
+            }
         }
     }
 
@@ -63,6 +75,12 @@ public class InSimConnection implements Closeable {
     }
 
     private void handleReadPacket(ReadablePacket packet) {
-        packet.getSize();
+        switch (packet.getType()) {
+            case ISP_VER -> {
+                if (!isConnected) {
+                    isConnected = true;
+                }
+            }
+        }
     }
 }

@@ -1,8 +1,7 @@
-package packets.util;
+package pl.adrian.packets.util;
 
 import org.junit.jupiter.api.Test;
 import pl.adrian.packets.exceptions.PacketReadingException;
-import pl.adrian.packets.util.PacketReader;
 
 import static org.junit.jupiter.api.Assertions.*;
 

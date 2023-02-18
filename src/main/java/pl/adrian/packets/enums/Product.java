@@ -25,4 +25,9 @@ public enum Product {
         }
         return allValuesCached.get(value);
     }
+
+    @Override
+    public String toString() {
+        return value;
+    }
 }

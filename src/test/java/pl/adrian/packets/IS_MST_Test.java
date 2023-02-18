@@ -1,7 +1,6 @@
-package packets;
+package pl.adrian.packets;
 
 import org.junit.jupiter.api.Test;
-import pl.adrian.packets.IS_MST;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 

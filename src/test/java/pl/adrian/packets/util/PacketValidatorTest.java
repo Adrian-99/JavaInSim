@@ -1,4 +1,4 @@
-package packets.util;
+package pl.adrian.packets.util;
 
 import org.junit.jupiter.api.Test;
 import pl.adrian.packets.annotations.Byte;
@@ -9,7 +9,6 @@ import pl.adrian.packets.base.SendablePacket;
 import pl.adrian.packets.enums.PacketType;
 import pl.adrian.packets.exceptions.PacketValidationException;
 import pl.adrian.packets.flags.Flags;
-import pl.adrian.packets.util.PacketValidator;
 
 import static org.junit.jupiter.api.Assertions.*;
 

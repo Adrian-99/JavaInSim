@@ -1,8 +1,7 @@
-package packets.util;
+package pl.adrian.packets.util;
 
 import org.junit.jupiter.api.Test;
 import pl.adrian.packets.enums.PacketType;
-import pl.adrian.packets.util.PacketBuilder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
