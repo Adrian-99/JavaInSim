@@ -206,4 +206,40 @@ class PacketBuilderTest {
         assertEquals(0, bytes[10]);
         assertEquals(55, bytes[11]);
     }
+
+    @Test
+    void writeUnsigned_fromLowNumber() {
+        var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
+        packetBuilder.writeUnsigned(15L);
+        packetBuilder.writeByte(55);
+        var bytes = packetBuilder.getBytes();
+
+        assertEquals(8, bytes.length);
+        assertEquals(2, bytes[0]);
+        assertEquals(1, bytes[1]);
+        assertEquals(-102, bytes[2]);
+        assertEquals(15, bytes[3]);
+        assertEquals(0, bytes[4]);
+        assertEquals(0, bytes[5]);
+        assertEquals(0, bytes[6]);
+        assertEquals(55, bytes[7]);
+    }
+
+    @Test
+    void writeUnsigned_fromHighNumber() {
+        var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
+        packetBuilder.writeUnsigned(3845264765L);
+        packetBuilder.writeByte(55);
+        var bytes = packetBuilder.getBytes();
+
+        assertEquals(8, bytes.length);
+        assertEquals(2, bytes[0]);
+        assertEquals(1, bytes[1]);
+        assertEquals(-102, bytes[2]);
+        assertEquals(125, bytes[3]);
+        assertEquals(21, bytes[4]);
+        assertEquals(50, bytes[5]);
+        assertEquals(-27, bytes[6]);
+        assertEquals(55, bytes[7]);
+    }
 }

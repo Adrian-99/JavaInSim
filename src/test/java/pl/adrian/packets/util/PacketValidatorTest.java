@@ -3,6 +3,7 @@ package pl.adrian.packets.util;
 import org.junit.jupiter.api.Test;
 import pl.adrian.packets.annotations.Byte;
 import pl.adrian.packets.annotations.CharArray;
+import pl.adrian.packets.annotations.Unsigned;
 import pl.adrian.packets.annotations.Word;
 import pl.adrian.packets.base.Packet;
 import pl.adrian.packets.base.SendablePacket;
@@ -20,13 +21,11 @@ class PacketValidatorTest {
                 23,
                 PacketType.ISP_NONE,
                 54,
-                'a',
                 null,
                 354,
                 new Flags<>(TestEnum.VALUE1),
                 null,
-                null,
-                "abc"
+                112946L
         );
         assertDoesNotThrow(() -> PacketValidator.validate(packet));
     }
@@ -37,13 +36,11 @@ class PacketValidatorTest {
                 23,
                 PacketType.ISP_NONE,
                 -5,
-                'a',
                 null,
                 354,
                 new Flags<>(TestEnum.VALUE1),
                 null,
-                null,
-                "abc"
+                112946L
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
@@ -56,55 +53,15 @@ class PacketValidatorTest {
                 23,
                 PacketType.ISP_NONE,
                 350,
-                'a',
                 null,
                 354,
                 new Flags<>(TestEnum.VALUE1),
                 null,
-                null,
-                "abc"
+                112946L
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
         assertEquals("reqI", exception.getField().getName());
-    }
-
-    @Test
-    void validate_withNullCharacterByte() {
-        var packet = new ValidTestPacket(
-                23,
-                PacketType.ISP_NONE,
-                54,
-                null,
-                null,
-                354,
-                new Flags<>(TestEnum.VALUE1),
-                null,
-                null,
-                "abc"
-        );
-        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.NULL_VALUE, exception.getFailureReason());
-        assertEquals("characterByte", exception.getField().getName());
-    }
-
-    @Test
-    void validate_withNullEnumByte() {
-        var packet = new ValidTestPacket(
-                23,
-                null,
-                54,
-                'a',
-                null,
-                354,
-                new Flags<>(TestEnum.VALUE1),
-                null,
-                null,
-                "abc"
-        );
-        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.NULL_VALUE, exception.getFailureReason());
-        assertEquals("type", exception.getField().getName());
     }
 
     @Test
@@ -113,13 +70,11 @@ class PacketValidatorTest {
                 23,
                 PacketType.ISP_NONE,
                 54,
-                'a',
                 null,
                 -15,
                 new Flags<>(TestEnum.VALUE1),
                 null,
-                null,
-                "abc"
+                112946L
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
@@ -133,54 +88,14 @@ class PacketValidatorTest {
                 PacketType.ISP_NONE,
                 54,
                 'a',
-                null,
                 74956,
                 new Flags<>(TestEnum.VALUE1),
                 null,
-                null,
-                "abc"
+                112946L
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
         assertEquals("intWord", exception.getField().getName());
-    }
-
-    @Test
-    void validate_withNullIntWord() {
-        var packet = new ValidTestPacket(
-                23,
-                PacketType.ISP_NONE,
-                54,
-                'a',
-                null,
-                null,
-                new Flags<>(TestEnum.VALUE1),
-                null,
-                null,
-                "abc"
-        );
-        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.NULL_VALUE, exception.getFailureReason());
-        assertEquals("intWord", exception.getField().getName());
-    }
-
-    @Test
-    void validate_withNullFlagsWord() {
-        var packet = new ValidTestPacket(
-                23,
-                PacketType.ISP_NONE,
-                54,
-                'a',
-                null,
-                354,
-                null,
-                null,
-                null,
-                "abc"
-        );
-        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.NULL_VALUE, exception.getFailureReason());
-        assertEquals("flagsWord", exception.getField().getName());
     }
 
     @Test
@@ -190,35 +105,48 @@ class PacketValidatorTest {
                 PacketType.ISP_NONE,
                 54,
                 'a',
-                null,
                 354,
                 new Flags<>(TestEnum.VALUE1),
-                null,
-                null,
-                "abcdefghij"
+                "abcdefghij",
+                112946L
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_TOO_LONG, exception.getFailureReason());
-        assertEquals("nonNullableCharArray", exception.getField().getName());
+        assertEquals("stringCharArray", exception.getField().getName());
     }
 
     @Test
-    void validate_withNullStringCharArray() {
+    void validate_withTooLowLongUnsigned() {
         var packet = new ValidTestPacket(
                 23,
                 PacketType.ISP_NONE,
                 54,
                 'a',
-                null,
                 354,
                 new Flags<>(TestEnum.VALUE1),
-                null,
-                null,
-                null
+                "abc",
+                -35L
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.NULL_VALUE, exception.getFailureReason());
-        assertEquals("nonNullableCharArray", exception.getField().getName());
+        assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
+        assertEquals("longUnsigned", exception.getField().getName());
+    }
+
+    @Test
+    void validate_withTooHighLongUnsigned() {
+        var packet = new ValidTestPacket(
+                23,
+                PacketType.ISP_NONE,
+                54,
+                'a',
+                354,
+                new Flags<>(TestEnum.VALUE1),
+                "abc",
+                5732985275L
+        );
+        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
+        assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
+        assertEquals("longUnsigned", exception.getField().getName());
     }
 
     @Test
@@ -273,41 +201,46 @@ class PacketValidatorTest {
         assertEquals("intCharArray", exception.getField().getName());
     }
 
+    @Test
+    void validate_packetWithInvalidUnsignedType() {
+        var packet = new PacketWithInvalidUnsignedType(
+                8,
+                PacketType.ISP_NONE,
+                54,
+                "15"
+        );
+        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
+        assertEquals(PacketValidationException.FailureReason.UNSUPPORTED_TYPE, exception.getFailureReason());
+        assertEquals("stringUnsigned", exception.getField().getName());
+    }
+
     @SuppressWarnings("all")
     private static class ValidTestPacket extends Packet implements SendablePacket {
         @Byte
         private final Character characterByte;
-        @Byte(nullable = true)
-        private final Character nullableByte;
         @Word
-        private final Integer intWord;
+        private final int intWord;
         @Word
         private final Flags<TestEnum> flagsWord;
-        @Word(nullable = true)
-        private final Integer nullableWord;
         @CharArray(maxLength = 5)
         private final String stringCharArray;
-        @CharArray(maxLength = 5, nullable = false)
-        private final String nonNullableCharArray;
+        @Unsigned
+        private final long longUnsigned;
 
         protected ValidTestPacket(int size,
                                   PacketType type,
                                   int reqI,
                                   Character characterByte,
-                                  Character nullableByte,
-                                  Integer intWord,
+                                  int intWord,
                                   Flags<TestEnum> flagsWord,
-                                  Integer nullableWord,
                                   String stringCharArray,
-                                  String nonNullableCharArray) {
+                                  long longUnsigned) {
             super(size, type, reqI);
             this.characterByte = characterByte;
-            this.nullableByte = nullableByte;
             this.intWord = intWord;
             this.flagsWord = flagsWord;
-            this.nullableWord = nullableWord;
             this.stringCharArray = stringCharArray;
-            this.nonNullableCharArray = nonNullableCharArray;
+            this.longUnsigned = longUnsigned;
         }
 
         @Override
@@ -386,6 +319,26 @@ class PacketValidatorTest {
                                                  int intCharArray) {
             super(size, type, reqI);
             this.intCharArray = intCharArray;
+        }
+
+        @Override
+        public byte[] getBytes() {
+            return new byte[0];
+        }
+    }
+
+    @SuppressWarnings("all")
+    private static class PacketWithInvalidUnsignedType extends Packet implements SendablePacket {
+
+        @Unsigned
+        private final String stringUnsigned;
+
+        protected PacketWithInvalidUnsignedType(int size,
+                                                 PacketType type,
+                                                 int reqI,
+                                                 String stringUnsigned) {
+            super(size, type, reqI);
+            this.stringUnsigned = stringUnsigned;
         }
 
         @Override

@@ -20,7 +20,7 @@ public class IS_INI extends Packet implements SendablePacket {
     private final Flags<ISF> flags;
     @Byte
     private final short inSimVer;
-    @Byte(nullable = true)
+    @Byte
     private final Character prefix;
     @Word
     private final int interval;

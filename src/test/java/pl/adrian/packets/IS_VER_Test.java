@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class IS_VER_Test {
 
     @Test
-    void readPacket() {
+    void read_IS_VER() {
         var headerBytes = new byte[] { 5, 2, -112 };
         var dataBytes = new byte[] { 0, 48, 46, 55, 68, 0, 0, 0, 0, 83, 51, 0, 0, 0, 0, 9 };
         var packetReader = new PacketReader(headerBytes);

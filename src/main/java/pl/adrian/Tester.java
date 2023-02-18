@@ -19,10 +19,9 @@ public class Tester {
         );
         try (var connection = new InSimConnection("localhost", 29999, initPacket)) {
             var mst = new IS_MST(0, "Hello world - " + new Date());
-            connection.send(mst);
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            while (System.in.read() != -1) {
+                connection.send(mst);
+            }
         }
     }
 }

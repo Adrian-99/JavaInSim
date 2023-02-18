@@ -69,6 +69,13 @@ public class PacketBuilder {
         }
     }
 
+    public PacketBuilder writeUnsigned(long value) {
+        return writeByte((int) value)
+                .writeByte((int) (value >> 8))
+                .writeByte((int) (value >> 16))
+                .writeByte((int) (value >> 24));
+    }
+
     public byte[] getBytes() {
         return packetBytes;
     }

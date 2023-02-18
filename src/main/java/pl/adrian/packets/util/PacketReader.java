@@ -1,6 +1,8 @@
 package pl.adrian.packets.util;
 
 import pl.adrian.Constants;
+import pl.adrian.packets.IS_SMALL;
+import pl.adrian.packets.IS_TINY;
 import pl.adrian.packets.IS_VER;
 import pl.adrian.packets.base.ReadablePacket;
 import pl.adrian.packets.enums.PacketType;
@@ -19,6 +21,8 @@ public class PacketReader {
 
             switch (type) {
                 case ISP_VER -> packet = new IS_VER(reqI);
+                case ISP_TINY -> packet = new IS_TINY(reqI);
+                case ISP_SMALL -> packet = new IS_SMALL(reqI);
                 default -> throw new PacketReadingException("Unrecognized readable packet type");
             }
         } else {
@@ -66,6 +70,10 @@ public class PacketReader {
         System.arraycopy(dataBytes, dataBytesReaderIndex, stringBytes, 0, stringLength);
         dataBytesReaderIndex += length;
         return new String(stringBytes);
+    }
+
+    public long readUnsigned() {
+        return readByte() + ((long) readByte() << 8) + ((long) readByte() << 16) + ((long) readByte() << 24);
     }
 
     private int convertByte(byte value) {

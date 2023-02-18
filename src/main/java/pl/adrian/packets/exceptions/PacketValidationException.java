@@ -6,13 +6,11 @@ public class PacketValidationException extends RuntimeException {
     private final transient Field field;
     private final FailureReason failureReason;
 
-    public PacketValidationException(Field field, String typeName) {
-        super(String.format("Field %s is not nullable as %s", field.getName(), typeName));
-        this.field = field;
-        failureReason = FailureReason.NULL_VALUE;
+    public PacketValidationException(Field field, int minValue, int maxValue, int actualValue, String typeName) {
+        this(field, minValue, maxValue, (long) actualValue, typeName);
     }
 
-    public PacketValidationException(Field field, int minValue, int maxValue, int actualValue, String typeName) {
+    public PacketValidationException(Field field, long minValue, long maxValue, long actualValue, String typeName) {
         super(
                 String.format(
                         "Invalid %s field value as %s - must be between %d and %d - was %d",
@@ -41,10 +39,10 @@ public class PacketValidationException extends RuntimeException {
         failureReason = FailureReason.VALUE_TOO_LONG;
     }
 
-    public PacketValidationException(Class<?> fieldClass, Field field, String typeName) {
+    public PacketValidationException(Field field, String typeName) {
         super(
                 String.format("Type %s of field %s is not supported as %s",
-                        fieldClass.getSimpleName(),
+                        field.getClass().getSimpleName(),
                         field.getName(),
                         typeName
                 )
@@ -68,7 +66,6 @@ public class PacketValidationException extends RuntimeException {
     }
 
     public enum FailureReason {
-        NULL_VALUE,
         VALUE_OUT_OF_RANGE,
         VALUE_TOO_LONG,
         UNSUPPORTED_TYPE,
