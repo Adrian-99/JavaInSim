@@ -1,5 +1,6 @@
 plugins {
-    id 'java'
+    id 'java-library'
+    id 'maven-publish'
 }
 
 group 'pl.adrian'
@@ -16,6 +17,25 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     testImplementation 'org.awaitility:awaitility:4.2.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = project.group
+            artifactId = project.name
+            version = project.version
+
+            from components.java
+        }
+    }
+}
+
+tasks.named('jar') {
+    manifest {
+        attributes('Implementation-Title': project.name,
+                'Implementation-Version': project.version)
+    }
 }
 
 test {
