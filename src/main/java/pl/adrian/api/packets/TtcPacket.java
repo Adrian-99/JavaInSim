@@ -1,4 +1,4 @@
-package pl.adrian.api.packets.sendable;
+package pl.adrian.api.packets;
 
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.Packet;
@@ -6,21 +6,17 @@ import pl.adrian.internal.packets.base.SendablePacket;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.TtcSubtype;
 import pl.adrian.internal.packets.util.PacketBuilder;
+import pl.adrian.internal.packets.util.PacketValidator;
 
 public class TtcPacket extends Packet implements SendablePacket {
-
     @Byte
     private final TtcSubtype subT;
-
     @Byte
     private final short ucid;
-
     @Byte
     private final short b1;
-
     @Byte
     private final short b2;
-
     @Byte
     private final short b3;
 
@@ -31,6 +27,7 @@ public class TtcPacket extends Packet implements SendablePacket {
         this.b1 = (short) b1;
         this.b2 = (short) b2;
         this.b3 = (short) b3;
+        PacketValidator.validate(this);
     }
 
     @Override

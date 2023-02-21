@@ -1,4 +1,4 @@
-package pl.adrian.api.packets.sendable;
+package pl.adrian.api.packets;
 
 import pl.adrian.internal.packets.annotations.CharArray;
 import pl.adrian.internal.packets.base.Packet;
@@ -9,7 +9,7 @@ import pl.adrian.internal.packets.util.PacketBuilder;
 import pl.adrian.internal.packets.util.PacketValidator;
 
 public class MstPacket extends Packet implements SendablePacket {
-    @CharArray(maxLength = 64)
+    @CharArray(length = 64)
     private final String msg;
 
     public MstPacket(int reqI, String msg) throws PacketValidationException {

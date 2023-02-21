@@ -1,7 +1,7 @@
-package pl.adrian.api.packets.sendable;
+package pl.adrian.api.packets;
 
 import org.junit.jupiter.api.Test;
-import pl.adrian.internal.packets.flags.Flags;
+import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.IsiFlag;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;

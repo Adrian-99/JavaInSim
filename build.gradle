@@ -41,3 +41,6 @@ tasks.named('jar') {
 test {
     useJUnitPlatform()
 }
+
+build.dependsOn(clean)
+publishToMavenLocal.dependsOn(build)

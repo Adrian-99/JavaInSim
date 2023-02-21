@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
 
-public class LFSMock implements Closeable {
+public class LfsMock implements Closeable {
     private final ExecutorService listenExecutor;
     private final List<byte[]> receivedPacketBytes;
     private final Product product;
@@ -26,7 +26,7 @@ public class LFSMock implements Closeable {
     private InputStream in;
     private OutputStream out;
 
-    public LFSMock(int port, Product product, String version) throws IOException {
+    public LfsMock(int port, Product product, String version) throws IOException {
         this.product = product;
         if (version.length() > 8) {
             version = version.substring(0, 8);
@@ -62,7 +62,7 @@ public class LFSMock implements Closeable {
     }
 
     private void sendVersionPacket(byte reqI) throws IOException {
-        out.write(new byte[] { 4, 2, reqI, 0 });
+        out.write(new byte[] { 5, 2, reqI, 0 });
         out.write(version.getBytes());
         for (var i = version.length(); i < 8; i++) {
             out.write(0);

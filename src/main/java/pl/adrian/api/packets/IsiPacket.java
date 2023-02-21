@@ -1,4 +1,4 @@
-package pl.adrian.api.packets.sendable;
+package pl.adrian.api.packets;
 
 import pl.adrian.internal.Constants;
 import pl.adrian.internal.packets.annotations.Byte;
@@ -6,7 +6,7 @@ import pl.adrian.internal.packets.annotations.CharArray;
 import pl.adrian.internal.packets.annotations.Word;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
-import pl.adrian.internal.packets.flags.Flags;
+import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.IsiFlag;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.base.SendablePacket;
@@ -24,9 +24,9 @@ public class IsiPacket extends Packet implements SendablePacket {
     private final Character prefix;
     @Word
     private final int interval;
-    @CharArray(maxLength = 16)
+    @CharArray(length = 16)
     private final String admin;
-    @CharArray(maxLength = 16)
+    @CharArray(length = 16)
     private final String iName;
 
     public IsiPacket(Flags<IsiFlag> flags,

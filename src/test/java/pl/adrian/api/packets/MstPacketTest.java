@@ -1,4 +1,4 @@
-package pl.adrian.api.packets.sendable;
+package pl.adrian.api.packets;
 
 import org.junit.jupiter.api.Test;
 

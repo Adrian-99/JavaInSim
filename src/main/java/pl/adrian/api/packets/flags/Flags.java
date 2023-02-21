@@ -1,4 +1,4 @@
-package pl.adrian.internal.packets.flags;
+package pl.adrian.api.packets.flags;
 
 import java.util.Set;
 

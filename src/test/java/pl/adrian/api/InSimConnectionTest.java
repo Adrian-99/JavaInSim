@@ -1,11 +1,11 @@
 package pl.adrian.api;
 
 import org.junit.jupiter.api.*;
-import pl.adrian.api.packets.sendable.IsiPacket;
+import pl.adrian.api.packets.IsiPacket;
 import pl.adrian.api.packets.enums.Product;
-import pl.adrian.internal.packets.flags.Flags;
+import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.IsiFlag;
-import pl.adrian.testutil.LFSMock;
+import pl.adrian.testutil.LfsMock;
 
 import java.io.IOException;
 
@@ -26,12 +26,12 @@ class InSimConnectionTest {
             105, 99, 97, 116, 105, 111, 110, 0, 0, 0, 0, 0
     };
 
-    private LFSMock lfsMock;
+    private LfsMock lfsMock;
     private InSimConnection inSimConnection;
 
     @BeforeEach
     void beforeEach() throws IOException {
-        lfsMock = new LFSMock(LFS_MOCK_PORT, Product.S3, "0.7D");
+        lfsMock = new LfsMock(LFS_MOCK_PORT, Product.S3, "0.7D");
         inSimConnection = new InSimConnection("localhost", 29999, INIT_PACKET);
     }
 

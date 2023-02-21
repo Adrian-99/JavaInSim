@@ -6,7 +6,7 @@ import pl.adrian.internal.packets.annotations.Unsigned;
 import pl.adrian.internal.packets.annotations.Word;
 import pl.adrian.internal.packets.base.SendablePacket;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
-import pl.adrian.internal.packets.flags.Flags;
+import pl.adrian.api.packets.flags.Flags;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -119,11 +119,11 @@ public class PacketValidator {
         var typeName = "Char Array";
         if (value != null) {
             if (value instanceof String stringValue) {
-                if (stringValue.length() > annotation.maxLength()) {
+                if (stringValue.length() > annotation.length()) {
                     throw new PacketValidationException(
                             field,
                             stringValue.length(),
-                            annotation.maxLength(),
+                            annotation.length(),
                             typeName
                     );
                 }

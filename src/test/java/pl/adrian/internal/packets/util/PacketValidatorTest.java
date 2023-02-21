@@ -9,7 +9,7 @@ import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.SendablePacket;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
-import pl.adrian.internal.packets.flags.Flags;
+import pl.adrian.api.packets.flags.Flags;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -222,7 +222,7 @@ class PacketValidatorTest {
         private final int intWord;
         @Word
         private final Flags<TestEnum> flagsWord;
-        @CharArray(maxLength = 5)
+        @CharArray(length = 5)
         private final String stringCharArray;
         @Unsigned
         private final long longUnsigned;
@@ -310,7 +310,7 @@ class PacketValidatorTest {
     @SuppressWarnings("all")
     private static class PacketWithInvalidCharArrayType extends Packet implements SendablePacket {
 
-        @CharArray(maxLength = 5)
+        @CharArray(length = 5)
         private final int intCharArray;
 
         protected PacketWithInvalidCharArrayType(int size,

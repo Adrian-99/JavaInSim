@@ -1,9 +1,9 @@
 package pl.adrian.internal;
 
 import pl.adrian.api.InSimConnection;
-import pl.adrian.api.packets.sendable.IsiPacket;
-import pl.adrian.api.packets.sendable.MstPacket;
-import pl.adrian.internal.packets.flags.Flags;
+import pl.adrian.api.packets.IsiPacket;
+import pl.adrian.api.packets.MstPacket;
+import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.IsiFlag;
 
 import java.io.IOException;

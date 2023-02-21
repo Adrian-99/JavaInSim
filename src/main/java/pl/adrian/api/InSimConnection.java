@@ -1,7 +1,7 @@
 package pl.adrian.api;
 
 import pl.adrian.internal.Constants;
-import pl.adrian.api.packets.sendable.IsiPacket;
+import pl.adrian.api.packets.IsiPacket;
 import pl.adrian.internal.packets.base.ReadablePacket;
 import pl.adrian.internal.packets.base.SendablePacket;
 import pl.adrian.api.packets.enums.PacketType;
