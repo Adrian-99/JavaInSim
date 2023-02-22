@@ -12,6 +12,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is a helper that is used while validating packets
+ */
 public class PacketValidator {
     private static final short BYTE_MIN_VALUE = 0;
     private static final short BYTE_MAX_VALUE = 255;
@@ -22,6 +25,11 @@ public class PacketValidator {
 
     private PacketValidator() {}
 
+    /**
+     * Triggers validation for all fields of packet
+     * @param packet packet to be validated
+     * @throws PacketValidationException if validation of any field fails
+     */
     @SuppressWarnings("java:S3011")
     public static void validate(SendablePacket packet) throws PacketValidationException {
         if (packet != null) {

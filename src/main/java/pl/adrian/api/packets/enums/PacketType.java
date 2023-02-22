@@ -1,75 +1,281 @@
 package pl.adrian.api.packets.enums;
 
+/**
+ * Enumeration for packet types
+ */
 public enum PacketType {
-    NONE,		//  0					: not used
-    ISI,		//  1 - instruction		: insim initialise
-    VER,		//  2 - info			: version info
-    TINY,		//  3 - both ways		: multi purpose
-    SMALL,		//  4 - both ways		: multi purpose
-    STA,		//  5 - info			: state info
-    SCH,		//  6 - instruction		: single character
-    SFP,		//  7 - instruction		: state flags pack
-    SCC,		//  8 - instruction		: set car camera
-    CPP,		//  9 - both ways		: cam pos pack
-    ISM,		// 10 - info			: start multiplayer
-    MSO,		// 11 - info			: message out
-    III,		// 12 - info			: hidden /i message
-    MST,		// 13 - instruction		: type message or /command
-    MTC,		// 14 - instruction		: message to a connection
-    MOD,		// 15 - instruction		: set screen mode
-    VTN,		// 16 - info			: vote notification
-    RST,		// 17 - info			: race start
-    NCN,		// 18 - info			: new connection
-    CNL,		// 19 - info			: connection left
-    CPR,		// 20 - info			: connection renamed
-    NPL,		// 21 - info			: new player (joined race)
-    PLP,		// 22 - info			: player pit (keeps slot in race)
-    PLL,		// 23 - info			: player leave (spectate - loses slot)
-    LAP,		// 24 - info			: lap time
-    SPX,		// 25 - info			: split x time
-    PIT,		// 26 - info			: pit stop start
-    PSF,		// 27 - info			: pit stop finish
-    PLA,		// 28 - info			: pit lane enter / leave
-    CCH,		// 29 - info			: camera changed
-    PEN,		// 30 - info			: penalty given or cleared
-    TOC,		// 31 - info			: take over car
-    FLG,		// 32 - info			: flag (yellow or blue)
-    PFL,		// 33 - info			: player flags (help flags)
-    FIN,		// 34 - info			: finished race
-    RES,		// 35 - info			: result confirmed
-    REO,		// 36 - both ways		: reorder (info or instruction)
-    NLP,		// 37 - info			: node and lap packet
-    MCI,		// 38 - info			: multi car info
-    MSX,		// 39 - instruction		: type message
-    MSL,		// 40 - instruction		: message to local computer
-    CRS,		// 41 - info			: car reset
-    BFN,		// 42 - both ways		: delete buttons / receive button requests
-    AXI,		// 43 - info			: autocross layout information
-    AXO,		// 44 - info			: hit an autocross object
-    BTN,		// 45 - instruction		: show a button on local or remote screen
-    BTC,		// 46 - info			: sent when a user clicks a button
-    BTT,		// 47 - info			: sent after typing into a button
-    RIP,		// 48 - both ways		: replay information packet
-    SSH,		// 49 - both ways		: screenshot
-    CON,		// 50 - info			: contact between cars (collision report)
-    OBH,		// 51 - info			: contact car + object (collision report)
-    HLV,		// 52 - info			: report incidents that would violate HLVC
-    PLC,		// 53 - instruction		: player cars
-    AXM,		// 54 - both ways		: autocross multiple objects
-    ACR,		// 55 - info			: admin command report
-    HCP,		// 56 - instruction		: car handicaps
-    NCI,		// 57 - info			: new connection - extra info for host
-    JRR,		// 58 - instruction		: reply to a join request (allow / disallow)
-    UCO,		// 59 - info			: report InSim checkpoint / InSim circle
-    OCO,		// 60 - instruction		: object control (currently used for lights)
-    TTC,		// 61 - instruction		: multi purpose - target to connection
-    SLC,		// 62 - info			: connection selected a car
-    CSC,		// 63 - info			: car state changed
-    CIM,		// 64 - info			: connection's interface mode
-    MAL;		// 65 - both ways		: set mods allowed
+    /**
+     * 0: not used
+     */
+    NONE,
+    /**
+     * 1 - instruction: insim initialise
+     */
+    ISI,
+    /**
+     * 2 - info: version info
+     */
+    VER,
+    /**
+     * 3 - both ways: multi purpose
+     */
+    TINY,
+    /**
+     * 4 - both ways: multi purpose
+     */
+    SMALL,
+    /**
+     * 5 - info: state info
+     */
+    STA,
+    /**
+     * 6 - instruction: single character
+     */
+    SCH,
+    /**
+     * 7 - instruction: state flags pack
+     */
+    SFP,
+    /**
+     * 8 - instruction: set car camera
+     */
+    SCC,
+    /**
+     * 9 - both ways: cam pos pack
+     */
+    CPP,
+    /**
+     * 10 - info: start multiplayer
+     */
+    ISM,
+    /**
+     * 11 - info: message out
+     */
+    MSO,
+    /**
+     * 12 - info: hidden /i message
+     */
+    III,
+    /**
+     * 13 - instruction: type message or /command
+     */
+    MST,
+    /**
+     * 14 - instruction: message to a connection
+     */
+    MTC,
+    /**
+     * 15 - instruction: set screen mode
+     */
+    MOD,
+    /**
+     * 16 - info: vote notification
+     */
+    VTN,
+    /**
+     * 17 - info: race start
+     */
+    RST,
+    /**
+     * 18 - info: new connection
+     */
+    NCN,
+    /**
+     * 19 - info: connection left
+     */
+    CNL,
+    /**
+     * 20 - info: connection renamed
+     */
+    CPR,
+    /**
+     * 21 - info: new player (joined race)
+     */
+    NPL,
+    /**
+     * 22 - info: player pit (keeps slot in race)
+     */
+    PLP,
+    /**
+     * 23 - info: player leave (spectate - loses slot)
+     */
+    PLL,
+    /**
+     * 24 - info: lap time
+     */
+    LAP,
+    /**
+     * 25 - info: split x time
+     */
+    SPX,
+    /**
+     * 26 - info: pit stop start
+     */
+    PIT,
+    /**
+     * 27 - info: pit stop finish
+     */
+    PSF,
+    /**
+     * 28 - info: pit lane enter / leave
+     */
+    PLA,
+    /**
+     * 29 - info: camera changed
+     */
+    CCH,
+    /**
+     * 30 - info: penalty given or cleared
+     */
+    PEN,
+    /**
+     * 31 - info: take over car
+     */
+    TOC,
+    /**
+     * 32 - info: flag (yellow or blue)
+     */
+    FLG,
+    /**
+     * 33 - info: player flags (help flags)
+     */
+    PFL,
+    /**
+     * 34 - info: finished race
+     */
+    FIN,
+    /**
+     * 35 - info: result confirmed
+     */
+    RES,
+    /**
+     * 36 - both ways: reorder (info or instruction)
+     */
+    REO,
+    /**
+     * 37 - info: node and lap packet
+     */
+    NLP,
+    /**
+     * 38 - info: multi car info
+     */
+    MCI,
+    /**
+     * 39 - instruction: type message
+     */
+    MSX,
+    /**
+     * 40 - instruction: message to local computer
+     */
+    MSL,
+    /**
+     * 41 - info: car reset
+     */
+    CRS,
+    /**
+     * 42 - both ways: delete buttons / receive button requests
+     */
+    BFN,
+    /**
+     * 43 - info: autocross layout information
+     */
+    AXI,
+    /**
+     * 44 - info: hit an autocross object
+     */
+    AXO,
+    /**
+     * 45 - instruction: show a button on local or remote screen
+     */
+    BTN,
+    /**
+     * 46 - info: sent when a user clicks a button
+     */
+    BTC,
+    /**
+     * 47 - info: sent after typing into a button
+     */
+    BTT,
+    /**
+     * 48 - both ways: replay information packet
+     */
+    RIP,
+    /**
+     * 49 - both ways: screenshot
+     */
+    SSH,
+    /**
+     * 50 - info: contact between cars (collision report)
+     */
+    CON,
+    /**
+     * 51 - info: contact car + object (collision report)
+     */
+    OBH,
+    /**
+     * 52 - info: report incidents that would violate HLVC
+     */
+    HLV,
+    /**
+     * 53 - instruction: player cars
+     */
+    PLC,
+    /**
+     * 54 - both ways: autocross multiple objects
+     */
+    AXM,
+    /**
+     * 55 - info: admin command report
+     */
+    ACR,
+    /**
+     * 56 - instruction: car handicaps
+     */
+    HCP,
+    /**
+     * 57 - info: new connection - extra info for host
+     */
+    NCI,
+    /**
+     * 58 - instruction: reply to a join request (allow / disallow)
+     */
+    JRR,
+    /**
+     * 59 - info: report InSim checkpoint / InSim circle
+     */
+    UCO,
+    /**
+     * 60 - instruction: object control (currently used for lights)
+     */
+    OCO,
+    /**
+     * 61 - instruction: multi-purpose - target to connection
+     */
+    TTC,
+    /**
+     * 62 - info: connection selected a car
+     */
+    SLC,
+    /**
+     * 63 - info: car state changed
+     */
+    CSC,
+    /**
+     * 64 - info: connection's interface mode
+     */
+    CIM,
+    /**
+     * 65 - both ways: set mods allowed
+     */
+    MAL;
 
     private static PacketType[] allValuesCached = null;
 
+    /**
+     * Converts ordinal number to enum value
+     * @param ordinal ordinal number
+     * @return enum value
+     */
     public static PacketType fromOrdinal(int ordinal) {
         if (allValuesCached == null) {
             allValuesCached = values();

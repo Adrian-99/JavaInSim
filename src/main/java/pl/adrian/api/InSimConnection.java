@@ -13,6 +13,9 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * This class is responsible for connecting and communicating with LFS
+ */
 public class InSimConnection implements Closeable {
     private final Socket socket;
     private final OutputStream out;
@@ -21,6 +24,13 @@ public class InSimConnection implements Closeable {
 
     private boolean isConnected = false;
 
+    /**
+     * Creates InSim connection
+     * @param hostname Address of the host where LFS is running
+     * @param port Port which has been open by LFS for InSim connection
+     * @param initializationPacket Packet sent upon connecting to initialize InSim
+     * @throws IOException if I/O error occurs when creating a connection
+     */
     public InSimConnection(String hostname, int port, IsiPacket initializationPacket) throws IOException {
         socket = new Socket(hostname, port);
         out = socket.getOutputStream();
@@ -39,10 +49,18 @@ public class InSimConnection implements Closeable {
         socket.close();
     }
 
+    /**
+     * @return Whether InSim connection is alive
+     */
     public boolean isConnected() {
         return isConnected;
     }
 
+    /**
+     * Sends InSim packet to LFS
+     * @param packet Packet to be sent
+     * @throws IOException if I/O error occurs while sending packet
+     */
     public void send(SendablePacket packet) throws IOException {
         var bytes = packet.getBytes();
         out.write(bytes);

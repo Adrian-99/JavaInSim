@@ -9,7 +9,16 @@ import pl.adrian.api.packets.flags.IsiFlag;
 import java.io.IOException;
 import java.util.Date;
 
+/**
+ * Tester class - to be deleted later
+ */
 public class Tester {
+
+    /**
+     * Tester main method - to be deleted later
+     * @param args arguments array
+     * @throws IOException if I/O error occurs
+     */
     public static void main(String[] args) throws IOException {
         var initPacket = new IsiPacket(
                 new Flags<>(IsiFlag.LOCAL, IsiFlag.CON, IsiFlag.MCI),

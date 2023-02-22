@@ -13,6 +13,9 @@ import pl.adrian.internal.packets.base.SendablePacket;
 import pl.adrian.internal.packets.util.PacketBuilder;
 import pl.adrian.internal.packets.util.PacketValidator;
 
+/**
+ * InSim Init - packet to initialise the InSim system
+ */
 public class IsiPacket extends Packet implements SendablePacket {
     @Word
     private final int udpPort;
@@ -29,6 +32,15 @@ public class IsiPacket extends Packet implements SendablePacket {
     @CharArray(length = 16)
     private final String iName;
 
+    /**
+     * Creates InSim Init packet
+     * @param flags bit flags for options
+     * @param prefix special host message prefix character
+     * @param interval time in ms between NLP or MCI (0 = none)
+     * @param admin admin password (if set in LFS)
+     * @param iName a short name for your program
+     * @throws PacketValidationException if validation of any field in packet fails
+     */
     public IsiPacket(Flags<IsiFlag> flags,
                      Character prefix,
                      int interval,

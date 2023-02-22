@@ -11,6 +11,9 @@ import pl.adrian.internal.packets.base.ReadablePacket;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.exceptions.PacketReadingException;
 
+/**
+ * This class is a helper that is used while converting byte array to appropriate packet class instance
+ */
 public class PacketReader {
     private final int packetSize;
     private final PacketType packetType;
@@ -18,6 +21,11 @@ public class PacketReader {
     private byte[] dataBytes;
     private int dataBytesReaderIndex;
 
+    /**
+     * Creates packet reader, which helps to convert byte array to appropriate packet class instance
+     * @param headerBytes header bytes of packet - length must be equal to 3 (size, type, reqI)
+     * @throws PacketReadingException if length of header bytes was not equal to 3
+     */
     public PacketReader(byte[] headerBytes) throws PacketReadingException {
         if (headerBytes.length == Constants.PACKET_HEADER_SIZE) {
             packetSize = convertByte(headerBytes[0]) * 4;
@@ -30,15 +38,27 @@ public class PacketReader {
         }
     }
 
+    /**
+     * @return packet identifier extracted from header bytes
+     */
     public PacketType getPacketType() {
         return packetType;
     }
 
+    /**
+     * @return count of data bytes of packet (total packet size minus header size)
+     */
     public int getDataBytesCount() {
         return packetSize - Constants.PACKET_HEADER_SIZE;
     }
 
-    public ReadablePacket read(byte[] dataBytes) {
+    /**
+     * Converts data bytes and header bytes (passed in constructor) into appropriate packet class instance
+     * @param dataBytes data bytes of packet
+     * @return packet class instance
+     * @throws PacketReadingException if reading given packet type (type is extracted from header bytes) is not supported
+     */
+    public ReadablePacket read(byte[] dataBytes) throws PacketReadingException {
         this.dataBytes = dataBytes;
         dataBytesReaderIndex = 0;
 
