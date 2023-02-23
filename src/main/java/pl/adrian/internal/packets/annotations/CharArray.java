@@ -13,7 +13,12 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface CharArray {
     /**
-     * @return Length of the character array
+     * @return length of the character array
      */
     int length();
+
+    /**
+     * @return whether length should be strictly validated
+     */
+    boolean strictLengthValidation() default false;
 }

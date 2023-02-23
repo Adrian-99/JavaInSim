@@ -24,6 +24,7 @@ class PacketValidatorTest {
                 null,
                 354,
                 new Flags<>(TestEnum.VALUE1),
+                "abcdefghij",
                 null,
                 112946L
         );
@@ -39,6 +40,7 @@ class PacketValidatorTest {
                 null,
                 354,
                 new Flags<>(TestEnum.VALUE1),
+                "abcdefghij",
                 null,
                 112946L
         );
@@ -56,6 +58,7 @@ class PacketValidatorTest {
                 null,
                 354,
                 new Flags<>(TestEnum.VALUE1),
+                "abcdefghij",
                 null,
                 112946L
         );
@@ -73,6 +76,7 @@ class PacketValidatorTest {
                 null,
                 -15,
                 new Flags<>(TestEnum.VALUE1),
+                "abcdefghij",
                 null,
                 112946L
         );
@@ -90,6 +94,7 @@ class PacketValidatorTest {
                 'a',
                 74956,
                 new Flags<>(TestEnum.VALUE1),
+                "abcdefghij",
                 null,
                 112946L
         );
@@ -108,6 +113,7 @@ class PacketValidatorTest {
                 354,
                 new Flags<>(TestEnum.VALUE1),
                 "abcdefghij",
+                "abcdefghij",
                 112946L
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
@@ -124,6 +130,7 @@ class PacketValidatorTest {
                 'a',
                 354,
                 new Flags<>(TestEnum.VALUE1),
+                "abcdefghij",
                 "abc",
                 -35L
         );
@@ -141,6 +148,7 @@ class PacketValidatorTest {
                 'a',
                 354,
                 new Flags<>(TestEnum.VALUE1),
+                "abcdefghij",
                 "abc",
                 5732985275L
         );
@@ -223,6 +231,8 @@ class PacketValidatorTest {
         @Word
         private final Flags<TestEnum> flagsWord;
         @CharArray(length = 5)
+        private final String stringCharArrayWithoutValidation;
+        @CharArray(length = 5, strictLengthValidation = true)
         private final String stringCharArray;
         @Unsigned
         private final long longUnsigned;
@@ -233,12 +243,14 @@ class PacketValidatorTest {
                                   Character characterByte,
                                   int intWord,
                                   Flags<TestEnum> flagsWord,
+                                  String stringCharArrayWithoutValidation,
                                   String stringCharArray,
                                   long longUnsigned) {
             super(size, type, reqI);
             this.characterByte = characterByte;
             this.intWord = intWord;
             this.flagsWord = flagsWord;
+            this.stringCharArrayWithoutValidation = stringCharArrayWithoutValidation;
             this.stringCharArray = stringCharArray;
             this.longUnsigned = longUnsigned;
         }

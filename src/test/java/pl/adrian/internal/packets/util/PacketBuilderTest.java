@@ -181,7 +181,7 @@ class PacketBuilderTest {
         assertEquals(32, bytes[7]);
         assertEquals(108, bytes[8]);
         assertEquals(111, bytes[9]);
-        assertEquals(110, bytes[10]);
+        assertEquals(0, bytes[10]);
         assertEquals(55, bytes[11]);
     }
 

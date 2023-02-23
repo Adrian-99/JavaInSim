@@ -127,11 +127,11 @@ public class PacketValidator {
         var typeName = "Char Array";
         if (value != null) {
             if (value instanceof String stringValue) {
-                if (stringValue.length() > annotation.length()) {
+                if (annotation.strictLengthValidation() && stringValue.length() > annotation.length() - 1) {
                     throw new PacketValidationException(
                             field,
                             stringValue.length(),
-                            annotation.length(),
+                            annotation.length() - 1,
                             typeName
                     );
                 }

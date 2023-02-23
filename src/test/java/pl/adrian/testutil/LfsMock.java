@@ -1,6 +1,8 @@
 package pl.adrian.testutil;
 
+import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.Product;
+import pl.adrian.internal.packets.util.PacketBuilder;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -62,16 +64,14 @@ public class LfsMock implements Closeable {
     }
 
     private void sendVersionPacket(byte reqI) throws IOException {
-        out.write(new byte[] { 5, 2, reqI, 0 });
-        out.write(version.getBytes());
-        for (var i = version.length(); i < 8; i++) {
-            out.write(0);
-        }
-        out.write(product.toString().getBytes());
-        for (var i = product.toString().length(); i < 6; i++) {
-            out.write(0);
-        }
-        out.write(new byte[] { 9, 0 });
+        var bytes = new PacketBuilder((short) 20, PacketType.VER, reqI < 0 ? (short) (reqI + 256) : (short) reqI)
+                .writeZeroByte()
+                .writeCharArray(version, 8)
+                .writeCharArray(product.toString(), 6)
+                .writeByte(9)
+                .writeByte(0)
+                .getBytes();
+        out.write(bytes);
     }
 
     private void listen() {

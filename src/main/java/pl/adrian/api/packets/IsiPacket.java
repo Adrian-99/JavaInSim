@@ -27,9 +27,9 @@ public class IsiPacket extends Packet implements SendablePacket {
     private final Character prefix;
     @Word
     private final int interval;
-    @CharArray(length = 16)
+    @CharArray(length = 16, strictLengthValidation = true)
     private final String admin;
-    @CharArray(length = 16)
+    @CharArray(length = 16, strictLengthValidation = true)
     private final String iName;
 
     /**

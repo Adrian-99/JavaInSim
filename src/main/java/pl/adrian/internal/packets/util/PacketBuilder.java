@@ -100,14 +100,14 @@ public class PacketBuilder {
     public PacketBuilder writeCharArray(String value, int length) {
         if (value != null) {
             var bytes = value.getBytes();
-            for (var i = 0; i < length; i++) {
+            for (var i = 0; i < length - 1; i++) {
                 if (i < bytes.length) {
                     packetBytes[currentIndex++] = bytes[i];
                 } else {
                     return writeZeroBytes(length - bytes.length);
                 }
             }
-            return this;
+            return writeZeroByte();
         } else {
             return writeZeroBytes(length);
         }
