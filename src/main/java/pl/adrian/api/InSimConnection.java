@@ -1,5 +1,7 @@
 package pl.adrian.api;
 
+import pl.adrian.api.packets.TinyPacket;
+import pl.adrian.api.packets.enums.TinySubtype;
 import pl.adrian.internal.Constants;
 import pl.adrian.api.packets.IsiPacket;
 import pl.adrian.internal.packets.base.ReadablePacket;
@@ -42,6 +44,11 @@ public class InSimConnection implements Closeable {
 
     @Override
     public void close() throws IOException {
+        if (isConnected && !socket.isClosed()) {
+            var closePacket = new TinyPacket(0, TinySubtype.CLOSE);
+            send(closePacket);
+        }
+
         isConnected = false;
         readingExecutor.shutdownNow();
         in.close();
@@ -53,7 +60,7 @@ public class InSimConnection implements Closeable {
      * @return Whether InSim connection is alive
      */
     public boolean isConnected() {
-        return isConnected;
+        return isConnected && !socket.isClosed();
     }
 
     /**
@@ -90,13 +97,16 @@ public class InSimConnection implements Closeable {
     }
 
     private boolean shouldPacketBeRead(PacketType packetType) {
-        return packetType == PacketType.VER;
+        return packetType == PacketType.VER || packetType == PacketType.TINY;
     }
 
-    private void handleReadPacket(ReadablePacket packet) {
+    private void handleReadPacket(ReadablePacket packet) throws IOException {
         switch (packet.getType()) {
-            case VER -> {
-                if (!isConnected) {
+            case VER -> isConnected = true;
+            case TINY -> {
+                var tinyPacket = (TinyPacket) packet;
+                if (tinyPacket.getReqI() == 0 && tinyPacket.getSubT().equals(TinySubtype.NONE)) {
+                    send(tinyPacket);
                     isConnected = true;
                 }
             }

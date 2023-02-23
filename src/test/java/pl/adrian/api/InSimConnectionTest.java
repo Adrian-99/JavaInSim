@@ -25,6 +25,12 @@ class InSimConnectionTest {
             119, 111, 114, 100, 0, 0, 0, 0, 0, 0, 0, 0, 97, 112, 112, 108,
             105, 99, 97, 116, 105, 111, 110, 0, 0, 0, 0, 0
     };
+    private static final byte[] CLOSE_PACKET_BYTES = new byte[] {
+            1, 3, 0, 2
+    };
+    private static final byte[] KEEP_ALIVE_PACKET_BYTES = new byte[] {
+            1, 3, 0, 0
+    };
 
     private LfsMock lfsMock;
     private InSimConnection inSimConnection;
@@ -52,6 +58,10 @@ class InSimConnectionTest {
         inSimConnection.close();
 
         assertFalse(inSimConnection.isConnected());
+
+        lfsReceivedPackets = lfsMock.awaitReceivedPackets(2);
+        assertEquals(2, lfsReceivedPackets.size());
+        assertArrayEquals(CLOSE_PACKET_BYTES, lfsReceivedPackets.get(1));
     }
 
     @Test
@@ -63,5 +73,14 @@ class InSimConnectionTest {
         lfsMock.close();
 
         assertFalse(inSimConnection.isConnected());
+    }
+
+    @Test
+    void keepAlivePackets() throws IOException {
+        lfsMock.send(KEEP_ALIVE_PACKET_BYTES);
+
+        var lfsReceivedPackets = lfsMock.awaitReceivedPackets(2);
+        assertEquals(2, lfsReceivedPackets.size());
+        assertArrayEquals(KEEP_ALIVE_PACKET_BYTES, lfsReceivedPackets.get(1));
     }
 }
