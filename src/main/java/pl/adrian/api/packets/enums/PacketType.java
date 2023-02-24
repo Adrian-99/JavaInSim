@@ -1,5 +1,8 @@
 package pl.adrian.api.packets.enums;
 
+import pl.adrian.api.packets.*;
+import pl.adrian.internal.packets.base.Packet;
+
 /**
  * Enumeration for packet types
  */
@@ -7,23 +10,23 @@ public enum PacketType {
     /**
      * 0: not used
      */
-    NONE,
+    NONE(null),
     /**
      * 1 - instruction: insim initialise
      */
-    ISI,
+    ISI(IsiPacket.class),
     /**
      * 2 - info: version info
      */
-    VER,
+    VER(VerPacket.class),
     /**
-     * 3 - both ways: multi purpose
+     * 3 - both ways: multi-purpose
      */
-    TINY,
+    TINY(TinyPacket.class),
     /**
-     * 4 - both ways: multi purpose
+     * 4 - both ways: multi-purpose
      */
-    SMALL,
+    SMALL(SmallPacket.class),
     /**
      * 5 - info: state info
      */
@@ -59,7 +62,7 @@ public enum PacketType {
     /**
      * 13 - instruction: type message or /command
      */
-    MST,
+    MST(MstPacket.class),
     /**
      * 14 - instruction: message to a connection
      */
@@ -251,7 +254,7 @@ public enum PacketType {
     /**
      * 61 - instruction: multi-purpose - target to connection
      */
-    TTC,
+    TTC(TtcPacket.class),
     /**
      * 62 - info: connection selected a car
      */
@@ -271,6 +274,16 @@ public enum PacketType {
 
     private static PacketType[] allValuesCached = null;
 
+    private final Class<? extends Packet> packetClass;
+
+    PacketType(Class<? extends Packet> packetClass) {
+        this.packetClass = packetClass;
+    }
+
+    PacketType() {
+        packetClass = null;
+    }
+
     /**
      * Converts ordinal number to enum value
      * @param ordinal ordinal number
@@ -281,5 +294,24 @@ public enum PacketType {
             allValuesCached = values();
         }
         return allValuesCached[ordinal];
+    }
+
+    /**
+     * Converts packet class to enum value
+     * @param packetClass packet class
+     * @return enum value
+     */
+    public static PacketType fromPacketClass(Class<? extends Packet> packetClass) {
+        if (packetClass != null) {
+            if (allValuesCached == null) {
+                allValuesCached = values();
+            }
+            for (var packetType : allValuesCached) {
+                if (packetClass.equals(packetType.packetClass)) {
+                    return packetType;
+                }
+            }
+        }
+        return NONE;
     }
 }
