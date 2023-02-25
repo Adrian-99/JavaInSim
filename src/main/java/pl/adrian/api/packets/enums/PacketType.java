@@ -4,7 +4,7 @@ import pl.adrian.api.packets.*;
 import pl.adrian.internal.packets.base.Packet;
 
 /**
- * Enumeration for packet types
+ * Enumeration for packet types.
  */
 public enum PacketType {
     /**
@@ -285,27 +285,23 @@ public enum PacketType {
     }
 
     /**
-     * Converts ordinal number to enum value
+     * Converts ordinal number to enum value.
      * @param ordinal ordinal number
      * @return enum value
      */
     public static PacketType fromOrdinal(int ordinal) {
-        if (allValuesCached == null) {
-            allValuesCached = values();
-        }
+        ensureAllValuesCacheIsFilled();
         return allValuesCached[ordinal];
     }
 
     /**
-     * Converts packet class to enum value
+     * Converts {@link Packet} class to enum value.
      * @param packetClass packet class
      * @return enum value
      */
     public static PacketType fromPacketClass(Class<? extends Packet> packetClass) {
         if (packetClass != null) {
-            if (allValuesCached == null) {
-                allValuesCached = values();
-            }
+            ensureAllValuesCacheIsFilled();
             for (var packetType : allValuesCached) {
                 if (packetClass.equals(packetType.packetClass)) {
                     return packetType;
@@ -313,5 +309,11 @@ public enum PacketType {
             }
         }
         return NONE;
+    }
+
+    private static void ensureAllValuesCacheIsFilled() {
+        if (allValuesCached == null) {
+            allValuesCached = values();
+        }
     }
 }

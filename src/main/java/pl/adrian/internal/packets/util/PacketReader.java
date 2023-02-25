@@ -12,17 +12,17 @@ import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.exceptions.PacketReadingException;
 
 /**
- * This class is a helper that is used while converting byte array to appropriate packet class instance
+ * This class is a helper that is used while converting byte array to appropriate {@link ReadablePacket}.
  */
 public class PacketReader {
     private final int packetSize;
     private final PacketType packetType;
-    private final int packetReqI;
+    private final short packetReqI;
     private byte[] dataBytes;
     private int dataBytesReaderIndex;
 
     /**
-     * Creates packet reader, which helps to convert byte array to appropriate packet class instance
+     * Creates packet reader, which helps to convert byte array to appropriate {@link ReadablePacket}.
      * @param headerBytes header bytes of packet - length must be equal to 3 (size, type, reqI)
      * @throws PacketReadingException if length of header bytes was not equal to 3
      */
@@ -46,6 +46,13 @@ public class PacketReader {
     }
 
     /**
+     * @return packet reqI value extracted from header bytes
+     */
+    public short getPacketReqI() {
+        return packetReqI;
+    }
+
+    /**
      * @return count of data bytes of packet (total packet size minus header size)
      */
     public int getDataBytesCount() {
@@ -53,10 +60,11 @@ public class PacketReader {
     }
 
     /**
-     * Converts data bytes and header bytes (passed in constructor) into appropriate packet class instance
+     * Converts data bytes and header bytes (passed in constructor) into appropriate {@link ReadablePacket}.
      * @param dataBytes data bytes of packet
      * @return packet class instance
-     * @throws PacketReadingException if reading given packet type (type is extracted from header bytes) is not supported
+     * @throws PacketReadingException if reading given packet type (type is extracted from header bytes)
+     * is not supported
      */
     public ReadablePacket read(byte[] dataBytes) throws PacketReadingException {
         this.dataBytes = dataBytes;
@@ -92,7 +100,7 @@ public class PacketReader {
         return new SmallPacket(packetReqI, subT, uVal);
     }
 
-    private int readByte() {
+    private short readByte() {
         return convertByte(dataBytes[dataBytesReaderIndex++]);
     }
 
@@ -122,9 +130,9 @@ public class PacketReader {
         return readByte() + ((long) readByte() << 8) + ((long) readByte() << 16) + ((long) readByte() << 24);
     }
 
-    private int convertByte(byte value) {
+    private short convertByte(byte value) {
         if (value < 0) {
-            return value + 256;
+            return (short) (value + 256);
         } else {
             return value;
         }

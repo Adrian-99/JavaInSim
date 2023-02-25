@@ -3,6 +3,7 @@ package pl.adrian.internal;
 import pl.adrian.api.InSimConnection;
 import pl.adrian.api.packets.IsiPacket;
 import pl.adrian.api.packets.MstPacket;
+import pl.adrian.api.packets.VerPacket;
 import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.IsiFlag;
 
@@ -37,8 +38,9 @@ public class Tester {
                 if (read == 113) {
                     break;
                 }
-                var mst = new MstPacket(0, "Hello world - " + new Date());
-                connection.send(mst);
+//                var mst = new MstPacket(0, "Hello world - " + new Date());
+//                connection.send(mst);
+                connection.request(VerPacket.class, (inSimConnection, packet) -> System.out.println(packet.getVersion()));
             }
 //            var random = new Random();
 //            var executor = Executors.newFixedThreadPool(5);

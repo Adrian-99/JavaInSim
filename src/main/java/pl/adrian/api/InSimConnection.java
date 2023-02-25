@@ -4,8 +4,10 @@ import pl.adrian.api.packets.TinyPacket;
 import pl.adrian.api.packets.enums.TinySubtype;
 import pl.adrian.internal.Constants;
 import pl.adrian.api.packets.IsiPacket;
+import pl.adrian.internal.PacketRequest;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.ReadablePacket;
+import pl.adrian.internal.packets.base.RequestablePacket;
 import pl.adrian.internal.packets.base.SendablePacket;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.exceptions.PacketReadingException;
@@ -18,31 +20,36 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * This class is responsible for connecting and communicating with LFS
+ * This class is responsible for connecting and communicating with LFS.
  */
 public class InSimConnection implements Closeable {
     private final Socket socket;
     private final OutputStream out;
     private final InputStream in;
+    private final Random random;
     private final ExecutorService threadsExecutor;
     @SuppressWarnings("rawtypes")
     private final Map<PacketType, Set<PacketListener>> registeredListeners;
+    @SuppressWarnings("rawtypes")
+    private final List<PacketRequest> packetRequests;
 
     private boolean isConnected = false;
 
     /**
-     * Creates InSim connection
-     * @param hostname Address of the host where LFS is running
-     * @param port Port which has been open by LFS for InSim connection
-     * @param initializationPacket Packet sent upon connecting to initialize InSim
+     * Creates InSim connection and sends specified initialization packet.
+     * @param hostname address of the host where LFS is running
+     * @param port port which has been open by LFS for InSim connection
+     * @param initializationPacket packet sent upon connecting to initialize InSim
      * @throws IOException if I/O error occurs when creating a connection
      */
     public InSimConnection(String hostname, int port, IsiPacket initializationPacket) throws IOException {
         socket = new Socket(hostname, port);
         out = socket.getOutputStream();
         in = socket.getInputStream();
+        random = new Random();
         threadsExecutor = Executors.newFixedThreadPool(2);
         registeredListeners = new EnumMap<>(PacketType.class);
+        packetRequests = new ArrayList<>();
 
         threadsExecutor.submit(this::readIncomingPackets);
         send(initializationPacket);
@@ -63,15 +70,15 @@ public class InSimConnection implements Closeable {
     }
 
     /**
-     * @return Whether InSim connection is alive
+     * @return whether InSim connection is alive
      */
     public boolean isConnected() {
         return isConnected && !socket.isClosed();
     }
 
     /**
-     * Sends InSim packet to LFS
-     * @param packet Packet to be sent
+     * Sends specified {@link SendablePacket} to LFS.
+     * @param packet packet to be sent
      * @throws IOException if I/O error occurs while sending packet
      */
     public void send(SendablePacket packet) throws IOException {
@@ -83,10 +90,10 @@ public class InSimConnection implements Closeable {
      * Registers packet listener - a function that will be called each time the packet of chosen
      * type will be received from LFS. It is possible to register multiple listeners for single
      * packet type, however duplicate listeners will be ignored. It is possible to unregister packet
-     * listers later on - see {@link #stopListening(Class, PacketListener) stopListening} method.
+     * listeners later on - see {@link #stopListening(Class, PacketListener) stopListening} method.
      * @param packetClass class of the packet to listen for
-     * @param packetListener function that will be called each time the packet of chosen type will
-     *                       be received from LFS
+     * @param packetListener function that will be called each time the packet of chosen type is
+     *                       received from LFS
      * @param <T> type of the packet to listen for
      */
     public <T extends Packet & ReadablePacket> void listen(Class<T> packetClass,
@@ -120,12 +127,32 @@ public class InSimConnection implements Closeable {
         }
     }
 
+    /**
+     * Requests packet of specified type from LFS. Calling this method causes sending appropriate
+     * {@link TinyPacket} to LFS that is a request for specified packet. The {@link TinyPacket}
+     * contains randomly generated reqI value from range 1-255. If requested packet is received,
+     * specified callback function will be called.
+     * @param packetClass class of the packet that is requested
+     * @param callback function that will be called when requested packet is received
+     * @param <T> type of the packet that is requested
+     * @throws IOException if I/O error occurs when sending tiny packet
+     */
+    public <T extends Packet & RequestablePacket> void request(Class<T> packetClass,
+                                                               PacketListener<T> callback)
+            throws IOException {
+        var packetType = PacketType.fromPacketClass(packetClass);
+        var reqI = (short) random.nextInt(1, 256);
+        var tinyPacket = new TinyPacket(reqI, TinySubtype.fromRequestablePacketClass(packetClass));
+        packetRequests.add(new PacketRequest<>(packetType, reqI, callback));
+        send(tinyPacket);
+    }
+
     private void readIncomingPackets() {
         try {
             byte[] headerBytes;
             while ((headerBytes = in.readNBytes(Constants.PACKET_HEADER_SIZE)).length == Constants.PACKET_HEADER_SIZE) {
                 var packetReader = new PacketReader(headerBytes);
-                if (shouldPacketBeRead(packetReader.getPacketType())) {
+                if (shouldPacketBeRead(packetReader.getPacketType(), packetReader.getPacketReqI())) {
                     var dataBytes = in.readNBytes(packetReader.getDataBytesCount());
                     var packet = packetReader.read(dataBytes);
                     handleReadPacket(packet);
@@ -143,14 +170,22 @@ public class InSimConnection implements Closeable {
         }
     }
 
-    private boolean shouldPacketBeRead(PacketType packetType) {
+    private boolean shouldPacketBeRead(PacketType packetType, short reqI) {
         return packetType == PacketType.VER ||
                 packetType == PacketType.TINY ||
-                registeredListeners.containsKey(packetType);
+                registeredListeners.containsKey(packetType) ||
+                packetRequests.stream().anyMatch(request ->
+                        request.packetType().equals(packetType) && request.reqI() == reqI
+                );
     }
 
-    @SuppressWarnings("unchecked")
     private void handleReadPacket(ReadablePacket packet) throws IOException {
+        handleBasicReadPacket(packet);
+        handleReadPacketForPacketListeners(packet);
+        handleReadPacketForPacketRequests(packet);
+    }
+
+    private void handleBasicReadPacket(ReadablePacket packet) throws IOException {
         if (packet.getType().equals(PacketType.VER)) {
             isConnected = true;
         } else if (packet.getType().equals(PacketType.TINY)) {
@@ -160,13 +195,32 @@ public class InSimConnection implements Closeable {
                 isConnected = true;
             }
         }
+    }
 
+    @SuppressWarnings("unchecked")
+    private void handleReadPacketForPacketListeners(ReadablePacket packet) {
         if (registeredListeners.containsKey(packet.getType())) {
             threadsExecutor.submit(() -> {
                 for (var listener : registeredListeners.get(packet.getType())) {
                     listener.onPacketReceived(this, packet);
                 }
             });
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void handleReadPacketForPacketRequests(ReadablePacket packet) {
+        if (!packetRequests.isEmpty()) {
+            for (var packetRequest : packetRequests) {
+                if (packetRequest.packetType().equals(packet.getType()) &&
+                        packetRequest.reqI() == packet.getReqI()) {
+                    threadsExecutor.submit(() ->
+                            packetRequest.callback().onPacketReceived(this, packet)
+                    );
+                    packetRequests.remove(packetRequest);
+                    break;
+                }
+            }
         }
     }
 }

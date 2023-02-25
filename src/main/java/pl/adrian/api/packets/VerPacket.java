@@ -3,14 +3,14 @@ package pl.adrian.api.packets;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.CharArray;
 import pl.adrian.internal.packets.base.Packet;
-import pl.adrian.internal.packets.base.ReadablePacket;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.Product;
+import pl.adrian.internal.packets.base.RequestablePacket;
 
 /**
- * VERsion
+ * VERsion.
  */
-public class VerPacket extends Packet implements ReadablePacket {
+public class VerPacket extends Packet implements RequestablePacket {
     @CharArray(length = 8)
     private final String version;
     @CharArray(length = 6)
@@ -19,7 +19,7 @@ public class VerPacket extends Packet implements ReadablePacket {
     private final short inSimVer;
 
     /**
-     * Creates version packet
+     * Creates version packet.
      * @param reqI as received in the request packet
      * @param version LFS version, e.g. 0.3G
      * @param product LFS product

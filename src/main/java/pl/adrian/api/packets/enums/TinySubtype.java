@@ -1,7 +1,11 @@
 package pl.adrian.api.packets.enums;
 
+import pl.adrian.api.packets.VerPacket;
+import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.base.RequestablePacket;
+
 /**
- * Enumeration for subtype of tiny packet
+ * Enumeration for subtype of tiny packet.
  */
 public enum TinySubtype {
     /**
@@ -11,13 +15,13 @@ public enum TinySubtype {
     /**
      * 1 - info request: get version
      */
-    VER,
+    VER(VerPacket.class),
     /**
      * 2 - instruction: close insim
      */
     CLOSE,
     /**
-     * 3 - ping request: external progam requesting a reply
+     * 3 - ping request: external program requesting a reply
      */
     PING,
     /**
@@ -119,15 +123,47 @@ public enum TinySubtype {
 
     private static TinySubtype[] allValuesCached = null;
 
+    private final Class<? extends RequestablePacket> requestablePacketClass;
+
+    TinySubtype(Class<? extends RequestablePacket> requestablePacketClass) {
+        this.requestablePacketClass = requestablePacketClass;
+    }
+
+    TinySubtype() {
+        this.requestablePacketClass = null;
+    }
+
     /**
-     * Converts ordinal number to enum value
+     * Converts ordinal number to enum value.
      * @param ordinal ordinal number
      * @return enum value
      */
     public static TinySubtype fromOrdinal(int ordinal) {
+        ensureAllValuesCacheIsFilled();
+        return allValuesCached[ordinal];
+    }
+
+    /**
+     * Converts {@link RequestablePacket} class to enum value.
+     * @param packetClass class of the packet
+     * @return enum value
+     * @param <T> type of the packet
+     */
+    public static <T extends Packet & RequestablePacket> TinySubtype fromRequestablePacketClass(Class<T> packetClass) {
+        if (packetClass != null) {
+            ensureAllValuesCacheIsFilled();
+            for (var tinySubtype : allValuesCached) {
+                if (packetClass.equals(tinySubtype.requestablePacketClass)) {
+                    return tinySubtype;
+                }
+            }
+        }
+        return NONE;
+    }
+
+    private static void ensureAllValuesCacheIsFilled() {
         if (allValuesCached == null) {
             allValuesCached = values();
         }
-        return allValuesCached[ordinal];
     }
 }
