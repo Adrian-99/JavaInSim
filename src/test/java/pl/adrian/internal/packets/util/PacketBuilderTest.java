@@ -72,6 +72,32 @@ class PacketBuilderTest {
     }
 
     @Test
+    void writeByte_fromTrueBoolean() {
+        var packetBuilder = new PacketBuilder((short) 4, PacketType.fromOrdinal(1), (short) 154);
+        packetBuilder.writeByte(true);
+        var bytes = packetBuilder.getBytes();
+
+        assertEquals(4, bytes.length);
+        assertEquals(1, bytes[0]);
+        assertEquals(1, bytes[1]);
+        assertEquals(-102, bytes[2]);
+        assertEquals(1, bytes[3]);
+    }
+
+    @Test
+    void writeByte_fromFalseBoolean() {
+        var packetBuilder = new PacketBuilder((short) 4, PacketType.fromOrdinal(1), (short) 154);
+        packetBuilder.writeByte(false);
+        var bytes = packetBuilder.getBytes();
+
+        assertEquals(4, bytes.length);
+        assertEquals(1, bytes[0]);
+        assertEquals(1, bytes[1]);
+        assertEquals(-102, bytes[2]);
+        assertEquals(0, bytes[3]);
+    }
+
+    @Test
     void writeZeroByte() {
         var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
         packetBuilder.writeZeroByte();

@@ -8,6 +8,7 @@ import pl.adrian.internal.packets.annotations.Word;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.SendablePacket;
 import pl.adrian.api.packets.enums.PacketType;
+import pl.adrian.internal.packets.enums.EnumWithCustomValue;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
 import pl.adrian.api.packets.flags.Flags;
 
@@ -22,8 +23,10 @@ class PacketValidatorTest {
                 PacketType.NONE,
                 54,
                 null,
+                true,
                 354,
                 new Flags<>(TestEnum.VALUE1),
+                TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 null,
                 112946L
@@ -38,8 +41,10 @@ class PacketValidatorTest {
                 PacketType.NONE,
                 -5,
                 null,
+                true,
                 354,
                 new Flags<>(TestEnum.VALUE1),
+                TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 null,
                 112946L
@@ -56,8 +61,10 @@ class PacketValidatorTest {
                 PacketType.NONE,
                 350,
                 null,
+                true,
                 354,
                 new Flags<>(TestEnum.VALUE1),
+                TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 null,
                 112946L
@@ -74,8 +81,10 @@ class PacketValidatorTest {
                 PacketType.NONE,
                 54,
                 null,
+                true,
                 -15,
                 new Flags<>(TestEnum.VALUE1),
+                TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 null,
                 112946L
@@ -92,8 +101,10 @@ class PacketValidatorTest {
                 PacketType.NONE,
                 54,
                 'a',
+                false,
                 74956,
                 new Flags<>(TestEnum.VALUE1),
+                TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 null,
                 112946L
@@ -110,8 +121,10 @@ class PacketValidatorTest {
                 PacketType.NONE,
                 54,
                 'a',
+                false,
                 354,
                 new Flags<>(TestEnum.VALUE1),
+                TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 "abcdefghij",
                 112946L
@@ -128,8 +141,10 @@ class PacketValidatorTest {
                 PacketType.NONE,
                 54,
                 'a',
+                false,
                 354,
                 new Flags<>(TestEnum.VALUE1),
+                TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 "abc",
                 -35L
@@ -146,8 +161,10 @@ class PacketValidatorTest {
                 PacketType.NONE,
                 54,
                 'a',
+                false,
                 354,
                 new Flags<>(TestEnum.VALUE1),
+                TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 "abc",
                 5732985275L
@@ -226,10 +243,14 @@ class PacketValidatorTest {
     private static class ValidTestPacket extends Packet implements SendablePacket {
         @Byte
         private final Character characterByte;
+        @Byte
+        private final boolean booleanByte;
         @Word
         private final int intWord;
         @Word
         private final Flags<TestEnum> flagsWord;
+        @Word
+        private final TestCustomValueEnum customValieEnumWord;
         @CharArray(length = 5)
         private final String stringCharArrayWithoutValidation;
         @CharArray(length = 5, strictLengthValidation = true)
@@ -241,15 +262,19 @@ class PacketValidatorTest {
                                   PacketType type,
                                   int reqI,
                                   Character characterByte,
+                                  boolean booleanByte,
                                   int intWord,
                                   Flags<TestEnum> flagsWord,
+                                  TestCustomValueEnum customValieEnumWord,
                                   String stringCharArrayWithoutValidation,
                                   String stringCharArray,
                                   long longUnsigned) {
             super(size, type, reqI);
             this.characterByte = characterByte;
+            this.booleanByte = booleanByte;
             this.intWord = intWord;
             this.flagsWord = flagsWord;
+            this.customValieEnumWord = customValieEnumWord;
             this.stringCharArrayWithoutValidation = stringCharArrayWithoutValidation;
             this.stringCharArray = stringCharArray;
             this.longUnsigned = longUnsigned;
@@ -361,5 +386,14 @@ class PacketValidatorTest {
 
     private enum TestEnum {
         VALUE1, VALUE2, VALUE3
+    }
+
+    private enum TestCustomValueEnum implements EnumWithCustomValue {
+        VALUE1, VALUE2, VALUE3;
+
+        @Override
+        public int getValue() {
+            return 0;
+        }
     }
 }

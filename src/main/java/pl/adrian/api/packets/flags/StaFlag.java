@@ -1,7 +1,7 @@
 package pl.adrian.api.packets.flags;
 
 /**
- * Flags used in state packet.
+ * Flags used in {@link pl.adrian.api.packets.StaPacket StaPacket}.
  */
 public enum StaFlag {
     /**

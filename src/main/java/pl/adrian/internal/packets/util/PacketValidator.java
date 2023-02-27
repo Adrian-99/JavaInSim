@@ -5,6 +5,7 @@ import pl.adrian.internal.packets.annotations.CharArray;
 import pl.adrian.internal.packets.annotations.Unsigned;
 import pl.adrian.internal.packets.annotations.Word;
 import pl.adrian.internal.packets.base.SendablePacket;
+import pl.adrian.internal.packets.enums.EnumWithCustomValue;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
 import pl.adrian.api.packets.flags.Flags;
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class is a helper that is used while validating packets
+ * This class is a helper that is used while validating packets.
  */
 public class PacketValidator {
     private static final short BYTE_MIN_VALUE = 0;
@@ -26,7 +27,7 @@ public class PacketValidator {
     private PacketValidator() {}
 
     /**
-     * Triggers validation for all fields of packet
+     * Triggers validation for all fields of packet.
      * @param packet packet to be validated
      * @throws PacketValidationException if validation of any field fails
      */
@@ -78,6 +79,8 @@ public class PacketValidator {
                 intValue = charValue;
             } else if (value instanceof Enum<?> enumValue) {
                 intValue = enumValue.ordinal();
+            } else if (value instanceof Boolean booleanValue) {
+                intValue = Boolean.TRUE.equals(booleanValue) ? 1 : 0;
             } else {
                 throw new PacketValidationException(field, typeName);
             }
@@ -104,6 +107,8 @@ public class PacketValidator {
                 intValue = integerValue;
             } else if (value instanceof Flags<? extends Enum<?>> flagsValue) {
                 intValue = flagsValue.getValue();
+            } else if (value instanceof EnumWithCustomValue enumValue) {
+                intValue = enumValue.getValue();
             } else {
                 throw new PacketValidationException(field, typeName);
             }

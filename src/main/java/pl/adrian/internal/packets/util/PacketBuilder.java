@@ -3,14 +3,14 @@ package pl.adrian.internal.packets.util;
 import pl.adrian.api.packets.enums.PacketType;
 
 /**
- * This class is a helper that is used while converting packets to their byte array representation
+ * This class is a helper that is used while converting packets to their byte array representation.
  */
 public class PacketBuilder {
     private final byte[] packetBytes;
     private int currentIndex;
 
     /**
-     * Creates packet builder, which helps to convert packets to their byte array representation
+     * Creates packet builder, which helps to convert packets to their byte array representation.
      * @param size total packet size - a multiple of 4
      * @param type packet identifier
      * @param reqI non-zero if the packet is a packet request
@@ -24,7 +24,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array byte, that is converted from short value
+     * Appends to byte array byte, that is converted from short value.
      * @param value byte value
      * @return packet builder
      */
@@ -33,7 +33,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array byte, that is converted from int value
+     * Appends to byte array byte, that is converted from int value.
      * @param value byte value
      * @return packet builder
      */
@@ -50,7 +50,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array byte, that is converted from Character value
+     * Appends to byte array byte, that is converted from Character value.
      * @param value byte value
      * @return packet builder
      */
@@ -63,7 +63,17 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array byte with value 0
+     * Appends to byte array byte, that is converted from boolean value.
+     * @param value boolean value
+     * @return packet builder
+     */
+    public PacketBuilder writeByte(boolean value) {
+        packetBytes[currentIndex++] = (byte) (value ? 1 : 0);
+        return this;
+    }
+
+    /**
+     * Appends to byte array byte with value 0.
      * @return packet builder
      */
     public PacketBuilder writeZeroByte() {
@@ -72,7 +82,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array multiple bytes with value 0
+     * Appends to byte array multiple bytes with value 0.
      * @param count count of zero bytes to be appended
      * @return packet builder
      */
@@ -82,7 +92,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array word (2 bytes), that is converted from int value
+     * Appends to byte array word (2 bytes), that is converted from int value.
      * @param value word value
      * @return packet builder
      */
@@ -92,7 +102,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array char array, that is converted from String value
+     * Appends to byte array char array, that is converted from String value.
      * @param value char array value
      * @param length length of the char array that should be appended
      * @return packet builder
@@ -114,7 +124,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array unsigned (4 bytes), that is converted from long value
+     * Appends to byte array unsigned (4 bytes), that is converted from long value.
      * @param value unsigned value
      * @return packet builder
      */
@@ -126,7 +136,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Concludes building packet
+     * Concludes building packet.
      * @return bytes array of built packet
      */
     public byte[] getBytes() {

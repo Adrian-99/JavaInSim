@@ -39,7 +39,7 @@ public enum PacketType {
     /**
      * 7 - instruction: state flags pack
      */
-    SFP,
+    SFP(SfpPacket.class),
     /**
      * 8 - instruction: set car camera
      */
