@@ -1,14 +1,15 @@
 package pl.adrian.internal.packets.util;
 
-import pl.adrian.api.packets.enums.Product;
+import pl.adrian.api.packets.StaPacket;
+import pl.adrian.api.packets.enums.*;
 import pl.adrian.api.packets.SmallPacket;
 import pl.adrian.api.packets.TinyPacket;
-import pl.adrian.api.packets.enums.SmallSubtype;
-import pl.adrian.api.packets.enums.TinySubtype;
+import pl.adrian.api.packets.flags.Flags;
+import pl.adrian.api.packets.flags.StaFlag;
 import pl.adrian.internal.Constants;
 import pl.adrian.api.packets.VerPacket;
+import pl.adrian.internal.RaceLaps;
 import pl.adrian.internal.packets.base.ReadablePacket;
-import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.exceptions.PacketReadingException;
 
 /**
@@ -74,6 +75,7 @@ public class PacketReader {
             case VER -> readVerPacket();
             case TINY -> readTinyPacket();
             case SMALL -> readSmallPacket();
+            case STA -> readStaPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -98,6 +100,44 @@ public class PacketReader {
         var uVal = readUnsigned();
 
         return new SmallPacket(packetReqI, subT, uVal);
+    }
+
+    private StaPacket readStaPacket() {
+        skipZeroByte();
+        var replaySpeed = readFloat();
+        var flags = new Flags<>(StaFlag.class, readWord());
+        var inGameCam = ViewIdentifier.fromOrdinal(readByte());
+        var viewPlid = readByte();
+        var numP = readByte();
+        var numConns = readByte();
+        var numFinished = readByte();
+        var raceInProg = RaceProgress.fromOrdinal(readByte());
+        var qualMins = readByte();
+        var raceLaps = new RaceLaps(readByte());
+        var sp2 = readByte();
+        var serverStatus = ServerStatus.fromOrdinal(readByte());
+        var track = readCharArray(6);
+        var weather = readByte();
+        var wind = Wind.fromOrdinal(readByte());
+
+        return new StaPacket(
+                packetReqI,
+                replaySpeed,
+                flags,
+                inGameCam,
+                viewPlid,
+                numP,
+                numConns,
+                numFinished,
+                raceInProg,
+                qualMins,
+                raceLaps,
+                sp2,
+                serverStatus,
+                track,
+                weather,
+                wind
+        );
     }
 
     private short readByte() {
@@ -128,6 +168,15 @@ public class PacketReader {
 
     private long readUnsigned() {
         return readByte() + ((long) readByte() << 8) + ((long) readByte() << 16) + ((long) readByte() << 24);
+    }
+
+    private float readFloat() {
+        var asInt = (dataBytes[dataBytesReaderIndex] & 0xFF) |
+                ((dataBytes[dataBytesReaderIndex + 1] & 0xFF) << 8) |
+                ((dataBytes[dataBytesReaderIndex + 2] & 0xFF) << 16) |
+                ((dataBytes[dataBytesReaderIndex + 3] & 0xFF) << 24);
+        dataBytesReaderIndex += 4;
+        return Float.intBitsToFloat(asInt);
     }
 
     private short convertByte(byte value) {

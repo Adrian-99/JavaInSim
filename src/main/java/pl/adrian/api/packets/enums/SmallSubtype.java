@@ -1,7 +1,9 @@
 package pl.adrian.api.packets.enums;
 
+import pl.adrian.internal.packets.enums.EnumHelpers;
+
 /**
- * Enumeration for subtype of small packet
+ * Enumeration for subtype of small packet.
  */
 public enum SmallSubtype {
     /**
@@ -45,17 +47,12 @@ public enum SmallSubtype {
      */
     LCS;
 
-    private static SmallSubtype[] allValuesCached = null;
-
     /**
-     * Converts ordinal number to enum value
+     * Converts ordinal number to enum value.
      * @param ordinal ordinal number
      * @return enum value
      */
     public static SmallSubtype fromOrdinal(int ordinal) {
-        if (allValuesCached == null) {
-            allValuesCached = values();
-        }
-        return allValuesCached[ordinal];
+        return EnumHelpers.get(SmallSubtype.class).fromOrdinal(ordinal);
     }
 }

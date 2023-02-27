@@ -1,8 +1,10 @@
 package pl.adrian.api.packets.enums;
 
+import pl.adrian.api.packets.StaPacket;
 import pl.adrian.api.packets.VerPacket;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
+import pl.adrian.internal.packets.enums.EnumHelpers;
 
 /**
  * Enumeration for subtype of tiny packet.
@@ -39,7 +41,7 @@ public enum TinySubtype {
     /**
      * 7 - info request: send state info
      */
-    SST,
+    SST(StaPacket.class),
     /**
      * 8 - info request: get time in hundredths (i.e. SMALL_RTP)
      */
@@ -121,8 +123,6 @@ public enum TinySubtype {
      */
     MAL;
 
-    private static TinySubtype[] allValuesCached = null;
-
     private final Class<? extends RequestablePacket> requestablePacketClass;
 
     TinySubtype(Class<? extends RequestablePacket> requestablePacketClass) {
@@ -139,8 +139,7 @@ public enum TinySubtype {
      * @return enum value
      */
     public static TinySubtype fromOrdinal(int ordinal) {
-        ensureAllValuesCacheIsFilled();
-        return allValuesCached[ordinal];
+        return EnumHelpers.get(TinySubtype.class).fromOrdinal(ordinal);
     }
 
     /**
@@ -151,19 +150,13 @@ public enum TinySubtype {
      */
     public static <T extends Packet & RequestablePacket> TinySubtype fromRequestablePacketClass(Class<T> packetClass) {
         if (packetClass != null) {
-            ensureAllValuesCacheIsFilled();
-            for (var tinySubtype : allValuesCached) {
+            var enumHelper = EnumHelpers.get(TinySubtype.class);
+            for (var tinySubtype : enumHelper.getAllValuesCached()) {
                 if (packetClass.equals(tinySubtype.requestablePacketClass)) {
                     return tinySubtype;
                 }
             }
         }
         return NONE;
-    }
-
-    private static void ensureAllValuesCacheIsFilled() {
-        if (allValuesCached == null) {
-            allValuesCached = values();
-        }
     }
 }

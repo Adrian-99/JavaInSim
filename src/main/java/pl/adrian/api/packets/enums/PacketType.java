@@ -2,6 +2,7 @@ package pl.adrian.api.packets.enums;
 
 import pl.adrian.api.packets.*;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.enums.EnumHelpers;
 
 /**
  * Enumeration for packet types.
@@ -30,7 +31,7 @@ public enum PacketType {
     /**
      * 5 - info: state info
      */
-    STA,
+    STA(StaPacket.class),
     /**
      * 6 - instruction: single character
      */
@@ -272,8 +273,6 @@ public enum PacketType {
      */
     MAL;
 
-    private static PacketType[] allValuesCached = null;
-
     private final Class<? extends Packet> packetClass;
 
     PacketType(Class<? extends Packet> packetClass) {
@@ -290,8 +289,7 @@ public enum PacketType {
      * @return enum value
      */
     public static PacketType fromOrdinal(int ordinal) {
-        ensureAllValuesCacheIsFilled();
-        return allValuesCached[ordinal];
+        return EnumHelpers.get(PacketType.class).fromOrdinal(ordinal);
     }
 
     /**
@@ -301,19 +299,13 @@ public enum PacketType {
      */
     public static PacketType fromPacketClass(Class<? extends Packet> packetClass) {
         if (packetClass != null) {
-            ensureAllValuesCacheIsFilled();
-            for (var packetType : allValuesCached) {
+            var enumHelper = EnumHelpers.get(PacketType.class);
+            for (var packetType : enumHelper.getAllValuesCached()) {
                 if (packetClass.equals(packetType.packetClass)) {
                     return packetType;
                 }
             }
         }
         return NONE;
-    }
-
-    private static void ensureAllValuesCacheIsFilled() {
-        if (allValuesCached == null) {
-            allValuesCached = values();
-        }
     }
 }

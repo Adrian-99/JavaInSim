@@ -9,7 +9,7 @@ import pl.adrian.internal.packets.util.PacketBuilder;
 import pl.adrian.internal.packets.util.PacketValidator;
 
 /**
- * MSg Type - send to LFS to type message or command
+ * MSg Type - send to LFS to type message or command.
  */
 public class MstPacket extends Packet implements SendablePacket {
     @CharArray(length = 64)
@@ -17,12 +17,11 @@ public class MstPacket extends Packet implements SendablePacket {
 
     /**
      * Creates MSg Type packet
-     * @param reqI non-zero if the packet is a packet request
      * @param msg message to be sent
      * @throws PacketValidationException if validation of any field in packet fails
      */
-    public MstPacket(int reqI, String msg) throws PacketValidationException {
-        super(68, PacketType.MST, reqI);
+    public MstPacket(String msg) throws PacketValidationException {
+        super(68, PacketType.MST, 0);
         this.msg = msg;
         PacketValidator.validate(this);
     }

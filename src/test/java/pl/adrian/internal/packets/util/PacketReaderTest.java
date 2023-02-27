@@ -2,15 +2,17 @@ package pl.adrian.internal.packets.util;
 
 import org.junit.jupiter.api.Test;
 import pl.adrian.api.packets.SmallPacket;
+import pl.adrian.api.packets.StaPacket;
 import pl.adrian.api.packets.TinyPacket;
 import pl.adrian.api.packets.VerPacket;
-import pl.adrian.api.packets.enums.PacketType;
-import pl.adrian.api.packets.enums.Product;
-import pl.adrian.api.packets.enums.SmallSubtype;
-import pl.adrian.api.packets.enums.TinySubtype;
+import pl.adrian.api.packets.enums.*;
+import pl.adrian.api.packets.flags.StaFlag;
 import pl.adrian.internal.packets.exceptions.PacketReadingException;
 
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static pl.adrian.testutil.FlagsTestUtils.assertFlagsEqual;
 
 class PacketReaderTest {
 
@@ -34,6 +36,7 @@ class PacketReaderTest {
 
         assertEquals(PacketType.NONE, packetBuilder.getPacketType());
         assertEquals(1, packetBuilder.getDataBytesCount());
+        assertEquals(0, packetBuilder.getPacketReqI());
         assertThrows(PacketReadingException.class, () -> packetBuilder.read(dataBytes));
     }
 
@@ -45,6 +48,7 @@ class PacketReaderTest {
 
         assertEquals(PacketType.VER, packetReader.getPacketType());
         assertEquals(17, packetReader.getDataBytesCount());
+        assertEquals(144, packetReader.getPacketReqI());
 
         var readPacket = packetReader.read(dataBytes);
 
@@ -68,6 +72,7 @@ class PacketReaderTest {
 
         assertEquals(PacketType.TINY, packetReader.getPacketType());
         assertEquals(1, packetReader.getDataBytesCount());
+        assertEquals(144, packetReader.getPacketReqI());
 
         var readPacket = packetReader.read(dataBytes);
 
@@ -89,6 +94,7 @@ class PacketReaderTest {
 
         assertEquals(PacketType.SMALL, packetReader.getPacketType());
         assertEquals(5, packetReader.getDataBytesCount());
+        assertEquals(144, packetReader.getPacketReqI());
 
         var readPacket = packetReader.read(dataBytes);
 
@@ -101,5 +107,51 @@ class PacketReaderTest {
         assertEquals(144, castedReadPacket.getReqI());
         assertEquals(SmallSubtype.NONE, castedReadPacket.getSubT());
         assertEquals(3646985702L, castedReadPacket.getUVal());
+    }
+
+    @Test
+    void readStaPacket() {
+        var headerBytes = new byte[] { 7, 5, -112 };
+        var dataBytes = new byte[] {
+                0, 0, 0, -64, 63, 25, 74, 3, 0, 35, 41, 0, 0, 0, 0, 0,
+                1, 65, 83, 49, 88, 0, 0, 1, 1
+        };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertEquals(PacketType.STA, packetReader.getPacketType());
+        assertEquals(25, packetReader.getDataBytesCount());
+        assertEquals(144, packetReader.getPacketReqI());
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof StaPacket);
+
+        var castedReadPacket = (StaPacket) readPacket;
+
+        assertEquals(28, castedReadPacket.getSize());
+        assertEquals(PacketType.STA, castedReadPacket.getType());
+        assertEquals(144, castedReadPacket.getReqI());
+        assertEquals(1.5, castedReadPacket.getReplaySpeed());
+        assertFlagsEqual(
+                StaFlag.class,
+                Set.of(StaFlag.GAME, StaFlag.SHIFTU, StaFlag.DIALOG, StaFlag.MULTI, StaFlag.WINDOWED, StaFlag.VISIBLE),
+                castedReadPacket.getFlags()
+        );
+        assertEquals(ViewIdentifier.DRIVER, castedReadPacket.getInGameCam());
+        assertEquals(0, castedReadPacket.getViewPlid());
+        assertEquals(35, castedReadPacket.getNumP());
+        assertEquals(41, castedReadPacket.getNumConns());
+        assertEquals(0, castedReadPacket.getNumFinished());
+        assertEquals(RaceProgress.NO_RACE, castedReadPacket.getRaceInProg());
+        assertEquals(0, castedReadPacket.getQualMins());
+        assertTrue(castedReadPacket.getRaceLaps().isPractice());
+        assertFalse(castedReadPacket.getRaceLaps().areLaps());
+        assertFalse(castedReadPacket.getRaceLaps().areHours());
+        assertEquals(0, castedReadPacket.getRaceLaps().getValue());
+        assertEquals(0, castedReadPacket.getSp2());
+        assertEquals(ServerStatus.SUCCESS, castedReadPacket.getServerStatus());
+        assertEquals("AS1X", castedReadPacket.getTrack());
+        assertEquals(1, castedReadPacket.getWeather());
+        assertEquals(Wind.WEAK, castedReadPacket.getWind());
     }
 }

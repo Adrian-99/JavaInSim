@@ -8,7 +8,7 @@ import pl.adrian.api.packets.enums.Product;
 import pl.adrian.internal.packets.base.RequestablePacket;
 
 /**
- * VERsion.
+ * VERsion - version info.
  */
 public class VerPacket extends Packet implements RequestablePacket {
     @CharArray(length = 8)
