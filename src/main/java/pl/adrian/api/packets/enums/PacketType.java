@@ -55,7 +55,7 @@ public enum PacketType {
     /**
      * 11 - info: message out
      */
-    MSO,
+    MSO(MsoPacket.class),
     /**
      * 12 - info: hidden /i message
      */

@@ -1,13 +1,10 @@
 package pl.adrian.internal.packets.util;
 
-import pl.adrian.api.packets.StaPacket;
+import pl.adrian.api.packets.*;
 import pl.adrian.api.packets.enums.*;
-import pl.adrian.api.packets.SmallPacket;
-import pl.adrian.api.packets.TinyPacket;
 import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.StaFlag;
 import pl.adrian.internal.Constants;
-import pl.adrian.api.packets.VerPacket;
 import pl.adrian.internal.RaceLaps;
 import pl.adrian.internal.packets.base.ReadablePacket;
 import pl.adrian.internal.packets.exceptions.PacketReadingException;
@@ -76,6 +73,7 @@ public class PacketReader {
             case TINY -> readTinyPacket();
             case SMALL -> readSmallPacket();
             case STA -> readStaPacket();
+            case MSO -> readMsoPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -137,6 +135,17 @@ public class PacketReader {
                 weather,
                 wind
         );
+    }
+
+    private MsoPacket readMsoPacket() {
+        skipZeroByte();
+        var ucid = readByte();
+        var plid = readByte();
+        var userType = MessageType.fromOrdinal(readByte());
+        var textStart = readByte();
+        var msg = readCharArray(packetSize - 8);
+
+        return new MsoPacket(ucid, plid, userType, textStart, msg);
     }
 
     private short readByte() {

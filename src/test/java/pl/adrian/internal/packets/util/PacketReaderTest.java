@@ -1,10 +1,7 @@
 package pl.adrian.internal.packets.util;
 
 import org.junit.jupiter.api.Test;
-import pl.adrian.api.packets.SmallPacket;
-import pl.adrian.api.packets.StaPacket;
-import pl.adrian.api.packets.TinyPacket;
-import pl.adrian.api.packets.VerPacket;
+import pl.adrian.api.packets.*;
 import pl.adrian.api.packets.enums.*;
 import pl.adrian.api.packets.flags.StaFlag;
 import pl.adrian.internal.packets.exceptions.PacketReadingException;
@@ -152,5 +149,34 @@ class PacketReaderTest {
         assertEquals("AS1X", castedReadPacket.getTrack());
         assertEquals(1, castedReadPacket.getWeather());
         assertEquals(Wind.WEAK, castedReadPacket.getWind());
+    }
+
+    @Test
+    void readMsoPacket() {
+        var headerBytes = new byte[] { 7, 11, 0 };
+        var dataBytes = new byte[] {
+                0, 15, 65, 1, 10, 117, 115, 101, 114, 110, 97, 109, 101, 58, 32, 116,
+                101, 115, 116, 32, 116, 101, 120, 116, 0
+        };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertEquals(PacketType.MSO, packetReader.getPacketType());
+        assertEquals(25, packetReader.getDataBytesCount());
+        assertEquals(0, packetReader.getPacketReqI());
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof MsoPacket);
+
+        var castedReadPacket = (MsoPacket) readPacket;
+
+        assertEquals(28, castedReadPacket.getSize());
+        assertEquals(PacketType.MSO, castedReadPacket.getType());
+        assertEquals(0, castedReadPacket.getReqI());
+        assertEquals(15, castedReadPacket.getUcid());
+        assertEquals(65, castedReadPacket.getPlid());
+        assertEquals(MessageType.USER, castedReadPacket.getUserType());
+        assertEquals(10, castedReadPacket.getTextStart());
+        assertEquals("username: test text", castedReadPacket.getMsg());
     }
 }
