@@ -67,7 +67,7 @@ public enum PacketType {
     /**
      * 14 - instruction: message to a connection
      */
-    MTC,
+    MTC(MtcPacket.class),
     /**
      * 15 - instruction: set screen mode
      */

@@ -170,7 +170,7 @@ class PacketBuilderTest {
     @Test
     void writeCharArray_fromShortString() {
         var packetBuilder = new PacketBuilder((short) 12, PacketType.fromOrdinal(1), (short) 154);
-        packetBuilder.writeCharArray("Test", 8);
+        packetBuilder.writeCharArray("Test", 8, false);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
 
@@ -192,7 +192,7 @@ class PacketBuilderTest {
     @Test
     void writeCharArray_fromLongString() {
         var packetBuilder = new PacketBuilder((short) 12, PacketType.fromOrdinal(1), (short) 154);
-        packetBuilder.writeCharArray("Test long text", 8);
+        packetBuilder.writeCharArray("Test long text", 8, false);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
 
@@ -214,7 +214,7 @@ class PacketBuilderTest {
     @Test
     void writeCharArray_fromNull() {
         var packetBuilder = new PacketBuilder((short) 12, PacketType.fromOrdinal(1), (short) 154);
-        packetBuilder.writeCharArray(null, 8);
+        packetBuilder.writeCharArray(null, 8, false);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
 
@@ -231,6 +231,64 @@ class PacketBuilderTest {
         assertEquals(0, bytes[9]);
         assertEquals(0, bytes[10]);
         assertEquals(55, bytes[11]);
+    }
+
+    @Test
+    void writeCharArray_fromShortStringWithVariableLength() {
+        var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
+        packetBuilder.writeCharArray("Tes", 8, true);
+        packetBuilder.writeByte(55);
+        var bytes = packetBuilder.getBytes();
+
+        assertEquals(8, bytes.length);
+        assertEquals(2, bytes[0]);
+        assertEquals(1, bytes[1]);
+        assertEquals(-102, bytes[2]);
+        assertEquals(84, bytes[3]);
+        assertEquals(101, bytes[4]);
+        assertEquals(115, bytes[5]);
+        assertEquals(0, bytes[6]);
+        assertEquals(55, bytes[7]);
+    }
+
+    @Test
+    void writeCharArray_fromLongStringWithVariableLength() {
+        var packetBuilder = new PacketBuilder((short) 12, PacketType.fromOrdinal(1), (short) 154);
+        packetBuilder.writeCharArray("Test long text", 8, true);
+        packetBuilder.writeByte(55);
+        var bytes = packetBuilder.getBytes();
+
+        assertEquals(12, bytes.length);
+        assertEquals(3, bytes[0]);
+        assertEquals(1, bytes[1]);
+        assertEquals(-102, bytes[2]);
+        assertEquals(84, bytes[3]);
+        assertEquals(101, bytes[4]);
+        assertEquals(115, bytes[5]);
+        assertEquals(116, bytes[6]);
+        assertEquals(32, bytes[7]);
+        assertEquals(108, bytes[8]);
+        assertEquals(111, bytes[9]);
+        assertEquals(0, bytes[10]);
+        assertEquals(55, bytes[11]);
+    }
+
+    @Test
+    void writeCharArray_fromNullWithVariableLength() {
+        var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
+        packetBuilder.writeCharArray(null, 8, true);
+        packetBuilder.writeByte(55);
+        var bytes = packetBuilder.getBytes();
+
+        assertEquals(8, bytes.length);
+        assertEquals(2, bytes[0]);
+        assertEquals(1, bytes[1]);
+        assertEquals(-102, bytes[2]);
+        assertEquals(0, bytes[3]);
+        assertEquals(0, bytes[4]);
+        assertEquals(0, bytes[5]);
+        assertEquals(0, bytes[6]);
+        assertEquals(55, bytes[7]);
     }
 
     @Test

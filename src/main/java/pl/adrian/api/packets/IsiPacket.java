@@ -66,8 +66,8 @@ public class IsiPacket extends Packet implements SendablePacket {
                 .writeByte(inSimVer)
                 .writeByte(prefix)
                 .writeWord(interval)
-                .writeCharArray(admin, 16)
-                .writeCharArray(iName, 16)
+                .writeCharArray(admin, 16, false)
+                .writeCharArray(iName, 16, false)
                 .getBytes();
     }
 }

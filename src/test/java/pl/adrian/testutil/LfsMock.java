@@ -66,8 +66,8 @@ public class LfsMock implements Closeable {
     private void sendVersionPacket(byte reqI) throws IOException {
         var bytes = new PacketBuilder((short) 20, PacketType.VER, reqI < 0 ? (short) (reqI + 256) : (short) reqI)
                 .writeZeroByte()
-                .writeCharArray(version, 8)
-                .writeCharArray(product.toString(), 6)
+                .writeCharArray(version, 8, false)
+                .writeCharArray(product.toString(), 6, false)
                 .writeByte(9)
                 .writeByte(0)
                 .getBytes();

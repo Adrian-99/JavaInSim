@@ -20,7 +20,7 @@ public class MslPacket extends Packet implements SendablePacket {
     /**
      * Creates msg local packet.
      * @param sound sound effect
-     * @param msg message
+     * @param msg message to send (max 127 characters)
      */
     public MslPacket(MessageSound sound, String msg) {
         super(132, PacketType.MSL, 0);
@@ -32,7 +32,7 @@ public class MslPacket extends Packet implements SendablePacket {
     public byte[] getBytes() {
         return new PacketBuilder(size, type, reqI)
                 .writeByte(sound.ordinal())
-                .writeCharArray(msg, 128)
+                .writeCharArray(msg, 128, false)
                 .getBytes();
     }
 }

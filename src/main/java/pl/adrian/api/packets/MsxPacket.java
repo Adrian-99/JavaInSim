@@ -7,7 +7,7 @@ import pl.adrian.internal.packets.base.SendablePacket;
 import pl.adrian.internal.packets.util.PacketBuilder;
 
 /**
- * MSg eXtended - like {@link MstPacket} but longer (not for commands)
+ * MSg eXtended - like {@link MstPacket} but longer (not for commands).
  */
 public class MsxPacket extends Packet implements SendablePacket {
     @CharArray(length = 96)
@@ -15,7 +15,7 @@ public class MsxPacket extends Packet implements SendablePacket {
 
     /**
      * Creates msg extended packet.
-     * @param msg message
+     * @param msg message to send (max 95 characters)
      */
     public MsxPacket(String msg) {
         super(100, PacketType.MSX, 0);
@@ -26,7 +26,7 @@ public class MsxPacket extends Packet implements SendablePacket {
     public byte[] getBytes() {
         return new PacketBuilder(size, type, reqI)
                 .writeZeroByte()
-                .writeCharArray(msg, 96)
+                .writeCharArray(msg, 96, false)
                 .getBytes();
     }
 }

@@ -105,19 +105,24 @@ public class PacketBuilder {
      * Appends to byte array char array, that is converted from String value.
      * @param value char array value
      * @param length length of the char array that should be appended
+     * @param variableLength whether length of char array is variable (the lowest possible multiply of 4)
      * @return packet builder
      */
-    public PacketBuilder writeCharArray(String value, int length) {
-        if (value != null) {
+    public PacketBuilder writeCharArray(String value, int length, boolean variableLength) {
+        if (value != null && value.length() > 0) {
             var bytes = value.getBytes();
             for (var i = 0; i < length - 1; i++) {
                 if (i < bytes.length) {
                     packetBytes[currentIndex++] = bytes[i];
+                } else if (variableLength) {
+                    return writeZeroBytes(4 - (bytes.length % 4));
                 } else {
                     return writeZeroBytes(length - bytes.length);
                 }
             }
             return writeZeroByte();
+        } else if (variableLength) {
+            return writeZeroBytes(4);
         } else {
             return writeZeroBytes(length);
         }

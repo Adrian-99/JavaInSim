@@ -16,8 +16,8 @@ public class MstPacket extends Packet implements SendablePacket {
     private final String msg;
 
     /**
-     * Creates MSg Type packet
-     * @param msg message to be sent
+     * Creates MSg Type packet.
+     * @param msg message to sent (max 63 characters)
      * @throws PacketValidationException if validation of any field in packet fails
      */
     public MstPacket(String msg) throws PacketValidationException {
@@ -30,7 +30,7 @@ public class MstPacket extends Packet implements SendablePacket {
     public byte[] getBytes() {
         return new PacketBuilder(size, type, reqI)
                 .writeZeroByte()
-                .writeCharArray(msg, 64)
+                .writeCharArray(msg, 64, false)
                 .getBytes();
     }
 }
