@@ -74,6 +74,7 @@ public class PacketReader {
             case SMALL -> readSmallPacket();
             case STA -> readStaPacket();
             case MSO -> readMsoPacket();
+            case III -> readIiiPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -146,6 +147,17 @@ public class PacketReader {
         var msg = readCharArray(packetSize - 8);
 
         return new MsoPacket(ucid, plid, userType, textStart, msg);
+    }
+
+    private IiiPacket readIiiPacket() {
+        skipZeroByte();
+        var ucid = readByte();
+        var plid = readByte();
+        skipZeroByte();
+        skipZeroByte();
+        var msg = readCharArray(packetSize - 8);
+
+        return new IiiPacket(ucid, plid, msg);
     }
 
     private short readByte() {

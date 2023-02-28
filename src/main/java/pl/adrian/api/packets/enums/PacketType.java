@@ -59,7 +59,7 @@ public enum PacketType {
     /**
      * 12 - info: hidden /i message
      */
-    III,
+    III(IiiPacket.class),
     /**
      * 13 - instruction: type message or /command
      */

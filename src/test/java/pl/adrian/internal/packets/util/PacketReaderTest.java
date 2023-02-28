@@ -179,4 +179,28 @@ class PacketReaderTest {
         assertEquals(10, castedReadPacket.getTextStart());
         assertEquals("username: test text", castedReadPacket.getMsg());
     }
+
+    @Test
+    void readIiiPacket() {
+        var headerBytes = new byte[] { 4, 12, 0 };
+        var dataBytes = new byte[] { 0, 23, 17, 0, 0, 116, 101, 115, 116, 0, 0, 0, 0 };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertEquals(PacketType.III, packetReader.getPacketType());
+        assertEquals(13, packetReader.getDataBytesCount());
+        assertEquals(0, packetReader.getPacketReqI());
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof IiiPacket);
+
+        var castedReadPacket = (IiiPacket) readPacket;
+
+        assertEquals(16, castedReadPacket.getSize());
+        assertEquals(PacketType.III, castedReadPacket.getType());
+        assertEquals(0, castedReadPacket.getReqI());
+        assertEquals(23, castedReadPacket.getUcid());
+        assertEquals(17, castedReadPacket.getPlid());
+        assertEquals("test", castedReadPacket.getMsg());
+    }
 }
