@@ -10,7 +10,7 @@ import pl.adrian.internal.packets.util.PacketBuilder;
 import pl.adrian.internal.packets.util.PacketValidator;
 
 /**
- * General purpose 8 byte packet (Target To Connection)
+ * General purpose 8 byte packet (Target To Connection).
  */
 public class TtcPacket extends Packet implements SendablePacket {
     @Byte
@@ -25,8 +25,7 @@ public class TtcPacket extends Packet implements SendablePacket {
     private final short b3;
 
     /**
-     * Creates ttc packet
-     * @param reqI 0 unless it is an info request or a reply to an info request
+     * Creates ttc packet.
      * @param subT subtype
      * @param ucid connection's unique id (0 = local)
      * @param b1 may be used in various ways depending on SubT
@@ -34,7 +33,21 @@ public class TtcPacket extends Packet implements SendablePacket {
      * @param b3 may be used in various ways depending on SubT
      * @throws PacketValidationException if validation of any field in packet fails
      */
-    public TtcPacket(int reqI, TtcSubtype subT, int ucid, int b1, int b2, int b3) throws PacketValidationException {
+    public TtcPacket(TtcSubtype subT, int ucid, int b1, int b2, int b3) throws PacketValidationException {
+        this(subT, ucid, b1, b2, b3, 0);
+    }
+
+    /**
+     * Creates ttc packet.
+     * @param subT subtype
+     * @param ucid connection's unique id (0 = local)
+     * @param b1 may be used in various ways depending on SubT
+     * @param b2 may be used in various ways depending on SubT
+     * @param b3 may be used in various ways depending on SubT
+     * @param reqI 0 unless it is an info request or a reply to an info request
+     * @throws PacketValidationException if validation of any field in packet fails
+     */
+    public TtcPacket(TtcSubtype subT, int ucid, int b1, int b2, int b3, int reqI) throws PacketValidationException {
         super(8, PacketType.TTC, reqI);
         this.subT = subT;
         this.ucid = (short) ucid;

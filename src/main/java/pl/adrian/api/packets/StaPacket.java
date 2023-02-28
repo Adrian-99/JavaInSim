@@ -36,8 +36,6 @@ public class StaPacket extends Packet implements RequestablePacket {
     @Byte
     private final RaceLaps raceLaps;
     @Byte
-    private final short sp2;
-    @Byte
     private final ServerStatus serverStatus;
     @CharArray(length = 6)
     private final String track;
@@ -59,7 +57,6 @@ public class StaPacket extends Packet implements RequestablePacket {
      * @param raceInProg race progress
      * @param qualMins number of minutes of qualifications
      * @param raceLaps number of race laps (or hours)
-     * @param sp2 sp2
      * @param serverStatus server status
      * @param track short name for track e.g. FE2R
      * @param weather weather - 0,1,2...
@@ -77,7 +74,6 @@ public class StaPacket extends Packet implements RequestablePacket {
                      RaceProgress raceInProg,
                      short qualMins,
                      RaceLaps raceLaps,
-                     short sp2,
                      ServerStatus serverStatus,
                      String track,
                      short weather,
@@ -93,7 +89,6 @@ public class StaPacket extends Packet implements RequestablePacket {
         this.raceInProg = raceInProg;
         this.qualMins = qualMins;
         this.raceLaps = raceLaps;
-        this.sp2 = sp2;
         this.serverStatus = serverStatus;
         this.track = track;
         this.weather = weather;
@@ -168,13 +163,6 @@ public class StaPacket extends Packet implements RequestablePacket {
      */
     public RaceLaps getRaceLaps() {
         return raceLaps;
-    }
-
-    /**
-     * @return sp2
-     */
-    public short getSp2() {
-        return sp2;
     }
 
     /**

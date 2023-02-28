@@ -92,14 +92,14 @@ public class PacketReader {
     private TinyPacket readTinyPacket() {
         var subT = TinySubtype.fromOrdinal(readByte());
 
-        return new TinyPacket(packetReqI, subT);
+        return new TinyPacket(subT, packetReqI);
     }
 
     private SmallPacket readSmallPacket() {
         var subT = SmallSubtype.fromOrdinal(readByte());
         var uVal = readUnsigned();
 
-        return new SmallPacket(packetReqI, subT, uVal);
+        return new SmallPacket(subT, uVal, packetReqI);
     }
 
     private StaPacket readStaPacket() {
@@ -114,7 +114,7 @@ public class PacketReader {
         var raceInProg = RaceProgress.fromOrdinal(readByte());
         var qualMins = readByte();
         var raceLaps = new RaceLaps(readByte());
-        var sp2 = readByte();
+        skipZeroByte();
         var serverStatus = ServerStatus.fromOrdinal(readByte());
         var track = readCharArray(6);
         var weather = readByte();
@@ -132,7 +132,6 @@ public class PacketReader {
                 raceInProg,
                 qualMins,
                 raceLaps,
-                sp2,
                 serverStatus,
                 track,
                 weather,

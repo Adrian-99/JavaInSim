@@ -8,9 +8,26 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 class TtcPacketTest {
 
     @Test
-    void createTtcPacket() {
+    void createTtcPacket_withReqI() {
         var packet = new TtcPacket(
-                150,
+                TtcSubtype.NONE,
+                128,
+                129,
+                130,
+                131,
+                150
+        );
+        var bytes = packet.getBytes();
+        var expectedBytes = new byte[] {
+                2, 61, -106, 0, -128, -127, -126, -125
+        };
+
+        assertArrayEquals(expectedBytes, bytes);
+    }
+
+    @Test
+    void createTtcPacket_withoutReqI() {
+        var packet = new TtcPacket(
                 TtcSubtype.NONE,
                 128,
                 129,
@@ -19,7 +36,7 @@ class TtcPacketTest {
         );
         var bytes = packet.getBytes();
         var expectedBytes = new byte[] {
-                2, 61, -106, 0, -128, -127, -126, -125
+                2, 61, 0, 0, -128, -127, -126, -125
         };
 
         assertArrayEquals(expectedBytes, bytes);

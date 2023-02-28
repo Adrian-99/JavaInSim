@@ -148,7 +148,6 @@ class PacketReaderTest {
         assertFalse(castedReadPacket.getRaceLaps().areLaps());
         assertFalse(castedReadPacket.getRaceLaps().areHours());
         assertEquals(0, castedReadPacket.getRaceLaps().getValue());
-        assertEquals(0, castedReadPacket.getSp2());
         assertEquals(ServerStatus.SUCCESS, castedReadPacket.getServerStatus());
         assertEquals("AS1X", castedReadPacket.getTrack());
         assertEquals(1, castedReadPacket.getWeather());
