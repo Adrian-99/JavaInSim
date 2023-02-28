@@ -71,7 +71,7 @@ public enum PacketType {
     /**
      * 15 - instruction: set screen mode
      */
-    MOD,
+    MOD(ModPacket.class),
     /**
      * 16 - info: vote notification
      */

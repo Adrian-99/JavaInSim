@@ -1,9 +1,7 @@
 package pl.adrian.internal.packets.util;
 
+import pl.adrian.internal.packets.annotations.*;
 import pl.adrian.internal.packets.annotations.Byte;
-import pl.adrian.internal.packets.annotations.CharArray;
-import pl.adrian.internal.packets.annotations.Unsigned;
-import pl.adrian.internal.packets.annotations.Word;
 import pl.adrian.internal.packets.base.SendablePacket;
 import pl.adrian.internal.packets.enums.EnumWithCustomValue;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
@@ -40,7 +38,8 @@ public class PacketValidator {
                     var anyAnnotationFound = tryToValidateByte(field, packet) ||
                             tryToValidateWord(field, packet) ||
                             tryToValidateCharArray(field, packet) ||
-                            tryToValidateUnsigned(field, packet);
+                            tryToValidateUnsigned(field, packet) ||
+                            tryToValidateInt(field, packet);
 
                     if (!anyAnnotationFound) {
                         throw new PacketValidationException(field);
@@ -164,6 +163,21 @@ public class PacketValidator {
             } else {
                 throw new PacketValidationException(field, typeName);
             }
+        }
+    }
+
+    private static boolean tryToValidateInt(Field field, SendablePacket packet) throws IllegalAccessException {
+        if (field.getAnnotation(Int.class) != null) {
+            validateInt(field, field.get(packet));
+            return true;
+        }
+        return false;
+    }
+
+    private static void validateInt(Field field, Object value) {
+        var typeName = "Int";
+        if (value != null && !(value instanceof Integer)) {
+            throw new PacketValidationException(field, typeName);
         }
     }
 }

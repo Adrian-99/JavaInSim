@@ -1,10 +1,8 @@
 package pl.adrian.internal.packets.util;
 
 import org.junit.jupiter.api.Test;
+import pl.adrian.internal.packets.annotations.*;
 import pl.adrian.internal.packets.annotations.Byte;
-import pl.adrian.internal.packets.annotations.CharArray;
-import pl.adrian.internal.packets.annotations.Unsigned;
-import pl.adrian.internal.packets.annotations.Word;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.SendablePacket;
 import pl.adrian.api.packets.enums.PacketType;
@@ -29,7 +27,8 @@ class PacketValidatorTest {
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 null,
-                112946L
+                112946L,
+                1834749274
         );
         assertDoesNotThrow(() -> PacketValidator.validate(packet));
     }
@@ -47,7 +46,8 @@ class PacketValidatorTest {
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 null,
-                112946L
+                112946L,
+                1834749274
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
@@ -67,7 +67,8 @@ class PacketValidatorTest {
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 null,
-                112946L
+                112946L,
+                1834749274
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
@@ -87,7 +88,8 @@ class PacketValidatorTest {
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 null,
-                112946L
+                112946L,
+                1834749274
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
@@ -107,7 +109,8 @@ class PacketValidatorTest {
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 null,
-                112946L
+                112946L,
+                1834749274
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
@@ -127,7 +130,8 @@ class PacketValidatorTest {
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 "abcdefghij",
-                112946L
+                112946L,
+                1834749274
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_TOO_LONG, exception.getFailureReason());
@@ -147,7 +151,8 @@ class PacketValidatorTest {
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 "abc",
-                -35L
+                -35L,
+                1834749274
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
@@ -167,7 +172,8 @@ class PacketValidatorTest {
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 "abc",
-                5732985275L
+                5732985275L,
+                1834749274
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
@@ -239,6 +245,19 @@ class PacketValidatorTest {
         assertEquals("stringUnsigned", exception.getField().getName());
     }
 
+    @Test
+    void validate_packetWithInvalidIntType() {
+        var packet = new PacketWithInvalidIntType(
+                8,
+                PacketType.NONE,
+                54,
+                "15"
+        );
+        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
+        assertEquals(PacketValidationException.FailureReason.UNSUPPORTED_TYPE, exception.getFailureReason());
+        assertEquals("stringInt", exception.getField().getName());
+    }
+
     @SuppressWarnings("all")
     private static class ValidTestPacket extends Packet implements SendablePacket {
         @Byte
@@ -257,6 +276,8 @@ class PacketValidatorTest {
         private final String stringCharArray;
         @Unsigned
         private final long longUnsigned;
+        @Int
+        private final int intInt;
 
         protected ValidTestPacket(int size,
                                   PacketType type,
@@ -268,7 +289,8 @@ class PacketValidatorTest {
                                   TestCustomValueEnum customValieEnumWord,
                                   String stringCharArrayWithoutValidation,
                                   String stringCharArray,
-                                  long longUnsigned) {
+                                  long longUnsigned,
+                                  int intInt) {
             super(size, type, reqI);
             this.characterByte = characterByte;
             this.booleanByte = booleanByte;
@@ -278,6 +300,7 @@ class PacketValidatorTest {
             this.stringCharArrayWithoutValidation = stringCharArrayWithoutValidation;
             this.stringCharArray = stringCharArray;
             this.longUnsigned = longUnsigned;
+            this.intInt = intInt;
         }
 
         @Override
@@ -376,6 +399,26 @@ class PacketValidatorTest {
                                                  String stringUnsigned) {
             super(size, type, reqI);
             this.stringUnsigned = stringUnsigned;
+        }
+
+        @Override
+        public byte[] getBytes() {
+            return new byte[0];
+        }
+    }
+
+    @SuppressWarnings("all")
+    private static class PacketWithInvalidIntType extends Packet implements SendablePacket {
+
+        @Int
+        private final String stringInt;
+
+        protected PacketWithInvalidIntType(int size,
+                                                PacketType type,
+                                                int reqI,
+                                                String stringInt) {
+            super(size, type, reqI);
+            this.stringInt = stringInt;
         }
 
         @Override

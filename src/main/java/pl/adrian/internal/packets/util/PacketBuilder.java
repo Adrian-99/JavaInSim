@@ -136,6 +136,15 @@ public class PacketBuilder {
     }
 
     /**
+     * Appends to byte array int (4 bytes), that is converted from int value.
+     * @param value int value
+     * @return packet builder
+     */
+    public PacketBuilder writeInt(int value) {
+        return writeUnsigned(value);
+    }
+
+    /**
      * Concludes building packet.
      * @return bytes array of built packet
      */
