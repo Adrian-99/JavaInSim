@@ -171,7 +171,7 @@ public enum PacketType {
     /**
      * 40 - instruction: message to local computer
      */
-    MSL,
+    MSL(MslPacket.class),
     /**
      * 41 - info: car reset
      */
