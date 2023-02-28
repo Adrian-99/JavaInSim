@@ -203,4 +203,29 @@ class PacketReaderTest {
         assertEquals(17, castedReadPacket.getPlid());
         assertEquals("test", castedReadPacket.getMsg());
     }
+
+    @Test
+    void readAcrPacket() {
+        var headerBytes = new byte[] { 5, 55, 0 };
+        var dataBytes = new byte[] { 0, 31, 1, 3, 0, 47, 99, 111, 109, 109, 97, 110, 100, 0, 0, 0, 0 };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertEquals(PacketType.ACR, packetReader.getPacketType());
+        assertEquals(17, packetReader.getDataBytesCount());
+        assertEquals(0, packetReader.getPacketReqI());
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof AcrPacket);
+
+        var castedReadPacket = (AcrPacket) readPacket;
+
+        assertEquals(20, castedReadPacket.getSize());
+        assertEquals(PacketType.ACR, castedReadPacket.getType());
+        assertEquals(0, castedReadPacket.getReqI());
+        assertEquals(31, castedReadPacket.getUcid());
+        assertTrue(castedReadPacket.isAdmin());
+        assertEquals(AcrResult.UNKNOWN_COMMAND, castedReadPacket.getResult());
+        assertEquals("/command", castedReadPacket.getText());
+    }
 }

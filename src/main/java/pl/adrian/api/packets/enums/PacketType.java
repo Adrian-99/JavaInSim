@@ -231,7 +231,7 @@ public enum PacketType {
     /**
      * 55 - info: admin command report
      */
-    ACR,
+    ACR(AcrPacket.class),
     /**
      * 56 - instruction: car handicaps
      */
