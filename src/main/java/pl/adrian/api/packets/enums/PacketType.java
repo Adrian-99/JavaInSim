@@ -167,7 +167,7 @@ public enum PacketType {
     /**
      * 39 - instruction: type message
      */
-    MSX,
+    MSX(MsxPacket.class),
     /**
      * 40 - instruction: message to local computer
      */
