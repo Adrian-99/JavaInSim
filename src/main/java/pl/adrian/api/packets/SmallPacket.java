@@ -2,6 +2,8 @@ package pl.adrian.api.packets;
 
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.SmallSubtype;
+import pl.adrian.api.packets.flags.Flags;
+import pl.adrian.api.packets.flags.LcsFlag;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Unsigned;
 import pl.adrian.internal.packets.base.Packet;
@@ -42,6 +44,14 @@ public class SmallPacket extends Packet implements SendablePacket, ReadablePacke
         this.subT = subT;
         this.uVal = uVal;
         PacketValidator.validate(this);
+    }
+
+    /**
+     * Creates small packet for local car switches.
+     * @param lcsFlags local car switches flags
+     */
+    public SmallPacket(Flags<LcsFlag> lcsFlags) {
+        this(SmallSubtype.LCS, lcsFlags.getValue(), 0);
     }
 
     @Override

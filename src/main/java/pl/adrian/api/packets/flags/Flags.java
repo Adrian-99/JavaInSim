@@ -1,6 +1,7 @@
 package pl.adrian.api.packets.flags;
 
 import pl.adrian.internal.packets.enums.EnumHelpers;
+import pl.adrian.internal.packets.flags.FlagWithCustomValue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,9 +30,17 @@ public class Flags<T extends Enum<?>> {
     public Flags(Class<T> enumClass, int wordValue) {
         flagsSet = new HashSet<>();
         for (var enumValue : EnumHelpers.get(enumClass).getAllValuesCached()) {
-            var flagValue = 1 << enumValue.ordinal();
-            if ((wordValue & flagValue) == flagValue) {
-                flagsSet.add(enumValue);
+            if (enumValue instanceof FlagWithCustomValue enumCustomValue) {
+                var flagValue = enumCustomValue.getValue();
+                var requiredZeros = enumCustomValue.getValueMask() - flagValue;
+                if ((wordValue & flagValue) == flagValue && (wordValue & requiredZeros) == 0) {
+                    flagsSet.add(enumValue);
+                }
+            } else {
+                var flagValue = 1 << enumValue.ordinal();
+                if ((wordValue & flagValue) == flagValue) {
+                    flagsSet.add(enumValue);
+                }
             }
         }
     }
@@ -40,7 +49,13 @@ public class Flags<T extends Enum<?>> {
      * @return integer value of flags
      */
     public int getValue() {
-        return flagsSet.stream().mapToInt(e -> 1 << e.ordinal()).sum();
+        return flagsSet.stream().mapToInt(enumValue -> {
+            if (enumValue instanceof FlagWithCustomValue enumCustomValue) {
+                return enumCustomValue.getValue();
+            } else {
+                return 1 << enumValue.ordinal();
+            }
+        }).reduce(0, (all, curr) -> all | curr);
     }
 
     /**
