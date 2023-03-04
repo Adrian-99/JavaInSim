@@ -5,6 +5,7 @@ import pl.adrian.internal.packets.annotations.Int;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.SendablePacket;
 import pl.adrian.internal.packets.util.PacketBuilder;
+import pl.adrian.internal.packets.util.PacketValidator;
 
 /**
  * MODe: send to LFS to change screen mode.
@@ -36,6 +37,7 @@ public class ModPacket extends Packet implements SendablePacket {
         this.rr = rr;
         this.width = width;
         this.height = height;
+        PacketValidator.validate(this);
     }
 
     @Override

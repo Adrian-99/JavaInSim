@@ -8,6 +8,7 @@ import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.SendablePacket;
 import pl.adrian.internal.packets.util.PacketBuilder;
 import pl.adrian.internal.packets.util.PacketUtils;
+import pl.adrian.internal.packets.util.PacketValidator;
 
 /**
  * Msg To Connection - hosts only - send to a connection / a player / all.
@@ -35,6 +36,7 @@ public class MtcPacket extends Packet implements SendablePacket {
         this.ucid = (short) ucid;
         this.plid = (short) plid;
         this.text = text;
+        PacketValidator.validate(this);
     }
 
     @Override

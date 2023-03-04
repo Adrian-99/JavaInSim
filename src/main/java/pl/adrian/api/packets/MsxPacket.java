@@ -5,6 +5,7 @@ import pl.adrian.internal.packets.annotations.CharArray;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.SendablePacket;
 import pl.adrian.internal.packets.util.PacketBuilder;
+import pl.adrian.internal.packets.util.PacketValidator;
 
 /**
  * MSg eXtended - like {@link MstPacket} but longer (not for commands).
@@ -20,6 +21,7 @@ public class MsxPacket extends Packet implements SendablePacket {
     public MsxPacket(String msg) {
         super(100, PacketType.MSX, 0);
         this.msg = msg;
+        PacketValidator.validate(this);
     }
 
     @Override

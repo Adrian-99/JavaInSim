@@ -1,7 +1,7 @@
 package pl.adrian.api.packets.flags;
 
 /**
- * Flags used in InSim Init packet
+ * Flags used in {@link pl.adrian.api.packets.IsiPacket IsiPacket}.
  */
 public enum IsiFlag {
     /**

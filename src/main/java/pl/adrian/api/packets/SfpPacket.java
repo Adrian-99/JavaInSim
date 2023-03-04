@@ -29,7 +29,6 @@ public class SfpPacket extends Packet implements SendablePacket {
         super(8, PacketType.SFP, 0);
         this.flag = flag;
         this.on = on;
-
         PacketValidator.validate(this);
     }
 

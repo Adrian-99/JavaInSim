@@ -22,6 +22,7 @@ class PacketValidatorTest {
                 54,
                 null,
                 true,
+                new Flags<>(TestEnum.VALUE2),
                 354,
                 new Flags<>(TestEnum.VALUE1),
                 TestCustomValueEnum.VALUE1,
@@ -41,6 +42,7 @@ class PacketValidatorTest {
                 -5,
                 null,
                 true,
+                new Flags<>(TestEnum.VALUE2),
                 354,
                 new Flags<>(TestEnum.VALUE1),
                 TestCustomValueEnum.VALUE1,
@@ -62,6 +64,7 @@ class PacketValidatorTest {
                 350,
                 null,
                 true,
+                new Flags<>(TestEnum.VALUE2),
                 354,
                 new Flags<>(TestEnum.VALUE1),
                 TestCustomValueEnum.VALUE1,
@@ -83,6 +86,7 @@ class PacketValidatorTest {
                 54,
                 null,
                 true,
+                new Flags<>(TestEnum.VALUE2),
                 -15,
                 new Flags<>(TestEnum.VALUE1),
                 TestCustomValueEnum.VALUE1,
@@ -104,6 +108,7 @@ class PacketValidatorTest {
                 54,
                 'a',
                 false,
+                new Flags<>(TestEnum.VALUE2),
                 74956,
                 new Flags<>(TestEnum.VALUE1),
                 TestCustomValueEnum.VALUE1,
@@ -125,6 +130,7 @@ class PacketValidatorTest {
                 54,
                 'a',
                 false,
+                new Flags<>(TestEnum.VALUE2),
                 354,
                 new Flags<>(TestEnum.VALUE1),
                 TestCustomValueEnum.VALUE1,
@@ -146,6 +152,7 @@ class PacketValidatorTest {
                 54,
                 'a',
                 false,
+                new Flags<>(TestEnum.VALUE2),
                 354,
                 new Flags<>(TestEnum.VALUE1),
                 TestCustomValueEnum.VALUE1,
@@ -167,6 +174,7 @@ class PacketValidatorTest {
                 54,
                 'a',
                 false,
+                new Flags<>(TestEnum.VALUE2),
                 354,
                 new Flags<>(TestEnum.VALUE1),
                 TestCustomValueEnum.VALUE1,
@@ -264,6 +272,8 @@ class PacketValidatorTest {
         private final Character characterByte;
         @Byte
         private final boolean booleanByte;
+        @Byte
+        private final Flags<TestEnum> flagsByte;
         @Word
         private final int intWord;
         @Word
@@ -284,6 +294,7 @@ class PacketValidatorTest {
                                   int reqI,
                                   Character characterByte,
                                   boolean booleanByte,
+                                  Flags<TestEnum> flagsByte,
                                   int intWord,
                                   Flags<TestEnum> flagsWord,
                                   TestCustomValueEnum customValieEnumWord,
@@ -294,6 +305,7 @@ class PacketValidatorTest {
             super(size, type, reqI);
             this.characterByte = characterByte;
             this.booleanByte = booleanByte;
+            this.flagsByte = flagsByte;
             this.intWord = intWord;
             this.flagsWord = flagsWord;
             this.customValieEnumWord = customValieEnumWord;

@@ -35,7 +35,7 @@ public enum PacketType {
     /**
      * 6 - instruction: single character
      */
-    SCH,
+    SCH(SchPacket.class),
     /**
      * 7 - instruction: state flags pack
      */

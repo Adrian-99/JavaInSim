@@ -78,6 +78,8 @@ public class PacketValidator {
                 intValue = charValue;
             } else if (value instanceof Enum<?> enumValue) {
                 intValue = enumValue.ordinal();
+            } else if (value instanceof Flags<?> flagsValue) {
+                intValue = flagsValue.getValue();
             } else if (value instanceof Boolean booleanValue) {
                 intValue = Boolean.TRUE.equals(booleanValue) ? 1 : 0;
             } else {
