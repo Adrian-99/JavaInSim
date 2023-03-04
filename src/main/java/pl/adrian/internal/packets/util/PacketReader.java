@@ -76,6 +76,7 @@ public class PacketReader {
             case MSO -> readMsoPacket();
             case III -> readIiiPacket();
             case ACR -> readAcrPacket();
+            case ISM -> readIsmPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -154,8 +155,7 @@ public class PacketReader {
         skipZeroByte();
         var ucid = readByte();
         var plid = readByte();
-        skipZeroByte();
-        skipZeroByte();
+        skipZeroBytes(2);
         var msg = readCharArray(packetSize - 8);
 
         return new IiiPacket(ucid, plid, msg);
@@ -172,12 +172,25 @@ public class PacketReader {
         return new AcrPacket(ucid, isAdmin, result, text);
     }
 
+    private IsmPacket readIsmPacket() {
+        skipZeroByte();
+        var isHost = readByte() != 0;
+        skipZeroBytes(3);
+        var hName = readCharArray(32);
+
+        return new IsmPacket(packetReqI, isHost, hName);
+    }
+
     private short readByte() {
         return convertByte(dataBytes[dataBytesReaderIndex++]);
     }
 
     private void skipZeroByte() {
         dataBytesReaderIndex++;
+    }
+
+    private void skipZeroBytes(int count) {
+        dataBytesReaderIndex += count;
     }
 
     private int readWord() {

@@ -51,7 +51,7 @@ public enum PacketType {
     /**
      * 10 - info: start multiplayer
      */
-    ISM,
+    ISM(IsmPacket.class),
     /**
      * 11 - info: message out
      */

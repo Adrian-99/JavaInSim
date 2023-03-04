@@ -228,4 +228,31 @@ class PacketReaderTest {
         assertEquals(AcrResult.UNKNOWN_COMMAND, castedReadPacket.getResult());
         assertEquals("/command", castedReadPacket.getText());
     }
+
+    @Test
+    void readIsmPacket() {
+        var headerBytes = new byte[] { 10, 10, -112 };
+        var dataBytes = new byte[] {
+                0, 1, 0, 0, 0, 69, 120, 97, 109, 112, 108, 101, 32, 76, 70, 83,
+                32, 83, 101, 114, 118, 101, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0
+        };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertEquals(PacketType.ISM, packetReader.getPacketType());
+        assertEquals(37, packetReader.getDataBytesCount());
+        assertEquals(144, packetReader.getPacketReqI());
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof IsmPacket);
+
+        var castedReadPacket = (IsmPacket) readPacket;
+
+        assertEquals(40, castedReadPacket.getSize());
+        assertEquals(PacketType.ISM, castedReadPacket.getType());
+        assertEquals(144, castedReadPacket.getReqI());
+        assertTrue(castedReadPacket.isHost());
+        assertEquals("Example LFS Server", castedReadPacket.getHName());
+    }
 }

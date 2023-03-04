@@ -14,9 +14,8 @@ public enum MessageType {
      * 1 - normal visible user message
      */
     USER,
-    // TODO: Add reference to ISI packet
     /**
-     * 2 - hidden message starting with special prefix (see ISI)
+     * 2 - hidden message starting with special prefix (see {@link pl.adrian.api.packets.IsiPacket IsiPacket})
      */
     PREFIX,
     /**

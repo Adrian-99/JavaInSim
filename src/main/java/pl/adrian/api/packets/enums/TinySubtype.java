@@ -1,5 +1,6 @@
 package pl.adrian.api.packets.enums;
 
+import pl.adrian.api.packets.IsmPacket;
 import pl.adrian.api.packets.StaPacket;
 import pl.adrian.api.packets.VerPacket;
 import pl.adrian.internal.packets.base.Packet;
@@ -53,7 +54,7 @@ public enum TinySubtype {
     /**
      * 10 - info request: get multiplayer info (i.e. ISP_ISM)
      */
-    ISM,
+    ISM(IsmPacket.class),
     /**
      * 11 - info: race end (return to race setup screen)
      */
