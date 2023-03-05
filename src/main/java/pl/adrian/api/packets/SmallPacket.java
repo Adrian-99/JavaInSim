@@ -2,6 +2,7 @@ package pl.adrian.api.packets;
 
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.SmallSubtype;
+import pl.adrian.api.packets.enums.VoteAction;
 import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.LcsFlag;
 import pl.adrian.internal.packets.annotations.Byte;
@@ -12,6 +13,8 @@ import pl.adrian.internal.packets.base.SendablePacket;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.packets.util.PacketBuilder;
 import pl.adrian.internal.packets.util.PacketValidator;
+
+import java.util.Optional;
 
 /**
  * General purpose 8 byte packet.
@@ -74,5 +77,18 @@ public class SmallPacket extends Packet implements SendablePacket, ReadablePacke
      */
     public long getUVal() {
         return uVal;
+    }
+
+    /**
+     * Warning! Method should be used only if {@link #getSubT() subtype}
+     * is equal to VTA.
+     * @return vote action, or empty optional if subtype is not equal to VTA
+     */
+    public Optional<VoteAction> getVoteAction() {
+        if (subT.equals(SmallSubtype.VTA)) {
+            return Optional.of(VoteAction.fromOrdinal((int) uVal));
+        } else {
+            return Optional.empty();
+        }
     }
 }

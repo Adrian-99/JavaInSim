@@ -77,6 +77,7 @@ public class PacketReader {
             case III -> readIiiPacket();
             case ACR -> readAcrPacket();
             case ISM -> readIsmPacket();
+            case VTN -> readVtnPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -179,6 +180,15 @@ public class PacketReader {
         var hName = readCharArray(32);
 
         return new IsmPacket(packetReqI, isHost, hName);
+    }
+
+    private VtnPacket readVtnPacket() {
+        skipZeroByte();
+        var ucid = readByte();
+        var action = VoteAction.fromOrdinal(readByte());
+        skipZeroBytes(2);
+
+        return new VtnPacket(ucid, action);
     }
 
     private short readByte() {

@@ -75,7 +75,7 @@ public enum PacketType {
     /**
      * 16 - info: vote notification
      */
-    VTN,
+    VTN(VtnPacket.class),
     /**
      * 17 - info: race start
      */

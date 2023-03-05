@@ -104,6 +104,32 @@ class PacketReaderTest {
         assertEquals(144, castedReadPacket.getReqI());
         assertEquals(SmallSubtype.NONE, castedReadPacket.getSubT());
         assertEquals(3646985702L, castedReadPacket.getUVal());
+        assertTrue(castedReadPacket.getVoteAction().isEmpty());
+    }
+
+    @Test
+    void readSmallPacket_withVtaSubtype() {
+        var headerBytes = new byte[] { 2, 4, -112 };
+        var dataBytes = new byte[] { 3, 3, 0, 0, 0 };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertEquals(PacketType.SMALL, packetReader.getPacketType());
+        assertEquals(5, packetReader.getDataBytesCount());
+        assertEquals(144, packetReader.getPacketReqI());
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof SmallPacket);
+
+        var castedReadPacket = (SmallPacket) readPacket;
+
+        assertEquals(8, castedReadPacket.getSize());
+        assertEquals(PacketType.SMALL, castedReadPacket.getType());
+        assertEquals(144, castedReadPacket.getReqI());
+        assertEquals(SmallSubtype.VTA, castedReadPacket.getSubT());
+        assertEquals(3, castedReadPacket.getUVal());
+        assertTrue(castedReadPacket.getVoteAction().isPresent());
+        assertEquals(VoteAction.QUALIFY, castedReadPacket.getVoteAction().get());
     }
 
     @Test
@@ -254,5 +280,28 @@ class PacketReaderTest {
         assertEquals(144, castedReadPacket.getReqI());
         assertTrue(castedReadPacket.isHost());
         assertEquals("Example LFS Server", castedReadPacket.getHName());
+    }
+
+    @Test
+    void readVtnPacket() {
+        var headerBytes = new byte[] { 2, 16, 0 };
+        var dataBytes = new byte[] { 0, 34, 2, 0, 0 };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertEquals(PacketType.VTN, packetReader.getPacketType());
+        assertEquals(5, packetReader.getDataBytesCount());
+        assertEquals(0, packetReader.getPacketReqI());
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof VtnPacket);
+
+        var castedReadPacket = (VtnPacket) readPacket;
+
+        assertEquals(8, castedReadPacket.getSize());
+        assertEquals(PacketType.VTN, castedReadPacket.getType());
+        assertEquals(0, castedReadPacket.getReqI());
+        assertEquals(34, castedReadPacket.getUcid());
+        assertEquals(VoteAction.RESTART, castedReadPacket.getAction());
     }
 }
