@@ -3,6 +3,7 @@ package pl.adrian.api.packets;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.SmallSubtype;
 import pl.adrian.api.packets.enums.VoteAction;
+import pl.adrian.api.packets.flags.Car;
 import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.LcsFlag;
 import pl.adrian.internal.packets.annotations.Byte;
@@ -51,10 +52,18 @@ public class SmallPacket extends Packet implements SendablePacket, ReadablePacke
 
     /**
      * Creates small packet for local car switches.
-     * @param lcsFlags local car switches flags
+     * @param lcsFlags local car switches
      */
-    public SmallPacket(Flags<LcsFlag> lcsFlags) {
-        this(SmallSubtype.LCS, lcsFlags.getValue(), 0);
+    public SmallPacket(LcsFlag... lcsFlags) {
+        this(SmallSubtype.LCS, new Flags<>(lcsFlags).getValue(), 0);
+    }
+
+    /**
+     * Creates small packet for setting allowed cars on host.
+     * @param cars allowed cars
+     */
+    public SmallPacket(Car... cars) {
+        this(SmallSubtype.ALC, new Flags<>(cars).getValue(), 0);
     }
 
     @Override
@@ -81,12 +90,27 @@ public class SmallPacket extends Packet implements SendablePacket, ReadablePacke
 
     /**
      * Warning! Method should be used only if {@link #getSubT() subtype}
-     * is equal to VTA.
-     * @return vote action, or empty optional if subtype is not equal to VTA
+     * is equal to {@link SmallSubtype#VTA}.
+     * @return vote action, or empty optional if {@link #getSubT() subtype} is
+     * not equal to {@link SmallSubtype#VTA}
      */
     public Optional<VoteAction> getVoteAction() {
         if (subT.equals(SmallSubtype.VTA)) {
             return Optional.of(VoteAction.fromOrdinal((int) uVal));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Warning! method should be used only if {@link #getSubT() subtype}
+     * is equal to {@link SmallSubtype#ALC}.
+     * @return allowed cars, or empty optional if {@link #getSubT() subtype} is
+     * not equal to {@link SmallSubtype#ALC}
+     */
+    public Optional<Flags<Car>> getCars() {
+        if (subT.equals(SmallSubtype.ALC)) {
+            return Optional.of(new Flags<>(Car.class, (int) uVal));
         } else {
             return Optional.empty();
         }

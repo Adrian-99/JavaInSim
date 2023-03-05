@@ -1,6 +1,8 @@
 package pl.adrian.api;
 
+import pl.adrian.api.packets.SmallPacket;
 import pl.adrian.api.packets.TinyPacket;
+import pl.adrian.api.packets.enums.SmallSubtype;
 import pl.adrian.api.packets.enums.TinySubtype;
 import pl.adrian.internal.Constants;
 import pl.adrian.api.packets.IsiPacket;
@@ -130,19 +132,40 @@ public class InSimConnection implements Closeable {
     /**
      * Requests packet of specified type from LFS. Calling this method causes sending appropriate
      * {@link TinyPacket} to LFS that is a request for specified packet. The {@link TinyPacket}
-     * contains randomly generated reqI value from range 1-255. If requested packet is received,
+     * contains randomly generated reqI value from range 1-255. When requested packet is received,
      * specified callback function will be called.
      * @param packetClass class of the packet that is requested
      * @param callback function that will be called when requested packet is received
      * @param <T> type of the packet that is requested
-     * @throws IOException if I/O error occurs when sending tiny packet
+     * @throws IOException if I/O error occurs when sending {@link TinyPacket}
      */
     public <T extends Packet & RequestablePacket> void request(Class<T> packetClass,
-                                                               PacketListener<T> callback)
-            throws IOException {
+                                                               PacketListener<T> callback) throws IOException {
         var packetType = PacketType.fromPacketClass(packetClass);
+        var tinySubtype = TinySubtype.fromRequestablePacketClass(packetClass);
+        handleRequest(packetType, tinySubtype, callback);
+    }
+
+    /**
+     * Requests specific {@link SmallPacket} from LFS. It is only possible to request {@link SmallPacket} of
+     * {@link SmallSubtype#ALC ALC} subtype. Calling this method causes sending appropriate {@link TinyPacket}
+     * to LFS that is a request for specified packet. The {@link TinyPacket} contains randomly generated reqI
+     * value from range 1-255. When requested packet is received, specified callback function will be called.
+     * @param tinySubtype {@link TinySubtype#ALC}, other values will be ignored
+     * @param callback function that will be called when requested packet is received
+     * @throws IOException if I/O error occurs when sending {@link TinyPacket}
+     */
+    public void request(TinySubtype tinySubtype, PacketListener<SmallPacket> callback) throws IOException {
+        if (tinySubtype.equals(TinySubtype.ALC)) {
+            handleRequest(PacketType.SMALL, tinySubtype, callback);
+        }
+    }
+
+    private <T extends Packet & ReadablePacket> void handleRequest(PacketType packetType,
+                                                                   TinySubtype tinySubtype,
+                                                                   PacketListener<T> callback) throws IOException {
         var reqI = (short) random.nextInt(1, 256);
-        var tinyPacket = new TinyPacket(TinySubtype.fromRequestablePacketClass(packetClass), reqI);
+        var tinyPacket = new TinyPacket(tinySubtype, reqI);
         packetRequests.add(new PacketRequest<>(packetType, reqI, callback));
         send(tinyPacket);
     }

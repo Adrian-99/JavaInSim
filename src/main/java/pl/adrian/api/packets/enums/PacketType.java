@@ -223,7 +223,7 @@ public enum PacketType {
     /**
      * 53 - instruction: player cars
      */
-    PLC,
+    PLC(PlcPacket.class),
     /**
      * 54 - both ways: autocross multiple objects
      */

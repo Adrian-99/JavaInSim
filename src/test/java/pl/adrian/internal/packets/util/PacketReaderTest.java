@@ -3,6 +3,7 @@ package pl.adrian.internal.packets.util;
 import org.junit.jupiter.api.Test;
 import pl.adrian.api.packets.*;
 import pl.adrian.api.packets.enums.*;
+import pl.adrian.api.packets.flags.Car;
 import pl.adrian.api.packets.flags.StaFlag;
 import pl.adrian.internal.packets.exceptions.PacketReadingException;
 
@@ -105,6 +106,7 @@ class PacketReaderTest {
         assertEquals(SmallSubtype.NONE, castedReadPacket.getSubT());
         assertEquals(3646985702L, castedReadPacket.getUVal());
         assertTrue(castedReadPacket.getVoteAction().isEmpty());
+        assertTrue(castedReadPacket.getCars().isEmpty());
     }
 
     @Test
@@ -130,6 +132,33 @@ class PacketReaderTest {
         assertEquals(3, castedReadPacket.getUVal());
         assertTrue(castedReadPacket.getVoteAction().isPresent());
         assertEquals(VoteAction.QUALIFY, castedReadPacket.getVoteAction().get());
+        assertTrue(castedReadPacket.getCars().isEmpty());
+    }
+
+    @Test
+    void readSmallPacket_withAlcSubtype() {
+        var headerBytes = new byte[] { 2, 4, -112 };
+        var dataBytes = new byte[] { 8, 0, 72, 12, 0 };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertEquals(PacketType.SMALL, packetReader.getPacketType());
+        assertEquals(5, packetReader.getDataBytesCount());
+        assertEquals(144, packetReader.getPacketReqI());
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof SmallPacket);
+
+        var castedReadPacket = (SmallPacket) readPacket;
+
+        assertEquals(8, castedReadPacket.getSize());
+        assertEquals(PacketType.SMALL, castedReadPacket.getType());
+        assertEquals(144, castedReadPacket.getReqI());
+        assertEquals(SmallSubtype.ALC, castedReadPacket.getSubT());
+        assertEquals(804864, castedReadPacket.getUVal());
+        assertTrue(castedReadPacket.getVoteAction().isEmpty());
+        assertTrue(castedReadPacket.getCars().isPresent());
+        assertFlagsEqual(Car.class, Set.of(Car.FOX, Car.FO8, Car.BF1, Car.FBM), castedReadPacket.getCars().get());
     }
 
     @Test

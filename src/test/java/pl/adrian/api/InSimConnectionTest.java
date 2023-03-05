@@ -2,23 +2,25 @@ package pl.adrian.api;
 
 import org.awaitility.core.ConditionTimeoutException;
 import org.junit.jupiter.api.*;
-import pl.adrian.api.packets.IsiPacket;
-import pl.adrian.api.packets.SmallPacket;
-import pl.adrian.api.packets.TinyPacket;
-import pl.adrian.api.packets.VerPacket;
+import pl.adrian.api.packets.*;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.Product;
+import pl.adrian.api.packets.enums.SmallSubtype;
+import pl.adrian.api.packets.enums.TinySubtype;
+import pl.adrian.api.packets.flags.Car;
 import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.IsiFlag;
 import pl.adrian.testutil.LfsMock;
 
 import java.io.IOException;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
+import static pl.adrian.testutil.FlagsTestUtils.assertFlagsEqual;
 
 class InSimConnectionTest {
     private static final int LFS_MOCK_PORT = 29999;
@@ -174,15 +176,13 @@ class InSimConnectionTest {
     void request() throws IOException {
         var responseReceived = new AtomicBoolean(false);
 
-        // TODO: Change to different packet type later
-        inSimConnection.request(VerPacket.class, (inSimConnection, packet) -> {
+        inSimConnection.request(IsmPacket.class, (inSimConnection, packet) -> {
             assertEquals(this.inSimConnection, inSimConnection);
-            assertEquals(20, packet.getSize());
-            assertEquals(PacketType.VER, packet.getType());
+            assertEquals(40, packet.getSize());
+            assertEquals(PacketType.ISM, packet.getType());
             assertTrue(packet.getReqI() >= 1 && packet.getReqI() <= 255);
-            assertEquals("0.7D", packet.getVersion());
-            assertEquals(Product.S3, packet.getProduct());
-            assertEquals(9, packet.getInSimVer());
+            assertFalse(packet.isHost());
+            assertEquals("Example LFS Server", packet.getHName());
             responseReceived.set(true);
         });
 
@@ -192,11 +192,45 @@ class InSimConnectionTest {
         assertEquals(1, lfsReceivedPackets.get(1)[0]);
         assertEquals(3, lfsReceivedPackets.get(1)[1]);
         assertNotEquals(0, lfsReceivedPackets.get(1)[2]);
-        assertEquals(1, lfsReceivedPackets.get(1)[3]);
+        assertEquals(10, lfsReceivedPackets.get(1)[3]);
 
         lfsMock.send(new byte[] {
-                5, 2, lfsReceivedPackets.get(1)[2], 0, 48, 46, 55, 68, 0, 0, 0, 0, 83, 51, 0, 0, 0, 0, 9, 0
+                10, 10, lfsReceivedPackets.get(1)[2], 0, 0, 0, 0, 0, 69, 120, 97, 109, 112, 108, 101, 32, 76,
+                70, 83, 32, 83, 101, 114, 118, 101, 114, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0
         });
+
+        await().atMost(1, TimeUnit.SECONDS)
+                .with().pollInterval(100, TimeUnit.MILLISECONDS)
+                .until(responseReceived::get);
+    }
+
+    @Test
+    void request_smallPacket() throws IOException {
+        var responseReceived = new AtomicBoolean(false);
+
+        inSimConnection.request(TinySubtype.ALC, (inSimConnection, packet) -> {
+            assertEquals(this.inSimConnection, inSimConnection);
+            assertEquals(8, packet.getSize());
+            assertEquals(PacketType.SMALL, packet.getType());
+            assertNotEquals(0, packet.getReqI());
+            assertEquals(SmallSubtype.ALC, packet.getSubT());
+            assertEquals(12561, packet.getUVal());
+            assertTrue(packet.getVoteAction().isEmpty());
+            assertTrue(packet.getCars().isPresent());
+            assertFlagsEqual(Car.class, Set.of(Car.XFG, Car.FXO, Car.UF1, Car.XFR, Car.UFR), packet.getCars().get());
+            responseReceived.set(true);
+        });
+
+        var lfsReceivedPackets = lfsMock.awaitReceivedPackets(2);
+        assertEquals(2, lfsReceivedPackets.size());
+        assertEquals(4, lfsReceivedPackets.get(1).length);
+        assertEquals(1, lfsReceivedPackets.get(1)[0]);
+        assertEquals(3, lfsReceivedPackets.get(1)[1]);
+        assertNotEquals(0, lfsReceivedPackets.get(1)[2]);
+        assertEquals(24, lfsReceivedPackets.get(1)[3]);
+
+        lfsMock.send(new byte[] { 2, 4, lfsReceivedPackets.get(1)[2], 8, 17, 49, 0, 0 });
 
         await().atMost(1, TimeUnit.SECONDS)
                 .with().pollInterval(100, TimeUnit.MILLISECONDS)
