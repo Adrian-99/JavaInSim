@@ -4,7 +4,7 @@ import pl.adrian.api.PacketListener;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.TinySubtype;
 import pl.adrian.internal.packets.base.Packet;
-import pl.adrian.internal.packets.base.ReadablePacket;
+import pl.adrian.internal.packets.base.InfoPacket;
 
 /**
  * This class stores information about packet request that has been made using
@@ -16,7 +16,7 @@ import pl.adrian.internal.packets.base.ReadablePacket;
  * @param callback function to be called when requested packet is received
  * @param <T> type of the packet that has been requested
  */
-public record PacketRequest<T extends Packet & ReadablePacket>(
+public record PacketRequest<T extends Packet & InfoPacket>(
         PacketType packetType,
         short reqI,
         PacketListener<T> callback

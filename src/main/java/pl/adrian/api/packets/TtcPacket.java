@@ -2,7 +2,7 @@ package pl.adrian.api.packets;
 
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.Packet;
-import pl.adrian.internal.packets.base.SendablePacket;
+import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.TtcSubtype;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
@@ -12,7 +12,7 @@ import pl.adrian.internal.packets.util.PacketValidator;
 /**
  * General purpose 8 byte packet (Target To Connection).
  */
-public class TtcPacket extends Packet implements SendablePacket {
+public class TtcPacket extends Packet implements InstructionPacket {
     @Byte
     private final TtcSubtype subT;
     @Byte

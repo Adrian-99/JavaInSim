@@ -8,9 +8,9 @@ import pl.adrian.internal.Constants;
 import pl.adrian.api.packets.IsiPacket;
 import pl.adrian.internal.PacketRequest;
 import pl.adrian.internal.packets.base.Packet;
-import pl.adrian.internal.packets.base.ReadablePacket;
+import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.RequestablePacket;
-import pl.adrian.internal.packets.base.SendablePacket;
+import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.exceptions.PacketReadingException;
 import pl.adrian.internal.packets.util.PacketReader;
@@ -79,11 +79,11 @@ public class InSimConnection implements Closeable {
     }
 
     /**
-     * Sends specified {@link SendablePacket} to LFS.
+     * Sends specified {@link InstructionPacket} to LFS.
      * @param packet packet to be sent
      * @throws IOException if I/O error occurs while sending packet
      */
-    public void send(SendablePacket packet) throws IOException {
+    public void send(InstructionPacket packet) throws IOException {
         var bytes = packet.getBytes();
         out.write(bytes);
     }
@@ -98,8 +98,8 @@ public class InSimConnection implements Closeable {
      *                       received from LFS
      * @param <T> type of the packet to listen for
      */
-    public <T extends Packet & ReadablePacket> void listen(Class<T> packetClass,
-                                                           PacketListener<T> packetListener) {
+    public <T extends Packet & InfoPacket> void listen(Class<T> packetClass,
+                                                       PacketListener<T> packetListener) {
         if (packetClass != null && packetListener != null) {
             var packetType = PacketType.fromPacketClass(packetClass);
             registeredListeners.computeIfAbsent(packetType, type -> new HashSet<>());
@@ -114,8 +114,8 @@ public class InSimConnection implements Closeable {
      * @param packetListener function that was called each time the packet of chosen type was received from LFS
      * @param <T> type of the packet that was listened for
      */
-    public <T extends Packet & ReadablePacket> void stopListening(Class<T> packetClass,
-                                                                  PacketListener<T> packetListener) {
+    public <T extends Packet & InfoPacket> void stopListening(Class<T> packetClass,
+                                                              PacketListener<T> packetListener) {
         if (packetClass != null && packetListener != null) {
             var packetType = PacketType.fromPacketClass(packetClass);
             if (registeredListeners.containsKey(packetType) &&
@@ -161,9 +161,9 @@ public class InSimConnection implements Closeable {
         }
     }
 
-    private <T extends Packet & ReadablePacket> void handleRequest(PacketType packetType,
-                                                                   TinySubtype tinySubtype,
-                                                                   PacketListener<T> callback) throws IOException {
+    private <T extends Packet & InfoPacket> void handleRequest(PacketType packetType,
+                                                               TinySubtype tinySubtype,
+                                                               PacketListener<T> callback) throws IOException {
         var reqI = (short) random.nextInt(1, 256);
         var tinyPacket = new TinyPacket(tinySubtype, reqI);
         packetRequests.add(new PacketRequest<>(packetType, reqI, callback));
@@ -202,13 +202,13 @@ public class InSimConnection implements Closeable {
                 );
     }
 
-    private void handleReadPacket(ReadablePacket packet) throws IOException {
+    private void handleReadPacket(InfoPacket packet) throws IOException {
         handleBasicReadPacket(packet);
         handleReadPacketForPacketListeners(packet);
         handleReadPacketForPacketRequests(packet);
     }
 
-    private void handleBasicReadPacket(ReadablePacket packet) throws IOException {
+    private void handleBasicReadPacket(InfoPacket packet) throws IOException {
         if (packet.getType().equals(PacketType.VER)) {
             isConnected = true;
         } else if (packet.getType().equals(PacketType.TINY)) {
@@ -221,7 +221,7 @@ public class InSimConnection implements Closeable {
     }
 
     @SuppressWarnings("unchecked")
-    private void handleReadPacketForPacketListeners(ReadablePacket packet) {
+    private void handleReadPacketForPacketListeners(InfoPacket packet) {
         if (registeredListeners.containsKey(packet.getType())) {
             threadsExecutor.submit(() -> {
                 for (var listener : registeredListeners.get(packet.getType())) {
@@ -232,7 +232,7 @@ public class InSimConnection implements Closeable {
     }
 
     @SuppressWarnings("unchecked")
-    private void handleReadPacketForPacketRequests(ReadablePacket packet) {
+    private void handleReadPacketForPacketRequests(InfoPacket packet) {
         if (!packetRequests.isEmpty()) {
             for (var packetRequest : packetRequests) {
                 if (packetRequest.packetType().equals(packet.getType()) &&

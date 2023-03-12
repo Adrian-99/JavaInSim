@@ -2,7 +2,7 @@ package pl.adrian.internal.packets.util;
 
 import pl.adrian.internal.packets.annotations.*;
 import pl.adrian.internal.packets.annotations.Byte;
-import pl.adrian.internal.packets.base.SendablePacket;
+import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.internal.packets.enums.EnumWithCustomValue;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
 import pl.adrian.api.packets.flags.Flags;
@@ -22,7 +22,7 @@ public class PacketValidator {
      * @param packet packet to be validated
      * @throws PacketValidationException if validation of any field fails
      */
-    public static void validate(SendablePacket packet) throws PacketValidationException {
+    public static void validate(InstructionPacket packet) throws PacketValidationException {
         if (packet != null) {
             validate(getAllPacketFields(packet.getClass()), packet);
         }

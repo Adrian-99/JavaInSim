@@ -3,14 +3,15 @@ package pl.adrian.api.packets;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.annotations.Int;
 import pl.adrian.internal.packets.base.Packet;
-import pl.adrian.internal.packets.base.SendablePacket;
+import pl.adrian.internal.packets.base.InstructionPacket;
+import pl.adrian.internal.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.packets.util.PacketBuilder;
 import pl.adrian.internal.packets.util.PacketValidator;
 
 /**
  * MODe: send to LFS to change screen mode.
  */
-public class ModPacket extends Packet implements SendablePacket {
+public class ModPacket extends Packet implements InstructionPacket {
     @Int
     private final int bits16;
     @Int
@@ -30,8 +31,9 @@ public class ModPacket extends Packet implements SendablePacket {
      * @param rr refresh rate - zero for default
      * @param width screen width - 0 means go to window
      * @param height screen height - 0 means go to window
+     * @throws PacketValidationException if validation of any field in packet fails
      */
-    public ModPacket(int bits16, int rr, int width, int height) {
+    public ModPacket(int bits16, int rr, int width, int height) throws PacketValidationException {
         super(20, PacketType.MOD, 0);
         this.bits16 = bits16;
         this.rr = rr;

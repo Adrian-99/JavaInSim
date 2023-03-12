@@ -6,11 +6,11 @@ import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.StaFlag;
 import pl.adrian.internal.Constants;
 import pl.adrian.internal.RaceLaps;
-import pl.adrian.internal.packets.base.ReadablePacket;
+import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.exceptions.PacketReadingException;
 
 /**
- * This class is a helper that is used while converting byte array to appropriate {@link ReadablePacket}.
+ * This class is a helper that is used while converting byte array to appropriate {@link InfoPacket}.
  */
 public class PacketReader {
     private final int packetSize;
@@ -20,7 +20,7 @@ public class PacketReader {
     private int dataBytesReaderIndex;
 
     /**
-     * Creates packet reader, which helps to convert byte array to appropriate {@link ReadablePacket}.
+     * Creates packet reader, which helps to convert byte array to appropriate {@link InfoPacket}.
      * @param headerBytes header bytes of packet - length must be equal to 3 (size, type, reqI)
      * @throws PacketReadingException if length of header bytes was not equal to 3
      */
@@ -58,13 +58,13 @@ public class PacketReader {
     }
 
     /**
-     * Converts data bytes and header bytes (passed in constructor) into appropriate {@link ReadablePacket}.
+     * Converts data bytes and header bytes (passed in constructor) into appropriate {@link InfoPacket}.
      * @param dataBytes data bytes of packet
      * @return packet class instance
      * @throws PacketReadingException if reading given packet type (type is extracted from header bytes)
      * is not supported
      */
-    public ReadablePacket read(byte[] dataBytes) throws PacketReadingException {
+    public InfoPacket read(byte[] dataBytes) throws PacketReadingException {
         this.dataBytes = dataBytes;
         dataBytesReaderIndex = 0;
 

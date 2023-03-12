@@ -9,8 +9,8 @@ import pl.adrian.api.packets.flags.LcsFlag;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Unsigned;
 import pl.adrian.internal.packets.base.Packet;
-import pl.adrian.internal.packets.base.ReadablePacket;
-import pl.adrian.internal.packets.base.SendablePacket;
+import pl.adrian.internal.packets.base.InfoPacket;
+import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.packets.util.PacketBuilder;
 import pl.adrian.internal.packets.util.PacketValidator;
@@ -20,7 +20,7 @@ import java.util.Optional;
 /**
  * General purpose 8 byte packet.
  */
-public class SmallPacket extends Packet implements SendablePacket, ReadablePacket {
+public class SmallPacket extends Packet implements InstructionPacket, InfoPacket {
     @Byte
     private final SmallSubtype subT;
     @Unsigned

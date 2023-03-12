@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.annotations.Byte;
-import pl.adrian.internal.packets.structures.SendableStructure;
+import pl.adrian.internal.packets.structures.InstructionStructure;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -425,7 +425,7 @@ class PacketBuilderTest {
         assertEquals(2, TestStructure.getAppendBytesMethodCallsCount());
     }
 
-    private static class TestStructure implements SendableStructure {
+    private static class TestStructure implements InstructionStructure {
         @Byte
         private final short structureField;
 

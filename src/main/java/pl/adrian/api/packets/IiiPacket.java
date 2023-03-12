@@ -4,13 +4,13 @@ import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.CharArray;
 import pl.adrian.internal.packets.base.Packet;
-import pl.adrian.internal.packets.base.ReadablePacket;
+import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.util.PacketUtils;
 
 /**
  * InsIm Info - /i message from user to host's InSim - variable size.
  */
-public class IiiPacket extends Packet implements ReadablePacket {
+public class IiiPacket extends Packet implements InfoPacket {
     @Byte
     private final short ucid;
     @Byte

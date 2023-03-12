@@ -9,14 +9,14 @@ import pl.adrian.internal.packets.exceptions.PacketValidationException;
 import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.IsiFlag;
 import pl.adrian.api.packets.enums.PacketType;
-import pl.adrian.internal.packets.base.SendablePacket;
+import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.internal.packets.util.PacketBuilder;
 import pl.adrian.internal.packets.util.PacketValidator;
 
 /**
- * InSim Init - packet to initialise the InSim system
+ * InSim Init - packet to initialise the InSim system.
  */
-public class IsiPacket extends Packet implements SendablePacket {
+public class IsiPacket extends Packet implements InstructionPacket {
     @Word
     private final int udpPort;
     @Word

@@ -4,12 +4,12 @@ import org.junit.jupiter.api.Test;
 import pl.adrian.internal.packets.annotations.*;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.Packet;
-import pl.adrian.internal.packets.base.SendablePacket;
+import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.enums.EnumWithCustomValue;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
 import pl.adrian.api.packets.flags.Flags;
-import pl.adrian.internal.packets.structures.SendableStructure;
+import pl.adrian.internal.packets.structures.InstructionStructure;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -381,7 +381,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class ValidTestPacket extends Packet implements SendablePacket {
+    private static class ValidTestPacket extends Packet implements InstructionPacket {
         @Byte
         private final Character characterByte;
         @Byte
@@ -440,7 +440,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithFieldWithoutAnnotation extends Packet implements SendablePacket {
+    private static class PacketWithFieldWithoutAnnotation extends Packet implements InstructionPacket {
         private final int fieldWithNoAnnotation;
 
         protected PacketWithFieldWithoutAnnotation(int size,
@@ -458,7 +458,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithInvalidByteType extends Packet implements SendablePacket {
+    private static class PacketWithInvalidByteType extends Packet implements InstructionPacket {
 
         @Byte
         private final String stringByte;
@@ -478,7 +478,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithInvalidWordType extends Packet implements SendablePacket {
+    private static class PacketWithInvalidWordType extends Packet implements InstructionPacket {
 
         @Word
         private final String stringWord;
@@ -498,7 +498,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithInvalidCharArrayType extends Packet implements SendablePacket {
+    private static class PacketWithInvalidCharArrayType extends Packet implements InstructionPacket {
 
         @CharArray(length = 5)
         private final int intCharArray;
@@ -518,7 +518,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithInvalidUnsignedType extends Packet implements SendablePacket {
+    private static class PacketWithInvalidUnsignedType extends Packet implements InstructionPacket {
 
         @Unsigned
         private final String stringUnsigned;
@@ -538,7 +538,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithInvalidIntType extends Packet implements SendablePacket {
+    private static class PacketWithInvalidIntType extends Packet implements InstructionPacket {
 
         @Int
         private final String stringInt;
@@ -558,7 +558,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithInvalidStructureArrayType extends Packet implements SendablePacket {
+    private static class PacketWithInvalidStructureArrayType extends Packet implements InstructionPacket {
 
         @StructureArray(length = 2)
         private final String stringStructureArray;
@@ -591,7 +591,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class TestStructure implements SendableStructure {
+    private static class TestStructure implements InstructionStructure {
         @Byte
         private final short structureField;
 

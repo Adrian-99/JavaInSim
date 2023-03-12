@@ -12,7 +12,7 @@ import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
 
 /**
- * STAte.
+ * STAte. LFS will send this packet any time the info in it changes.
  */
 public class StaPacket extends Packet implements RequestablePacket {
     @Float

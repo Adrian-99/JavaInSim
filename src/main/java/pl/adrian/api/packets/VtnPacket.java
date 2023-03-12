@@ -4,12 +4,12 @@ import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.VoteAction;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.Packet;
-import pl.adrian.internal.packets.base.ReadablePacket;
+import pl.adrian.internal.packets.base.InfoPacket;
 
 /**
- * VoTe Notification.
+ * VoTe Notification. LFS notifies the external program of any votes to restart or qualify.
  */
-public class VtnPacket extends Packet implements ReadablePacket {
+public class VtnPacket extends Packet implements InfoPacket {
     @Byte
     private final short ucid;
     @Byte

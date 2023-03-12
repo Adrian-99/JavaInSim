@@ -5,7 +5,8 @@ import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.CharArray;
 import pl.adrian.internal.packets.base.Packet;
-import pl.adrian.internal.packets.base.SendablePacket;
+import pl.adrian.internal.packets.base.InstructionPacket;
+import pl.adrian.internal.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.packets.util.PacketBuilder;
 import pl.adrian.internal.packets.util.PacketUtils;
 import pl.adrian.internal.packets.util.PacketValidator;
@@ -13,7 +14,7 @@ import pl.adrian.internal.packets.util.PacketValidator;
 /**
  * Msg To Connection - hosts only - send to a connection / a player / all.
  */
-public class MtcPacket extends Packet implements SendablePacket {
+public class MtcPacket extends Packet implements InstructionPacket {
     @Byte
     private final MessageSound sound;
     @Byte
@@ -29,8 +30,9 @@ public class MtcPacket extends Packet implements SendablePacket {
      * @param ucid connection's unique id (0 = host / 255 = all)
      * @param plid player's unique id (if zero, use ucid)
      * @param text text to send (max 127 characters)
+     * @throws PacketValidationException if validation of any field in packet fails
      */
-    public MtcPacket(MessageSound sound, int ucid, int plid, String text) {
+    public MtcPacket(MessageSound sound, int ucid, int plid, String text) throws PacketValidationException {
         super(8 + PacketUtils.getLfsCharArraySize(text, 128), PacketType.MTC, 0);
         this.sound = sound;
         this.ucid = (short) ucid;

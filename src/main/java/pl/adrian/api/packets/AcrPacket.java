@@ -5,13 +5,13 @@ import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.CharArray;
 import pl.adrian.internal.packets.base.Packet;
-import pl.adrian.internal.packets.base.ReadablePacket;
+import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.util.PacketUtils;
 
 /**
  * Admin Command Report - a user typed an admin command - variable size.
  */
-public class AcrPacket extends Packet implements ReadablePacket {
+public class AcrPacket extends Packet implements InfoPacket {
     @Byte
     private final short ucid;
     @Byte

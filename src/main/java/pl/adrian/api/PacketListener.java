@@ -1,6 +1,6 @@
 package pl.adrian.api;
 
-import pl.adrian.internal.packets.base.ReadablePacket;
+import pl.adrian.internal.packets.base.InfoPacket;
 
 /**
  * This interface allows to create packet listener - the function that will be called each time
@@ -10,7 +10,7 @@ import pl.adrian.internal.packets.base.ReadablePacket;
  * @param <T> type of the packet that will be handled by this packet listener
  */
 @FunctionalInterface
-public interface PacketListener<T extends ReadablePacket> {
+public interface PacketListener<T extends InfoPacket> {
     /**
      * Method that will be called each time packet of specified type will be received from LFS.
      * @param inSimConnection InSim connection that triggered the listener

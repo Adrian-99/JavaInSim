@@ -7,7 +7,7 @@ import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
 
 /**
- * InSim Multi.
+ * InSim Multi - LFS will send this packet when a host is started or joined.
  */
 public class IsmPacket extends Packet implements RequestablePacket {
     @Byte

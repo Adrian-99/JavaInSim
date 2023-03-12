@@ -4,8 +4,8 @@ import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.TinySubtype;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.Packet;
-import pl.adrian.internal.packets.base.ReadablePacket;
-import pl.adrian.internal.packets.base.SendablePacket;
+import pl.adrian.internal.packets.base.InfoPacket;
+import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.packets.util.PacketBuilder;
 import pl.adrian.internal.packets.util.PacketValidator;
@@ -13,7 +13,7 @@ import pl.adrian.internal.packets.util.PacketValidator;
 /**
  * General purpose 4 byte packet.
  */
-public class TinyPacket extends Packet implements SendablePacket, ReadablePacket {
+public class TinyPacket extends Packet implements InstructionPacket, InfoPacket {
     @Byte
     private final TinySubtype subT;
 
