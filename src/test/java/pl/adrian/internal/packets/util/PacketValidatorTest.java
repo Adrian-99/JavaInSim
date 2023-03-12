@@ -30,6 +30,7 @@ class PacketValidatorTest {
                 "abcdefghij",
                 null,
                 112946L,
+                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
                 1834749274,
                 new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
         );
@@ -51,6 +52,7 @@ class PacketValidatorTest {
                 "abcdefghij",
                 null,
                 112946L,
+                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
                 1834749274,
                 new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
         );
@@ -74,6 +76,7 @@ class PacketValidatorTest {
                 "abcdefghij",
                 null,
                 112946L,
+                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
                 1834749274,
                 new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
         );
@@ -97,6 +100,7 @@ class PacketValidatorTest {
                 "abcdefghij",
                 null,
                 112946L,
+                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
                 1834749274,
                 new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
         );
@@ -120,6 +124,7 @@ class PacketValidatorTest {
                 "abcdefghij",
                 null,
                 112946L,
+                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
                 1834749274,
                 new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
         );
@@ -143,6 +148,7 @@ class PacketValidatorTest {
                 "abcdefghij",
                 "abcdefghij",
                 112946L,
+                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
                 1834749274,
                 new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
         );
@@ -166,6 +172,7 @@ class PacketValidatorTest {
                 "abcdefghij",
                 "abc",
                 -35L,
+                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
                 1834749274,
                 new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
         );
@@ -189,6 +196,7 @@ class PacketValidatorTest {
                 "abcdefghij",
                 "abc",
                 5732985275L,
+                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
                 1834749274,
                 new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
         );
@@ -212,6 +220,7 @@ class PacketValidatorTest {
                 "abcdefghij",
                 "abc",
                 112946L,
+                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
                 -2134749274,
                 new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
         );
@@ -235,6 +244,7 @@ class PacketValidatorTest {
                 "abcdefghij",
                 "abc",
                 112946L,
+                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
                 2134749274,
                 new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
         );
@@ -258,6 +268,7 @@ class PacketValidatorTest {
                 "abcdefghij",
                 null,
                 112946L,
+                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
                 1834749274,
                 new TestStructure[] { new TestStructure(55), null }
         );
@@ -281,6 +292,7 @@ class PacketValidatorTest {
                 "abcdefghij",
                 null,
                 112946L,
+                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
                 1834749274,
                 new TestStructure[] { new TestStructure(55), null, new TestStructure(-15) }
         );
@@ -400,6 +412,8 @@ class PacketValidatorTest {
         private final String stringCharArray;
         @Unsigned
         private final long longUnsigned;
+        @Unsigned
+        private final Flags<TestEnum> flagsUnsigned;
         @Int(minValue = -2000000000, maxValue = 2000000000)
         private final int intInt;
         @StructureArray(length = 3)
@@ -417,6 +431,7 @@ class PacketValidatorTest {
                                   String stringCharArrayWithoutValidation,
                                   String stringCharArray,
                                   long longUnsigned,
+                                  Flags<TestEnum> flagsUnsigned,
                                   int intInt,
                                   TestStructure[] structureArray) {
             super(size, type, reqI);
@@ -429,6 +444,7 @@ class PacketValidatorTest {
             this.stringCharArrayWithoutValidation = stringCharArrayWithoutValidation;
             this.stringCharArray = stringCharArray;
             this.longUnsigned = longUnsigned;
+            this.flagsUnsigned = flagsUnsigned;
             this.intInt = intInt;
             this.structureArray = structureArray;
         }

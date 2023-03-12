@@ -177,18 +177,23 @@ public class PacketValidator {
     private static void validateUnsigned(Unsigned annotation, Field field, Object value) {
         var typeName = "Unsigned";
         if (value != null) {
-            if (value instanceof Long longValue) {
-                if (longValue < annotation.minValue() || longValue > annotation.maxValue()) {
-                    throw new PacketValidationException(
-                            field,
-                            annotation.minValue(),
-                            annotation.maxValue(),
-                            longValue,
-                            typeName
-                    );
-                }
+            long longValue;
+            if (value instanceof Long lngValue) {
+                longValue = lngValue;
+            } else if (value instanceof Flags<?> flagsValue) {
+                longValue = flagsValue.getValue();
             } else {
                 throw new PacketValidationException(field, typeName);
+            }
+
+            if (longValue < annotation.minValue() || longValue > annotation.maxValue()) {
+                throw new PacketValidationException(
+                        field,
+                        annotation.minValue(),
+                        annotation.maxValue(),
+                        longValue,
+                        typeName
+                );
             }
         }
     }

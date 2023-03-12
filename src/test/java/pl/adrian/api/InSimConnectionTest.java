@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static pl.adrian.testutil.FlagsTestUtils.assertFlagsEqual;
 
 class InSimConnectionTest {
-    private static final int LFS_MOCK_PORT = 29999;
+    private static final int LFS_MOCK_PORT = 49999;
     private static final IsiPacket INIT_PACKET = new IsiPacket(
             new Flags<>(IsiFlag.LOCAL),
             null,
@@ -52,7 +52,7 @@ class InSimConnectionTest {
     @BeforeEach
     void beforeEach() throws IOException {
         lfsMock = new LfsMock(LFS_MOCK_PORT, Product.S3, "0.7D");
-        inSimConnection = new InSimConnection("localhost", 29999, INIT_PACKET);
+        inSimConnection = new InSimConnection("localhost", LFS_MOCK_PORT, INIT_PACKET);
     }
 
     @AfterEach
