@@ -1,4 +1,4 @@
-package pl.adrian.internal;
+package pl.adrian.internal.packets.util;
 
 /**
  * This class helps to interpret race laps value returned from LFS.

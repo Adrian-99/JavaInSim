@@ -1,4 +1,4 @@
-package pl.adrian.internal;
+package pl.adrian.internal.packets.util;
 
 /**
  * This class contains constant values used in library

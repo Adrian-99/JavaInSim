@@ -79,7 +79,7 @@ public enum PacketType {
     /**
      * 17 - info: race start
      */
-    RST,
+    RST(RstPacket.class),
     /**
      * 18 - info: new connection
      */

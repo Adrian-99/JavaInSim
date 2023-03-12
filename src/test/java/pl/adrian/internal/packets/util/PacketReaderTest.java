@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Test;
 import pl.adrian.api.packets.*;
 import pl.adrian.api.packets.enums.*;
 import pl.adrian.api.packets.flags.Car;
+import pl.adrian.api.packets.flags.RaceFlag;
 import pl.adrian.api.packets.flags.StaFlag;
+import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.exceptions.PacketReadingException;
 
 import java.util.Set;
@@ -44,9 +46,7 @@ class PacketReaderTest {
         var dataBytes = new byte[] { 0, 48, 46, 55, 68, 0, 0, 0, 0, 83, 51, 0, 0, 0, 0, 9 };
         var packetReader = new PacketReader(headerBytes);
 
-        assertEquals(PacketType.VER, packetReader.getPacketType());
-        assertEquals(17, packetReader.getDataBytesCount());
-        assertEquals(144, packetReader.getPacketReqI());
+        assertPacketHeaderEquals(17, PacketType.VER, 144, packetReader);
 
         var readPacket = packetReader.read(dataBytes);
 
@@ -54,9 +54,7 @@ class PacketReaderTest {
 
         var castedReadPacket = (VerPacket) readPacket;
 
-        assertEquals(20, castedReadPacket.getSize());
-        assertEquals(PacketType.VER, castedReadPacket.getType());
-        assertEquals(144, castedReadPacket.getReqI());
+        assertPacketHeaderEquals(20, PacketType.VER, 144, castedReadPacket);
         assertEquals("0.7D", castedReadPacket.getVersion());
         assertEquals(Product.S3, castedReadPacket.getProduct());
         assertEquals(9, castedReadPacket.getInSimVer());
@@ -68,9 +66,7 @@ class PacketReaderTest {
         var dataBytes = new byte[] { 0 };
         var packetReader = new PacketReader(headerBytes);
 
-        assertEquals(PacketType.TINY, packetReader.getPacketType());
-        assertEquals(1, packetReader.getDataBytesCount());
-        assertEquals(144, packetReader.getPacketReqI());
+        assertPacketHeaderEquals(1, PacketType.TINY, 144, packetReader);
 
         var readPacket = packetReader.read(dataBytes);
 
@@ -78,9 +74,7 @@ class PacketReaderTest {
 
         var castedReadPacket = (TinyPacket) readPacket;
 
-        assertEquals(4, castedReadPacket.getSize());
-        assertEquals(PacketType.TINY, castedReadPacket.getType());
-        assertEquals(144, castedReadPacket.getReqI());
+        assertPacketHeaderEquals(4, PacketType.TINY, 144, castedReadPacket);
         assertEquals(TinySubtype.NONE, castedReadPacket.getSubT());
     }
 
@@ -90,9 +84,7 @@ class PacketReaderTest {
         var dataBytes = new byte[] { 0, -26, -107, 96, -39 };
         var packetReader = new PacketReader(headerBytes);
 
-        assertEquals(PacketType.SMALL, packetReader.getPacketType());
-        assertEquals(5, packetReader.getDataBytesCount());
-        assertEquals(144, packetReader.getPacketReqI());
+        assertPacketHeaderEquals(5, PacketType.SMALL, 144, packetReader);
 
         var readPacket = packetReader.read(dataBytes);
 
@@ -100,9 +92,7 @@ class PacketReaderTest {
 
         var castedReadPacket = (SmallPacket) readPacket;
 
-        assertEquals(8, castedReadPacket.getSize());
-        assertEquals(PacketType.SMALL, castedReadPacket.getType());
-        assertEquals(144, castedReadPacket.getReqI());
+        assertPacketHeaderEquals(8, PacketType.SMALL, 144, castedReadPacket);
         assertEquals(SmallSubtype.NONE, castedReadPacket.getSubT());
         assertEquals(3646985702L, castedReadPacket.getUVal());
         assertTrue(castedReadPacket.getVoteAction().isEmpty());
@@ -115,9 +105,7 @@ class PacketReaderTest {
         var dataBytes = new byte[] { 3, 3, 0, 0, 0 };
         var packetReader = new PacketReader(headerBytes);
 
-        assertEquals(PacketType.SMALL, packetReader.getPacketType());
-        assertEquals(5, packetReader.getDataBytesCount());
-        assertEquals(144, packetReader.getPacketReqI());
+        assertPacketHeaderEquals(5, PacketType.SMALL, 144, packetReader);
 
         var readPacket = packetReader.read(dataBytes);
 
@@ -125,9 +113,7 @@ class PacketReaderTest {
 
         var castedReadPacket = (SmallPacket) readPacket;
 
-        assertEquals(8, castedReadPacket.getSize());
-        assertEquals(PacketType.SMALL, castedReadPacket.getType());
-        assertEquals(144, castedReadPacket.getReqI());
+        assertPacketHeaderEquals(8, PacketType.SMALL, 144, castedReadPacket);
         assertEquals(SmallSubtype.VTA, castedReadPacket.getSubT());
         assertEquals(3, castedReadPacket.getUVal());
         assertTrue(castedReadPacket.getVoteAction().isPresent());
@@ -141,9 +127,7 @@ class PacketReaderTest {
         var dataBytes = new byte[] { 8, 0, 72, 12, 0 };
         var packetReader = new PacketReader(headerBytes);
 
-        assertEquals(PacketType.SMALL, packetReader.getPacketType());
-        assertEquals(5, packetReader.getDataBytesCount());
-        assertEquals(144, packetReader.getPacketReqI());
+        assertPacketHeaderEquals(5, PacketType.SMALL, 144, packetReader);
 
         var readPacket = packetReader.read(dataBytes);
 
@@ -151,9 +135,7 @@ class PacketReaderTest {
 
         var castedReadPacket = (SmallPacket) readPacket;
 
-        assertEquals(8, castedReadPacket.getSize());
-        assertEquals(PacketType.SMALL, castedReadPacket.getType());
-        assertEquals(144, castedReadPacket.getReqI());
+        assertPacketHeaderEquals(8, PacketType.SMALL, 144, castedReadPacket);
         assertEquals(SmallSubtype.ALC, castedReadPacket.getSubT());
         assertEquals(804864, castedReadPacket.getUVal());
         assertTrue(castedReadPacket.getVoteAction().isEmpty());
@@ -170,9 +152,7 @@ class PacketReaderTest {
         };
         var packetReader = new PacketReader(headerBytes);
 
-        assertEquals(PacketType.STA, packetReader.getPacketType());
-        assertEquals(25, packetReader.getDataBytesCount());
-        assertEquals(144, packetReader.getPacketReqI());
+        assertPacketHeaderEquals(25, PacketType.STA, 144, packetReader);
 
         var readPacket = packetReader.read(dataBytes);
 
@@ -180,9 +160,7 @@ class PacketReaderTest {
 
         var castedReadPacket = (StaPacket) readPacket;
 
-        assertEquals(28, castedReadPacket.getSize());
-        assertEquals(PacketType.STA, castedReadPacket.getType());
-        assertEquals(144, castedReadPacket.getReqI());
+        assertPacketHeaderEquals(28, PacketType.STA, 144, castedReadPacket);
         assertEquals(1.5, castedReadPacket.getReplaySpeed());
         assertFlagsEqual(
                 StaFlag.class,
@@ -215,9 +193,7 @@ class PacketReaderTest {
         };
         var packetReader = new PacketReader(headerBytes);
 
-        assertEquals(PacketType.MSO, packetReader.getPacketType());
-        assertEquals(25, packetReader.getDataBytesCount());
-        assertEquals(0, packetReader.getPacketReqI());
+        assertPacketHeaderEquals(25, PacketType.MSO, 0, packetReader);
 
         var readPacket = packetReader.read(dataBytes);
 
@@ -225,9 +201,7 @@ class PacketReaderTest {
 
         var castedReadPacket = (MsoPacket) readPacket;
 
-        assertEquals(28, castedReadPacket.getSize());
-        assertEquals(PacketType.MSO, castedReadPacket.getType());
-        assertEquals(0, castedReadPacket.getReqI());
+        assertPacketHeaderEquals(28, PacketType.MSO, 0, castedReadPacket);
         assertEquals(15, castedReadPacket.getUcid());
         assertEquals(65, castedReadPacket.getPlid());
         assertEquals(MessageType.USER, castedReadPacket.getUserType());
@@ -241,9 +215,7 @@ class PacketReaderTest {
         var dataBytes = new byte[] { 0, 23, 17, 0, 0, 116, 101, 115, 116, 0, 0, 0, 0 };
         var packetReader = new PacketReader(headerBytes);
 
-        assertEquals(PacketType.III, packetReader.getPacketType());
-        assertEquals(13, packetReader.getDataBytesCount());
-        assertEquals(0, packetReader.getPacketReqI());
+        assertPacketHeaderEquals(13, PacketType.III, 0, packetReader);
 
         var readPacket = packetReader.read(dataBytes);
 
@@ -251,9 +223,7 @@ class PacketReaderTest {
 
         var castedReadPacket = (IiiPacket) readPacket;
 
-        assertEquals(16, castedReadPacket.getSize());
-        assertEquals(PacketType.III, castedReadPacket.getType());
-        assertEquals(0, castedReadPacket.getReqI());
+        assertPacketHeaderEquals(16, PacketType.III, 0, castedReadPacket);
         assertEquals(23, castedReadPacket.getUcid());
         assertEquals(17, castedReadPacket.getPlid());
         assertEquals("test", castedReadPacket.getMsg());
@@ -265,9 +235,7 @@ class PacketReaderTest {
         var dataBytes = new byte[] { 0, 31, 1, 3, 0, 47, 99, 111, 109, 109, 97, 110, 100, 0, 0, 0, 0 };
         var packetReader = new PacketReader(headerBytes);
 
-        assertEquals(PacketType.ACR, packetReader.getPacketType());
-        assertEquals(17, packetReader.getDataBytesCount());
-        assertEquals(0, packetReader.getPacketReqI());
+        assertPacketHeaderEquals(17, PacketType.ACR, 0, packetReader);
 
         var readPacket = packetReader.read(dataBytes);
 
@@ -275,9 +243,7 @@ class PacketReaderTest {
 
         var castedReadPacket = (AcrPacket) readPacket;
 
-        assertEquals(20, castedReadPacket.getSize());
-        assertEquals(PacketType.ACR, castedReadPacket.getType());
-        assertEquals(0, castedReadPacket.getReqI());
+        assertPacketHeaderEquals(20, PacketType.ACR, 0, castedReadPacket);
         assertEquals(31, castedReadPacket.getUcid());
         assertTrue(castedReadPacket.isAdmin());
         assertEquals(AcrResult.UNKNOWN_COMMAND, castedReadPacket.getResult());
@@ -294,9 +260,7 @@ class PacketReaderTest {
         };
         var packetReader = new PacketReader(headerBytes);
 
-        assertEquals(PacketType.ISM, packetReader.getPacketType());
-        assertEquals(37, packetReader.getDataBytesCount());
-        assertEquals(144, packetReader.getPacketReqI());
+        assertPacketHeaderEquals(37, PacketType.ISM, 144, packetReader);
 
         var readPacket = packetReader.read(dataBytes);
 
@@ -304,9 +268,7 @@ class PacketReaderTest {
 
         var castedReadPacket = (IsmPacket) readPacket;
 
-        assertEquals(40, castedReadPacket.getSize());
-        assertEquals(PacketType.ISM, castedReadPacket.getType());
-        assertEquals(144, castedReadPacket.getReqI());
+        assertPacketHeaderEquals(40, PacketType.ISM, 144, castedReadPacket);
         assertTrue(castedReadPacket.isHost());
         assertEquals("Example LFS Server", castedReadPacket.getHName());
     }
@@ -317,9 +279,7 @@ class PacketReaderTest {
         var dataBytes = new byte[] { 0, 34, 2, 0, 0 };
         var packetReader = new PacketReader(headerBytes);
 
-        assertEquals(PacketType.VTN, packetReader.getPacketType());
-        assertEquals(5, packetReader.getDataBytesCount());
-        assertEquals(0, packetReader.getPacketReqI());
+        assertPacketHeaderEquals(5, PacketType.VTN, 0, packetReader);
 
         var readPacket = packetReader.read(dataBytes);
 
@@ -327,10 +287,69 @@ class PacketReaderTest {
 
         var castedReadPacket = (VtnPacket) readPacket;
 
-        assertEquals(8, castedReadPacket.getSize());
-        assertEquals(PacketType.VTN, castedReadPacket.getType());
-        assertEquals(0, castedReadPacket.getReqI());
+        assertPacketHeaderEquals(8, PacketType.VTN, 0, castedReadPacket);
         assertEquals(34, castedReadPacket.getUcid());
         assertEquals(VoteAction.RESTART, castedReadPacket.getAction());
+    }
+
+    @Test
+    void readRstPacket() {
+        var headerBytes = new byte[] { 7, 17, -112 };
+        var dataBytes = new byte[] {
+                0, 15, 0, 20, 67, 70, 69, 49, 82, 0, 0, 1, 2, 33, 1, -24,
+                3, 0, 0, -32, 0, 77, 2, -67, 2
+        };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertPacketHeaderEquals(25, PacketType.RST, 144, packetReader);
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof RstPacket);
+
+        var castedReadPacket = (RstPacket) readPacket;
+
+        assertPacketHeaderEquals(28, PacketType.RST, 144, castedReadPacket);
+        assertFalse(castedReadPacket.getRaceLaps().isPractice());
+        assertTrue(castedReadPacket.getRaceLaps().areLaps());
+        assertFalse(castedReadPacket.getRaceLaps().areHours());
+        assertEquals(15, castedReadPacket.getRaceLaps().getValue());
+        assertEquals(0, castedReadPacket.getQualMins());
+        assertEquals(20, castedReadPacket.getNumP());
+        assertTrue(castedReadPacket.getTiming().isStandardLapTiming());
+        assertFalse(castedReadPacket.getTiming().isCustomLapTiming());
+        assertFalse(castedReadPacket.getTiming().isNoLapTiming());
+        assertEquals(3, castedReadPacket.getTiming().getNumberOfCheckpoints());
+        assertEquals("FE1R", castedReadPacket.getTrack());
+        assertEquals(1, castedReadPacket.getWeather());
+        assertEquals(Wind.STRONG, castedReadPacket.getWind());
+        assertFlagsEqual(
+                RaceFlag.class,
+                Set.of(RaceFlag.CAN_VOTE, RaceFlag.MID_RACE, RaceFlag.FCV),
+                castedReadPacket.getFlags()
+        );
+        assertEquals(1000, castedReadPacket.getNumNodes());
+        assertEquals(0, castedReadPacket.getFinish());
+        assertEquals(224, castedReadPacket.getSplit1());
+        assertEquals(589, castedReadPacket.getSplit2());
+        assertEquals(701, castedReadPacket.getSplit3());
+    }
+
+    private void assertPacketHeaderEquals(int expectedDataBytesCount,
+                                          PacketType expectedPacketType,
+                                          int expectedReqI,
+                                          PacketReader packetReader) {
+        assertEquals(expectedPacketType, packetReader.getPacketType());
+        assertEquals(expectedDataBytesCount, packetReader.getDataBytesCount());
+        assertEquals(expectedReqI, packetReader.getPacketReqI());
+    }
+
+    private void assertPacketHeaderEquals(int expectedSize,
+                                          PacketType expectedPacketType,
+                                          int expectedReqI,
+                                          InfoPacket packet) {
+        assertEquals(expectedSize, packet.getSize());
+        assertEquals(expectedPacketType, packet.getType());
+        assertEquals(expectedReqI, packet.getReqI());
     }
 }

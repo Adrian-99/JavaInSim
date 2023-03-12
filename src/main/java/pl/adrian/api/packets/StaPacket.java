@@ -3,7 +3,7 @@ package pl.adrian.api.packets;
 import pl.adrian.api.packets.enums.*;
 import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.StaFlag;
-import pl.adrian.internal.RaceLaps;
+import pl.adrian.internal.packets.util.RaceLaps;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.CharArray;
 import pl.adrian.internal.packets.annotations.Float;

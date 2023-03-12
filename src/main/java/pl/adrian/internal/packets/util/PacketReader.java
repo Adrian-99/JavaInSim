@@ -3,9 +3,8 @@ package pl.adrian.internal.packets.util;
 import pl.adrian.api.packets.*;
 import pl.adrian.api.packets.enums.*;
 import pl.adrian.api.packets.flags.Flags;
+import pl.adrian.api.packets.flags.RaceFlag;
 import pl.adrian.api.packets.flags.StaFlag;
-import pl.adrian.internal.Constants;
-import pl.adrian.internal.RaceLaps;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.exceptions.PacketReadingException;
 
@@ -78,6 +77,7 @@ public class PacketReader {
             case ACR -> readAcrPacket();
             case ISM -> readIsmPacket();
             case VTN -> readVtnPacket();
+            case RST -> readRstPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -189,6 +189,40 @@ public class PacketReader {
         skipZeroBytes(2);
 
         return new VtnPacket(ucid, action);
+    }
+
+    private RstPacket readRstPacket() {
+        skipZeroByte();
+        var raceLaps = new RaceLaps(readByte());
+        var qualMins = readByte();
+        var numP = readByte();
+        var timing = new LapTiming(readByte());
+        var track = readCharArray(6);
+        var weather = readByte();
+        var wind = Wind.fromOrdinal(readByte());
+        var flags = new Flags<>(RaceFlag.class, readWord());
+        var numNodes = readWord();
+        var finish = readWord();
+        var split1 = readWord();
+        var split2 = readWord();
+        var split3 = readWord();
+
+        return new RstPacket(
+                packetReqI,
+                raceLaps,
+                qualMins,
+                numP,
+                timing,
+                track,
+                weather,
+                wind,
+                flags,
+                numNodes,
+                finish,
+                split1,
+                split2,
+                split3
+        );
     }
 
     private short readByte() {

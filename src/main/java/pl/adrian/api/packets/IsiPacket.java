@@ -1,6 +1,6 @@
 package pl.adrian.api.packets;
 
-import pl.adrian.internal.Constants;
+import pl.adrian.internal.packets.util.Constants;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.CharArray;
 import pl.adrian.internal.packets.annotations.Word;

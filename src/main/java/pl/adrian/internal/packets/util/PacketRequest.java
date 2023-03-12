@@ -1,4 +1,4 @@
-package pl.adrian.internal;
+package pl.adrian.internal.packets.util;
 
 import pl.adrian.api.PacketListener;
 import pl.adrian.api.packets.enums.PacketType;

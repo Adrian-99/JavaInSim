@@ -1,6 +1,7 @@
 package pl.adrian.api.packets.enums;
 
 import pl.adrian.api.packets.IsmPacket;
+import pl.adrian.api.packets.RstPacket;
 import pl.adrian.api.packets.StaPacket;
 import pl.adrian.api.packets.VerPacket;
 import pl.adrian.internal.packets.base.Packet;
@@ -88,9 +89,9 @@ public enum TinySubtype {
      */
     REO,
     /**
-     * 19 - info request: send an IS_RST
+     * 19 - info request: send an {@link RstPacket}
      */
-    RST,
+    RST(RstPacket.class),
     /**
      * 20 - info request: send an IS_AXI - AutoX Info
      */
