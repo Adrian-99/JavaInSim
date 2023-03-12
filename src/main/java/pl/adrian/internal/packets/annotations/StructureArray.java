@@ -7,18 +7,13 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation indicating that given field of packet is sent to and from LFS
- * in form of array of 1-byte characters.
+ * in form of array of structures.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface CharArray {
+public @interface StructureArray {
     /**
-     * @return length of the character array
+     * @return length of the structures array
      */
     int length();
-
-    /**
-     * @return whether length should be strictly validated
-     */
-    boolean strictLengthValidation() default false;
 }

@@ -3,7 +3,7 @@ package pl.adrian.internal.packets.exceptions;
 import java.lang.reflect.Field;
 
 /**
- * Exception that is thrown when error occurs while validating packet
+ * Exception that is thrown when error occurs while validating packet.
  */
 public class PacketValidationException extends RuntimeException {
     /**
@@ -16,7 +16,7 @@ public class PacketValidationException extends RuntimeException {
     private final FailureReason failureReason;
 
     /**
-     * Creates PacketValidationException for invalid field value error
+     * Creates PacketValidationException for invalid field value error.
      * @param field field with invalid value
      * @param minValue minimum allowed value
      * @param maxValue maximum allowed value
@@ -28,7 +28,7 @@ public class PacketValidationException extends RuntimeException {
     }
 
     /**
-     * Creates PacketValidationException for invalid field value error
+     * Creates PacketValidationException for invalid field value error.
      * @param field field with invalid value
      * @param minValue minimum allowed value
      * @param maxValue maximum allowed value
@@ -51,28 +51,38 @@ public class PacketValidationException extends RuntimeException {
     }
 
     /**
-     * Creates PacketValidationException for value too long error
+     * Creates PacketValidationException for array value too long error.
      * @param field field with invalid value
-     * @param valueLength actual value length
-     * @param maxValueLength maximum allowed value length
+     * @param valueLength actual value array length
+     * @param maxValueLength maximum allowed value array length
+     * @param lengthsMustEqual whether array lengths must equal (true) or array length may be lower (false)
+     * @param unit unit describing the length
      * @param typeName name of LFS field type
      */
-    public PacketValidationException(Field field, int valueLength, int maxValueLength, String typeName) {
+    public PacketValidationException(Field field,
+                                     int valueLength,
+                                     int maxValueLength,
+                                     boolean lengthsMustEqual,
+                                     String unit,
+                                     String typeName) {
         super(
                 String.format(
-                        "Invalid %s field value as %s - must not be longer than %d bytes - was %d bytes long",
+                        "Invalid %s field value as %s - length must %s %d %s - was %d %s long",
                         field.getName(),
                         typeName,
+                        lengthsMustEqual ? "be equal to" : "not be higher than",
                         maxValueLength,
-                        valueLength
+                        unit,
+                        valueLength,
+                        unit
                 )
         );
         this.field = field;
-        failureReason = FailureReason.VALUE_TOO_LONG;
+        failureReason = FailureReason.INCORRECT_VALUE_LENGTH;
     }
 
     /**
-     * Creates PacketValidationException for unsupported type error
+     * Creates PacketValidationException for unsupported type error.
      * @param field field with unsupported type
      * @param typeName name of LFS field type
      */
@@ -89,7 +99,7 @@ public class PacketValidationException extends RuntimeException {
     }
 
     /**
-     * Creates PacketValidationException for missing type annotation error
+     * Creates PacketValidationException for missing type annotation error.
      * @param field field with no annotation
      */
     public PacketValidationException(Field field) {
@@ -121,9 +131,9 @@ public class PacketValidationException extends RuntimeException {
          */
         VALUE_OUT_OF_RANGE,
         /**
-         * value was too long
+         * value length was incorrect
          */
-        VALUE_TOO_LONG,
+        INCORRECT_VALUE_LENGTH,
         /**
          * field had type unsupported by given LFS field type
          */

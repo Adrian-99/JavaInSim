@@ -15,13 +15,6 @@ import java.util.List;
  * This class is a helper that is used while validating packets.
  */
 public class PacketValidator {
-    private static final short BYTE_MIN_VALUE = 0;
-    private static final short BYTE_MAX_VALUE = 255;
-    private static final int WORD_MIN_VALUE = 0;
-    private static final int WORD_MAX_VALUE = 65535;
-    private static final long UNSIGNED_MIN_VALUE = 0;
-    private static final long UNSIGNED_MAX_VALUE = 4294967295L;
-
     private PacketValidator() {}
 
     /**
@@ -29,25 +22,9 @@ public class PacketValidator {
      * @param packet packet to be validated
      * @throws PacketValidationException if validation of any field fails
      */
-    @SuppressWarnings("java:S3011")
     public static void validate(SendablePacket packet) throws PacketValidationException {
         if (packet != null) {
-            for (var field : getAllPacketFields(packet.getClass())) {
-                try {
-                    field.setAccessible(true);
-                    var anyAnnotationFound = tryToValidateByte(field, packet) ||
-                            tryToValidateWord(field, packet) ||
-                            tryToValidateCharArray(field, packet) ||
-                            tryToValidateUnsigned(field, packet) ||
-                            tryToValidateInt(field, packet);
-
-                    if (!anyAnnotationFound) {
-                        throw new PacketValidationException(field);
-                    }
-                } catch (IllegalAccessException e) {
-                    throw new IllegalStateException(e);
-                }
-            }
+            validate(getAllPacketFields(packet.getClass()), packet);
         }
     }
 
@@ -60,15 +37,41 @@ public class PacketValidator {
         return currentClassFields;
     }
 
-    private static boolean tryToValidateByte(Field field, SendablePacket packet) throws IllegalAccessException {
-        if (field.getAnnotation(Byte.class) != null) {
-            validateByte(field, field.get(packet));
+    private static List<Field> getAllStructureFields(Class<?> structureClass) {
+        return List.of(structureClass.getDeclaredFields());
+    }
+
+    @SuppressWarnings("java:S3011")
+    private static void validate(List<Field> fields, Object packetOrStructure) {
+        for (var field : fields) {
+            try {
+                field.setAccessible(true);
+                var anyAnnotationFound = tryToValidateByte(field, packetOrStructure) ||
+                        tryToValidateWord(field, packetOrStructure) ||
+                        tryToValidateCharArray(field, packetOrStructure) ||
+                        tryToValidateUnsigned(field, packetOrStructure) ||
+                        tryToValidateInt(field, packetOrStructure) ||
+                        tryToValidateStructureArray(field, packetOrStructure);
+
+                if (!anyAnnotationFound) {
+                    throw new PacketValidationException(field);
+                }
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+    }
+
+    private static boolean tryToValidateByte(Field field, Object packetOrStructure) throws IllegalAccessException {
+        var annotation = field.getAnnotation(Byte.class);
+        if (annotation != null) {
+            validateByte(annotation, field, field.get(packetOrStructure));
             return true;
         }
         return false;
     }
 
-    private static void validateByte(Field field, Object value) throws PacketValidationException {
+    private static void validateByte(Byte annotation, Field field, Object value) throws PacketValidationException {
         var typeName = "Byte";
         if (value != null) {
             int intValue;
@@ -86,21 +89,28 @@ public class PacketValidator {
                 throw new PacketValidationException(field, typeName);
             }
 
-            if (intValue < BYTE_MIN_VALUE || intValue > BYTE_MAX_VALUE) {
-                throw new PacketValidationException(field, BYTE_MIN_VALUE, BYTE_MAX_VALUE, intValue, typeName);
+            if (intValue < annotation.minValue() || intValue > annotation.maxValue()) {
+                throw new PacketValidationException(
+                        field,
+                        annotation.minValue(),
+                        annotation.maxValue(),
+                        intValue,
+                        typeName
+                );
             }
         }
     }
 
-    private static boolean tryToValidateWord(Field field, SendablePacket packet) throws IllegalAccessException {
-        if (field.getAnnotation(Word.class) != null) {
-            validateWord(field, field.get(packet));
+    private static boolean tryToValidateWord(Field field, Object packetOrStructure) throws IllegalAccessException {
+        var annotation = field.getAnnotation(Word.class);
+        if (annotation != null) {
+            validateWord(annotation, field, field.get(packetOrStructure));
             return true;
         }
         return false;
     }
 
-    private static void validateWord(Field field, Object value) throws PacketValidationException {
+    private static void validateWord(Word annotation, Field field, Object value) throws PacketValidationException {
         var typeName = "Word";
         if (value != null) {
             int intValue;
@@ -114,16 +124,22 @@ public class PacketValidator {
                 throw new PacketValidationException(field, typeName);
             }
 
-            if (intValue < WORD_MIN_VALUE || intValue > WORD_MAX_VALUE) {
-                throw new PacketValidationException(field, WORD_MIN_VALUE, WORD_MAX_VALUE, intValue, typeName);
+            if (intValue < annotation.minValue() || intValue > annotation.maxValue()) {
+                throw new PacketValidationException(
+                        field,
+                        annotation.minValue(),
+                        annotation.maxValue(),
+                        intValue,
+                        typeName
+                );
             }
         }
     }
 
-    private static boolean tryToValidateCharArray(Field field, SendablePacket packet) throws IllegalAccessException {
+    private static boolean tryToValidateCharArray(Field field, Object packetOrStructure) throws IllegalAccessException {
         var annotation = field.getAnnotation(CharArray.class);
         if (annotation != null) {
-            validateCharArray(annotation, field, field.get(packet));
+            validateCharArray(annotation, field, field.get(packetOrStructure));
             return true;
         }
         return false;
@@ -138,6 +154,8 @@ public class PacketValidator {
                             field,
                             stringValue.length(),
                             annotation.length() - 1,
+                            false,
+                            "bytes",
                             typeName
                     );
                 }
@@ -147,20 +165,27 @@ public class PacketValidator {
         }
     }
 
-    private static boolean tryToValidateUnsigned(Field field, SendablePacket packet) throws IllegalAccessException {
-        if (field.getAnnotation(Unsigned.class) != null) {
-            validateUnsigned(field, field.get(packet));
+    private static boolean tryToValidateUnsigned(Field field, Object packetOrStructure) throws IllegalAccessException {
+        var annotation = field.getAnnotation(Unsigned.class);
+        if (annotation != null) {
+            validateUnsigned(annotation, field, field.get(packetOrStructure));
             return true;
         }
         return false;
     }
 
-    private static void validateUnsigned(Field field, Object value) {
+    private static void validateUnsigned(Unsigned annotation, Field field, Object value) {
         var typeName = "Unsigned";
         if (value != null) {
             if (value instanceof Long longValue) {
-                if (longValue < UNSIGNED_MIN_VALUE || longValue > UNSIGNED_MAX_VALUE) {
-                    throw new PacketValidationException(field, UNSIGNED_MIN_VALUE, UNSIGNED_MAX_VALUE, longValue, typeName);
+                if (longValue < annotation.minValue() || longValue > annotation.maxValue()) {
+                    throw new PacketValidationException(
+                            field,
+                            annotation.minValue(),
+                            annotation.maxValue(),
+                            longValue,
+                            typeName
+                    );
                 }
             } else {
                 throw new PacketValidationException(field, typeName);
@@ -168,17 +193,63 @@ public class PacketValidator {
         }
     }
 
-    private static boolean tryToValidateInt(Field field, SendablePacket packet) throws IllegalAccessException {
-        if (field.getAnnotation(Int.class) != null) {
-            validateInt(field, field.get(packet));
+    private static boolean tryToValidateInt(Field field, Object packetOrStructure) throws IllegalAccessException {
+        var annotation = field.getAnnotation(Int.class);
+        if (annotation != null) {
+            validateInt(annotation, field, field.get(packetOrStructure));
             return true;
         }
         return false;
     }
 
-    private static void validateInt(Field field, Object value) {
+    private static void validateInt(Int annotation, Field field, Object value) {
         var typeName = "Int";
-        if (value != null && !(value instanceof Integer)) {
+        if (value != null) {
+            if (value instanceof Integer intValue) {
+                if (intValue < annotation.minValue() || intValue > annotation.maxValue()) {
+                    throw new PacketValidationException(
+                            field,
+                            annotation.minValue(),
+                            annotation.maxValue(),
+                            intValue,
+                            typeName
+                    );
+                }
+            } else {
+                throw new PacketValidationException(field, typeName);
+            }
+        }
+    }
+
+    private static boolean tryToValidateStructureArray(Field field, Object packetOrStructure) throws IllegalAccessException {
+        var annotation = field.getAnnotation(StructureArray.class);
+        if (annotation != null) {
+            validateStructureArray(annotation, field, field.get(packetOrStructure));
+            return true;
+        }
+        return false;
+    }
+
+    private static void validateStructureArray(StructureArray annotation, Field field, Object value) {
+        var typeName = "StructureArray";
+        if (value instanceof Object[] arrayValue) {
+            if (arrayValue.length == annotation.length()) {
+                for (var arrayElement : arrayValue) {
+                    if (arrayElement != null) {
+                        validate(getAllStructureFields(arrayElement.getClass()), arrayElement);
+                    }
+                }
+            } else {
+                throw new PacketValidationException(
+                        field,
+                        arrayValue.length,
+                        annotation.length(),
+                        true,
+                        "objects",
+                        typeName
+                );
+            }
+        } else {
             throw new PacketValidationException(field, typeName);
         }
     }

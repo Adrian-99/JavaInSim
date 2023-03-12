@@ -12,4 +12,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Byte {
+    /**
+     * @return minimum allowed value, 0 by default
+     */
+    short minValue() default 0;
+
+    /**
+     * @return maximum allowed value, 255 by default
+     */
+    short maxValue() default 255;
 }

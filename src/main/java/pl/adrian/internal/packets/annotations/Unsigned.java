@@ -12,4 +12,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Unsigned {
+    /**
+     * @return minimum allowed value, 0 by default
+     */
+    long minValue() default 0;
+
+    /**
+     * @return maximum allowed value, 4294967295 by default
+     */
+    long maxValue() default 4294967295L;
 }

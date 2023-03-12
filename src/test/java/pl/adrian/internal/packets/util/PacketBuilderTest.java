@@ -1,11 +1,19 @@
 package pl.adrian.internal.packets.util;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.adrian.api.packets.enums.PacketType;
+import pl.adrian.internal.packets.annotations.Byte;
+import pl.adrian.internal.packets.structures.SendableStructure;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PacketBuilderTest {
+
+    @BeforeEach
+    void beforeEach() {
+        TestStructure.resetMethodCallsCounter();
+    }
 
     @Test
     void buildEmptyPacket() {
@@ -361,5 +369,84 @@ class PacketBuilderTest {
         assertEquals(121, bytes[5]);
         assertEquals(-117, bytes[6]);
         assertEquals(55, bytes[7]);
+    }
+
+    @Test
+    void writeStructureArray_fromRegularArray() {
+        var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
+        packetBuilder.writeStructureArray(
+                new TestStructure[] {
+                        new TestStructure(5),
+                        new TestStructure(6),
+                        new TestStructure(7),
+                        new TestStructure(8),
+                },
+                1
+        );
+        packetBuilder.writeByte(55);
+        var bytes = packetBuilder.getBytes();
+
+        assertEquals(8, bytes.length);
+        assertEquals(2, bytes[0]);
+        assertEquals(1, bytes[1]);
+        assertEquals(-102, bytes[2]);
+        assertEquals(5, bytes[3]);
+        assertEquals(6, bytes[4]);
+        assertEquals(7, bytes[5]);
+        assertEquals(8, bytes[6]);
+        assertEquals(55, bytes[7]);
+        assertEquals(4, TestStructure.getAppendBytesMethodCallsCount());
+    }
+
+    @Test
+    void writeStructureArray_fromArrayWithNulls() {
+        var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
+        packetBuilder.writeStructureArray(
+                new TestStructure[] {
+                        new TestStructure(5),
+                        null,
+                        null,
+                        new TestStructure(8),
+                },
+                1
+        );
+        packetBuilder.writeByte(55);
+        var bytes = packetBuilder.getBytes();
+
+        assertEquals(8, bytes.length);
+        assertEquals(2, bytes[0]);
+        assertEquals(1, bytes[1]);
+        assertEquals(-102, bytes[2]);
+        assertEquals(5, bytes[3]);
+        assertEquals(0, bytes[4]);
+        assertEquals(0, bytes[5]);
+        assertEquals(8, bytes[6]);
+        assertEquals(55, bytes[7]);
+        assertEquals(2, TestStructure.getAppendBytesMethodCallsCount());
+    }
+
+    private static class TestStructure implements SendableStructure {
+        @Byte
+        private final short structureField;
+
+        private static int appendBytesMethodCallsCount = 0;
+
+        private TestStructure(int structureField) {
+            this.structureField = (short) structureField;
+        }
+
+        @Override
+        public void appendBytes(PacketBuilder packetBuilder) {
+            appendBytesMethodCallsCount++;
+            packetBuilder.writeByte(structureField);
+        }
+
+        public static void resetMethodCallsCounter() {
+            appendBytesMethodCallsCount = 0;
+        }
+
+        public static int getAppendBytesMethodCallsCount() {
+            return appendBytesMethodCallsCount;
+        }
     }
 }

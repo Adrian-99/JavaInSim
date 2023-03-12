@@ -12,4 +12,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Word {
+    /**
+     * @return minimum allowed value, 0 by default
+     */
+    int minValue() default 0;
+
+    /**
+     * @return maximum allowed value, 65535 by default
+     */
+    int maxValue() default 65535;
 }

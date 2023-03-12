@@ -235,7 +235,7 @@ public enum PacketType {
     /**
      * 56 - instruction: car handicaps
      */
-    HCP,
+    HCP(HcpPacket.class),
     /**
      * 57 - info: new connection - extra info for host
      */

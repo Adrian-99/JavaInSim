@@ -1,6 +1,7 @@
 package pl.adrian.internal.packets.util;
 
 import pl.adrian.api.packets.enums.PacketType;
+import pl.adrian.internal.packets.structures.SendableStructure;
 
 /**
  * This class is a helper that is used while converting packets to their byte array representation.
@@ -147,6 +148,23 @@ public class PacketBuilder {
      */
     public PacketBuilder writeInt(int value) {
         return writeUnsigned(value);
+    }
+
+    /**
+     * Appends to byte array structures array.
+     * @param value structures array value
+     * @param singleStructureSize size (in bytes) of single structure
+     * @return packet builder
+     */
+    public PacketBuilder writeStructureArray(SendableStructure[] value, int singleStructureSize) {
+        for (var structure : value) {
+            if (structure != null) {
+                structure.appendBytes(this);
+            } else {
+                writeZeroBytes(singleStructureSize);
+            }
+        }
+        return this;
     }
 
     /**

@@ -12,4 +12,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Int {
+    /**
+     * @return minimum allowed value, {@link Integer#MIN_VALUE} by default
+     */
+    int minValue() default Integer.MIN_VALUE;
+
+    /**
+     * @return maximum allowed value, {@link Integer#MAX_VALUE} by default
+     */
+    int maxValue() default Integer.MAX_VALUE;
 }
