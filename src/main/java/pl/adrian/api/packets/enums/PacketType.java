@@ -83,7 +83,7 @@ public enum PacketType {
     /**
      * 18 - info: new connection
      */
-    NCN,
+    NCN(NcnPacket.class),
     /**
      * 19 - info: connection left
      */

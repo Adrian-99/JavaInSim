@@ -1,9 +1,6 @@
 package pl.adrian.api.packets.enums;
 
-import pl.adrian.api.packets.IsmPacket;
-import pl.adrian.api.packets.RstPacket;
-import pl.adrian.api.packets.StaPacket;
-import pl.adrian.api.packets.VerPacket;
+import pl.adrian.api.packets.*;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
 import pl.adrian.internal.packets.enums.EnumHelpers;
@@ -65,9 +62,9 @@ public enum TinySubtype {
      */
     CLR,
     /**
-     * 13 - info request: get NCN for all connections
+     * 13 - info request: get {@link NcnPacket} for all connections
      */
-    NCN,
+    NCN(NcnPacket.class),
     /**
      * 14 - info request: get all players
      */

@@ -3,6 +3,7 @@ package pl.adrian.internal.packets.util;
 import pl.adrian.api.packets.*;
 import pl.adrian.api.packets.enums.*;
 import pl.adrian.api.packets.flags.Flags;
+import pl.adrian.api.packets.flags.NcnFlag;
 import pl.adrian.api.packets.flags.RaceFlag;
 import pl.adrian.api.packets.flags.StaFlag;
 import pl.adrian.internal.packets.base.InfoPacket;
@@ -78,6 +79,7 @@ public class PacketReader {
             case ISM -> readIsmPacket();
             case VTN -> readVtnPacket();
             case RST -> readRstPacket();
+            case NCN -> readNcnPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -223,6 +225,18 @@ public class PacketReader {
                 split2,
                 split3
         );
+    }
+
+    private NcnPacket readNcnPacket() {
+        var ucid = readByte();
+        var uName = readCharArray(24);
+        var pName = readCharArray(24);
+        var isAdmin = readByte() == 1;
+        var total = readByte();
+        var flags = new Flags<>(NcnFlag.class, readByte());
+        skipZeroByte();
+
+        return new NcnPacket(packetReqI, ucid, uName, pName, isAdmin, total, flags);
     }
 
     private short readByte() {
