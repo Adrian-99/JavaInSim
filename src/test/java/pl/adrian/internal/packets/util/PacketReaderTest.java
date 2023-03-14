@@ -364,6 +364,27 @@ class PacketReaderTest {
         assertFlagsEqual(NcnFlag.class, Set.of(NcnFlag.REMOTE), castedReadPacket.getFlags());
     }
 
+    @Test
+    void readNciPacket() {
+        var headerBytes = new byte[] { 4, 57, -112 };
+        var dataBytes = new byte[] { 31, 17, 0, 0, 0, 112, -42, 0, 0, 54, 120, -95, 64 };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertPacketHeaderEquals(13, PacketType.NCI, 144, packetReader);
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof NciPacket);
+
+        var castedReadPacket = (NciPacket) readPacket;
+
+        assertPacketHeaderEquals(16, PacketType.NCI, 144, castedReadPacket);
+        assertEquals(31, castedReadPacket.getUcid());
+        assertEquals(Language.POLSKI, castedReadPacket.getLanguage());
+        assertEquals(54896, castedReadPacket.getUserId());
+        assertEquals(1084323894, castedReadPacket.getIpAddress());
+    }
+
     private void assertPacketHeaderEquals(int expectedDataBytesCount,
                                           PacketType expectedPacketType,
                                           int expectedReqI,

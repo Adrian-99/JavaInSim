@@ -80,6 +80,7 @@ public class PacketReader {
             case VTN -> readVtnPacket();
             case RST -> readRstPacket();
             case NCN -> readNcnPacket();
+            case NCI -> readNciPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -237,6 +238,16 @@ public class PacketReader {
         skipZeroByte();
 
         return new NcnPacket(packetReqI, ucid, uName, pName, isAdmin, total, flags);
+    }
+
+    private NciPacket readNciPacket() {
+        var ucid = readByte();
+        var language = Language.fromOrdinal(readByte());
+        skipZeroBytes(3);
+        var userId = readUnsigned();
+        var ipAddress = readUnsigned();
+
+        return new NciPacket(packetReqI, ucid, language, userId, ipAddress);
     }
 
     private short readByte() {

@@ -239,7 +239,7 @@ public enum PacketType {
     /**
      * 57 - info: new connection - extra info for host
      */
-    NCI,
+    NCI(NciPacket.class),
     /**
      * 58 - instruction: reply to a join request (allow / disallow)
      */

@@ -102,9 +102,9 @@ public enum TinySubtype {
      */
     RIP,
     /**
-     * 23 - info request: get NCI for all guests (on host only)
+     * 23 - info request: get {@link NciPacket} for all guests (on host only)
      */
-    NCI,
+    NCI(NciPacket.class, true),
     /**
      * 24 - info request: send a SMALL_ALC (allowed cars)
      */
