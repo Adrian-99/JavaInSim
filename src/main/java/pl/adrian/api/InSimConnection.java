@@ -17,9 +17,14 @@ import pl.adrian.internal.packets.util.PacketReader;
 
 import java.io.*;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 /**
  * This class is responsible for connecting and communicating with LFS.
@@ -29,13 +34,24 @@ public class InSimConnection implements Closeable {
     private final OutputStream out;
     private final InputStream in;
     private final Random random;
-    private final ExecutorService threadsExecutor;
+    private final ScheduledExecutorService threadsExecutor;
     @SuppressWarnings("rawtypes")
     private final Map<PacketType, Set<PacketListener>> registeredListeners;
     @SuppressWarnings("rawtypes")
     private final List<PacketRequest> packetRequests;
 
+    /**
+     * Time period (in milliseconds) after which inactive packet requests will be removed.
+     */
+    protected short packetRequestTimeoutMs;
+    /**
+     * Time interval (in milliseconds) in which checks for inactive packet requests will be made.
+     */
+    protected short clearPacketRequestsIntervalMs;
+
     private boolean isConnected = false;
+    private ScheduledFuture<?> clearPacketRequestsThread;
+
 
     /**
      * Creates InSim connection and sends specified initialization packet.
@@ -49,9 +65,11 @@ public class InSimConnection implements Closeable {
         out = socket.getOutputStream();
         in = socket.getInputStream();
         random = new Random();
-        threadsExecutor = Executors.newFixedThreadPool(2);
+        threadsExecutor = Executors.newScheduledThreadPool(2);
         registeredListeners = new EnumMap<>(PacketType.class);
         packetRequests = new ArrayList<>();
+        packetRequestTimeoutMs = 10000;
+        clearPacketRequestsIntervalMs = 2000;
 
         threadsExecutor.submit(this::readIncomingPackets);
         send(initializationPacket);
@@ -130,10 +148,10 @@ public class InSimConnection implements Closeable {
     }
 
     /**
-     * Requests packet of specified type from LFS. Calling this method causes sending appropriate
-     * {@link TinyPacket} to LFS that is a request for specified packet. The {@link TinyPacket}
-     * contains randomly generated reqI value from range 1-255. When requested packet is received,
-     * specified callback function will be called.
+     * Requests packet(s) of specified type from LFS. Calling this method causes sending appropriate
+     * {@link TinyPacket} to LFS that is a request for specified packet(s). The {@link TinyPacket}
+     * contains randomly generated reqI value from range 1-255. When requested packet(s) is/are received,
+     * specified callback function will be called (separately for each packet, if multiple).
      * @param packetClass class of the packet that is requested
      * @param callback function that will be called when requested packet is received
      * @param <T> type of the packet that is requested
@@ -164,10 +182,27 @@ public class InSimConnection implements Closeable {
     private <T extends Packet & InfoPacket> void handleRequest(PacketType packetType,
                                                                TinySubtype tinySubtype,
                                                                PacketListener<T> callback) throws IOException {
-        var reqI = (short) random.nextInt(1, 256);
+        var allowedReqIs = IntStream.range(1, 256).filter(
+                reqI -> packetRequests.stream().noneMatch(
+                        request -> request.getReqI() == reqI && request.getPacketType().equals(packetType)
+                )
+        ).toArray();
+        var reqIIndex = random.nextInt(0, allowedReqIs.length);
+        var reqI = (short) allowedReqIs[reqIIndex];
+
+        packetRequests.add(new PacketRequest<>(packetType, tinySubtype.isMultiPacketResponse(), reqI, callback));
+
         var tinyPacket = new TinyPacket(tinySubtype, reqI);
-        packetRequests.add(new PacketRequest<>(packetType, reqI, callback));
         send(tinyPacket);
+
+        if (clearPacketRequestsThread == null || clearPacketRequestsThread.isCancelled()) {
+            clearPacketRequestsThread = threadsExecutor.scheduleAtFixedRate(
+                    this::clearTimedOutPacketRequests,
+                    packetRequestTimeoutMs,
+                    clearPacketRequestsIntervalMs,
+                    TimeUnit.MILLISECONDS
+            );
+        }
     }
 
     private void readIncomingPackets() {
@@ -198,7 +233,7 @@ public class InSimConnection implements Closeable {
                 packetType == PacketType.TINY ||
                 registeredListeners.containsKey(packetType) ||
                 packetRequests.stream().anyMatch(request ->
-                        request.packetType().equals(packetType) && request.reqI() == reqI
+                        request.getPacketType().equals(packetType) && request.getReqI() == reqI
                 );
     }
 
@@ -235,15 +270,35 @@ public class InSimConnection implements Closeable {
     private void handleReadPacketForPacketRequests(InfoPacket packet) {
         if (!packetRequests.isEmpty()) {
             for (var packetRequest : packetRequests) {
-                if (packetRequest.packetType().equals(packet.getType()) &&
-                        packetRequest.reqI() == packet.getReqI()) {
+                if (packetRequest.getPacketType().equals(packet.getType()) &&
+                        packetRequest.getReqI() == packet.getReqI()) {
                     threadsExecutor.submit(() ->
-                            packetRequest.callback().onPacketReceived(this, packet)
+                            packetRequest.getCallback().onPacketReceived(this, packet)
                     );
-                    packetRequests.remove(packetRequest);
+                    if (!packetRequest.isExpectMultiPacketResponse()) {
+                        packetRequests.remove(packetRequest);
+                        tryToStopClearPacketRequestsThread();
+                    } else {
+                        packetRequest.setLastUpdateNow();
+                    }
                     break;
                 }
             }
+        }
+    }
+
+    private void clearTimedOutPacketRequests() {
+        packetRequests.removeIf(
+                packetRequest -> packetRequest.getLastUpdateAt()
+                        .until(LocalDateTime.now(), ChronoUnit.MILLIS) >
+                        packetRequestTimeoutMs
+        );
+        tryToStopClearPacketRequestsThread();
+    }
+
+    private void tryToStopClearPacketRequestsThread() {
+        if (packetRequests.isEmpty() && clearPacketRequestsThread != null) {
+            clearPacketRequestsThread.cancel(false);
         }
     }
 }

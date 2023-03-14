@@ -64,7 +64,7 @@ public enum TinySubtype {
     /**
      * 13 - info request: get {@link NcnPacket} for all connections
      */
-    NCN(NcnPacket.class),
+    NCN(NcnPacket.class, true),
     /**
      * 14 - info request: get all players
      */
@@ -123,13 +123,28 @@ public enum TinySubtype {
     MAL;
 
     private final Class<? extends RequestablePacket> requestablePacketClass;
+    private final boolean multiPacketResponse;
+
+    TinySubtype(Class<? extends RequestablePacket> requestablePacketClass, boolean multiPacketResponse) {
+        this.requestablePacketClass = requestablePacketClass;
+        this.multiPacketResponse = multiPacketResponse;
+    }
 
     TinySubtype(Class<? extends RequestablePacket> requestablePacketClass) {
         this.requestablePacketClass = requestablePacketClass;
+        this.multiPacketResponse = false;
     }
 
     TinySubtype() {
         this.requestablePacketClass = null;
+        this.multiPacketResponse = false;
+    }
+
+    /**
+     * @return whether multiple packets are expected in response to request of this type
+     */
+    public boolean isMultiPacketResponse() {
+        return multiPacketResponse;
     }
 
     /**
