@@ -385,6 +385,25 @@ class PacketReaderTest {
         assertEquals(1084323894, castedReadPacket.getIpAddress());
     }
 
+    @Test
+    void readSlcPacket() {
+        var headerBytes = new byte[] { 2, 62, -112 };
+        var dataBytes = new byte[] { 9, 88, 82, 84, 0 };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertPacketHeaderEquals(5, PacketType.SLC, 144, packetReader);
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof SlcPacket);
+
+        var castedReadPacket = (SlcPacket) readPacket;
+
+        assertPacketHeaderEquals(8, PacketType.SLC, 144, castedReadPacket);
+        assertEquals(9, castedReadPacket.getUcid());
+        assertEquals("XRT", castedReadPacket.getCName());
+    }
+
     private void assertPacketHeaderEquals(int expectedDataBytesCount,
                                           PacketType expectedPacketType,
                                           int expectedReqI,

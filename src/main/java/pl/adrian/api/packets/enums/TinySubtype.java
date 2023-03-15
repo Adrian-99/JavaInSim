@@ -116,7 +116,7 @@ public enum TinySubtype {
     /**
      * 26 - info request: send IS_SLC packets for all connections
      */
-    SLC,
+    SLC(SlcPacket.class, true),
     /**
      * 27 - info request: send IS_MAL listing the currently allowed mods
      */

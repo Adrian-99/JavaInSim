@@ -259,7 +259,7 @@ public enum PacketType {
     /**
      * 62 - info: connection selected a car
      */
-    SLC,
+    SLC(SlcPacket.class),
     /**
      * 63 - info: car state changed
      */
