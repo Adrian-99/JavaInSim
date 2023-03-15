@@ -55,7 +55,7 @@ public class SmallPacket extends Packet implements InstructionPacket, InfoPacket
      * @param lcsFlags local car switches
      */
     public SmallPacket(LcsFlag... lcsFlags) {
-        this(SmallSubtype.LCS, new Flags<>(lcsFlags).getValue(), 0);
+        this(SmallSubtype.LCS, new Flags<>(lcsFlags).getUnsignedValue(), 0);
     }
 
     /**
@@ -63,7 +63,7 @@ public class SmallPacket extends Packet implements InstructionPacket, InfoPacket
      * @param cars allowed cars
      */
     public SmallPacket(Car... cars) {
-        this(SmallSubtype.ALC, new Flags<>(cars).getValue(), 0);
+        this(SmallSubtype.ALC, new Flags<>(cars).getUnsignedValue(), 0);
     }
 
     @Override

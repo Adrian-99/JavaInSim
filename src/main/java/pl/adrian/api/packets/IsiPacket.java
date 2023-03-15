@@ -62,7 +62,7 @@ public class IsiPacket extends Packet implements InstructionPacket {
         return new PacketBuilder(size, type, reqI)
                 .writeZeroByte()
                 .writeWord(udpPort)
-                .writeWord(flags.getValue())
+                .writeWord(flags.getWordValue())
                 .writeByte(inSimVer)
                 .writeByte(prefix)
                 .writeWord(interval)

@@ -1,13 +1,13 @@
 package pl.adrian.api.packets.structures;
 
 import pl.adrian.internal.packets.annotations.Byte;
-import pl.adrian.internal.packets.structures.InstructionStructure;
+import pl.adrian.internal.packets.structures.base.ComplexInstructionStructure;
 import pl.adrian.internal.packets.util.PacketBuilder;
 
 /**
  * Car handicaps in 2 bytes - there is an array of these in the {@link pl.adrian.api.packets.HcpPacket HcpPacket}.
  */
-public class CarHandicaps implements InstructionStructure {
+public class CarHandicaps implements ComplexInstructionStructure {
     @Byte(maxValue = 200)
     private final short hMass;
     @Byte(maxValue = 50)

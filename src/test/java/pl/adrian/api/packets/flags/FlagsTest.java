@@ -10,7 +10,9 @@ class FlagsTest {
     void createFlags_fromFlag() {
         var flags = new Flags<>(IsiFlag.LOCAL, IsiFlag.MSO_COLS, IsiFlag.NLP, IsiFlag.CON, IsiFlag.REQ_JOIN);
 
-        assertEquals(2140, flags.getValue());
+        assertEquals(2140, flags.getByteValue());
+        assertEquals(2140, flags.getWordValue());
+        assertEquals(2140, flags.getUnsignedValue());
         assertTrue(flags.hasNoFlag(IsiFlag.RES_0));
         assertTrue(flags.hasNoFlag(IsiFlag.RES_1));
         assertTrue(flags.hasFlag(IsiFlag.LOCAL));
@@ -29,7 +31,9 @@ class FlagsTest {
     void createFlags_fromFlagWithCustomValue() {
         var flags = new Flags<>(LcsFlag.SIGNALS_HAZARD, LcsFlag.FLASH_OFF, LcsFlag.HORN_3, LcsFlag.SIREN_OFF);
 
-        assertEquals(197403, flags.getValue());
+        assertEquals(795, flags.getByteValue());
+        assertEquals(197403, flags.getWordValue());
+        assertEquals(197403, flags.getUnsignedValue());
         assertTrue(flags.hasNoFlag(LcsFlag.SIGNALS_OFF));
         assertTrue(flags.hasNoFlag(LcsFlag.SIGNALS_LEFT));
         assertTrue(flags.hasNoFlag(LcsFlag.SIGNALS_RIGHT));
@@ -53,7 +57,9 @@ class FlagsTest {
     void createFlags_fromBinary() {
         var flags = new Flags<>(IsiFlag.class, 1220);
 
-        assertEquals(1220, flags.getValue());
+        assertEquals(1220, flags.getByteValue());
+        assertEquals(1220, flags.getWordValue());
+        assertEquals(1220, flags.getUnsignedValue());
         assertTrue(flags.hasNoFlag(IsiFlag.RES_0));
         assertTrue(flags.hasNoFlag(IsiFlag.RES_1));
         assertTrue(flags.hasFlag(IsiFlag.LOCAL));
@@ -72,7 +78,9 @@ class FlagsTest {
     void createFlags_fromBinaryOfFlagWithCustomValue() {
         var flags = new Flags<>(LcsFlag.class, 264735);
 
-        assertEquals(264735, flags.getValue());
+        assertEquals(2591, flags.getByteValue());
+        assertEquals(264735, flags.getWordValue());
+        assertEquals(264735, flags.getUnsignedValue());
         assertTrue(flags.hasNoFlag(LcsFlag.SIGNALS_OFF));
         assertTrue(flags.hasNoFlag(LcsFlag.SIGNALS_LEFT));
         assertTrue(flags.hasFlag(LcsFlag.SIGNALS_RIGHT));

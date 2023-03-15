@@ -1,4 +1,4 @@
-package pl.adrian.internal.packets.util;
+package pl.adrian.internal.packets.structures;
 
 /**
  * This class helps to interpret lap timing info returned from LFS.

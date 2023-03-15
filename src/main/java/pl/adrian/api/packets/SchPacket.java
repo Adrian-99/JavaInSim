@@ -39,7 +39,7 @@ public class SchPacket extends Packet implements InstructionPacket {
         return new PacketBuilder(size, type, reqI)
                 .writeZeroByte()
                 .writeByte(charB)
-                .writeByte(flags.getValue())
+                .writeByte(flags.getByteValue())
                 .writeZeroBytes(2)
                 .getBytes();
     }

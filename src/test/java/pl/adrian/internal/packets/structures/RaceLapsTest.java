@@ -1,4 +1,4 @@
-package pl.adrian.internal.packets.util;
+package pl.adrian.internal.packets.structures;
 
 import org.junit.jupiter.api.Test;
 

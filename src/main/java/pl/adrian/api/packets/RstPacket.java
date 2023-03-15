@@ -4,13 +4,13 @@ import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.Wind;
 import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.RaceFlag;
-import pl.adrian.internal.packets.util.LapTiming;
+import pl.adrian.internal.packets.structures.LapTiming;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.CharArray;
 import pl.adrian.internal.packets.annotations.Word;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
-import pl.adrian.internal.packets.util.RaceLaps;
+import pl.adrian.internal.packets.structures.RaceLaps;
 
 /**
  * Race STart. The packet is sent by LFS when race starts.

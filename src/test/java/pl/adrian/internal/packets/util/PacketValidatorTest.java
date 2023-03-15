@@ -8,8 +8,10 @@ import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.enums.EnumWithCustomValue;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
-import pl.adrian.api.packets.flags.Flags;
-import pl.adrian.internal.packets.structures.InstructionStructure;
+import pl.adrian.internal.packets.structures.base.ByteInstructionStructure;
+import pl.adrian.internal.packets.structures.base.ComplexInstructionStructure;
+import pl.adrian.internal.packets.structures.base.UnsignedInstructionStructure;
+import pl.adrian.internal.packets.structures.base.WordInstructionStructure;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,16 +25,16 @@ class PacketValidatorTest {
                 54,
                 null,
                 true,
-                new Flags<>(TestEnum.VALUE2),
+                new TestSimpleStructure(64),
                 354,
-                new Flags<>(TestEnum.VALUE1),
+                new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 null,
                 112946L,
-                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
+                new TestSimpleStructure(150685),
                 1834749274,
-                new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
+                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         assertDoesNotThrow(() -> PacketValidator.validate(packet));
     }
@@ -45,16 +47,16 @@ class PacketValidatorTest {
                 -5,
                 null,
                 true,
-                new Flags<>(TestEnum.VALUE2),
+                new TestSimpleStructure(64),
                 354,
-                new Flags<>(TestEnum.VALUE1),
+                new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 null,
                 112946L,
-                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
+                new TestSimpleStructure(150685),
                 1834749274,
-                new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
+                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
@@ -69,16 +71,16 @@ class PacketValidatorTest {
                 350,
                 null,
                 true,
-                new Flags<>(TestEnum.VALUE2),
+                new TestSimpleStructure(64),
                 354,
-                new Flags<>(TestEnum.VALUE1),
+                new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 null,
                 112946L,
-                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
+                new TestSimpleStructure(150685),
                 1834749274,
-                new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
+                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
@@ -93,16 +95,16 @@ class PacketValidatorTest {
                 54,
                 null,
                 true,
-                new Flags<>(TestEnum.VALUE2),
+                new TestSimpleStructure(64),
                 -15,
-                new Flags<>(TestEnum.VALUE1),
+                new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 null,
                 112946L,
-                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
+                new TestSimpleStructure(150685),
                 1834749274,
-                new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
+                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
@@ -117,16 +119,16 @@ class PacketValidatorTest {
                 54,
                 'a',
                 false,
-                new Flags<>(TestEnum.VALUE2),
+                new TestSimpleStructure(64),
                 74956,
-                new Flags<>(TestEnum.VALUE1),
+                new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 null,
                 112946L,
-                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
+                new TestSimpleStructure(150685),
                 1834749274,
-                new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
+                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
@@ -141,16 +143,16 @@ class PacketValidatorTest {
                 54,
                 'a',
                 false,
-                new Flags<>(TestEnum.VALUE2),
+                new TestSimpleStructure(64),
                 354,
-                new Flags<>(TestEnum.VALUE1),
+                new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 "abcdefghij",
                 112946L,
-                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
+                new TestSimpleStructure(150685),
                 1834749274,
-                new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
+                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.INCORRECT_VALUE_LENGTH, exception.getFailureReason());
@@ -165,16 +167,16 @@ class PacketValidatorTest {
                 54,
                 'a',
                 false,
-                new Flags<>(TestEnum.VALUE2),
+                new TestSimpleStructure(64),
                 354,
-                new Flags<>(TestEnum.VALUE1),
+                new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 "abc",
                 -35L,
-                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
+                new TestSimpleStructure(150685),
                 1834749274,
-                new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
+                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
@@ -189,16 +191,16 @@ class PacketValidatorTest {
                 54,
                 'a',
                 false,
-                new Flags<>(TestEnum.VALUE2),
+                new TestSimpleStructure(64),
                 354,
-                new Flags<>(TestEnum.VALUE1),
+                new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 "abc",
                 5732985275L,
-                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
+                new TestSimpleStructure(150685),
                 1834749274,
-                new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
+                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
@@ -213,16 +215,16 @@ class PacketValidatorTest {
                 54,
                 'a',
                 false,
-                new Flags<>(TestEnum.VALUE2),
+                new TestSimpleStructure(64),
                 354,
-                new Flags<>(TestEnum.VALUE1),
+                new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 "abc",
                 112946L,
-                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
+                new TestSimpleStructure(150685),
                 -2134749274,
-                new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
+                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
@@ -237,16 +239,16 @@ class PacketValidatorTest {
                 54,
                 'a',
                 false,
-                new Flags<>(TestEnum.VALUE2),
+                new TestSimpleStructure(64),
                 354,
-                new Flags<>(TestEnum.VALUE1),
+                new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 "abc",
                 112946L,
-                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
+                new TestSimpleStructure(150685),
                 2134749274,
-                new TestStructure[] { new TestStructure(55), null, new TestStructure(15) }
+                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
@@ -261,16 +263,16 @@ class PacketValidatorTest {
                 54,
                 null,
                 true,
-                new Flags<>(TestEnum.VALUE2),
+                new TestSimpleStructure(64),
                 354,
-                new Flags<>(TestEnum.VALUE1),
+                new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 null,
                 112946L,
-                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
+                new TestSimpleStructure(150685),
                 1834749274,
-                new TestStructure[] { new TestStructure(55), null }
+                new TestComplexStructure[] { new TestComplexStructure(55), null }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.INCORRECT_VALUE_LENGTH, exception.getFailureReason());
@@ -285,16 +287,16 @@ class PacketValidatorTest {
                 54,
                 null,
                 true,
-                new Flags<>(TestEnum.VALUE2),
+                new TestSimpleStructure(64),
                 354,
-                new Flags<>(TestEnum.VALUE1),
+                new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
                 null,
                 112946L,
-                new Flags<>(TestEnum.VALUE1, TestEnum.VALUE3),
+                new TestSimpleStructure(150685),
                 1834749274,
-                new TestStructure[] { new TestStructure(55), null, new TestStructure(-15) }
+                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(-15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
@@ -399,13 +401,13 @@ class PacketValidatorTest {
         @Byte
         private final boolean booleanByte;
         @Byte
-        private final Flags<TestEnum> flagsByte;
+        private final TestSimpleStructure simpleStructureByte;
         @Word
         private final int intWord;
         @Word
-        private final Flags<TestEnum> flagsWord;
+        private final TestSimpleStructure simpleStructureWord;
         @Word
-        private final TestCustomValueEnum customValieEnumWord;
+        private final TestCustomValueEnum customValueEnumWord;
         @CharArray(length = 5)
         private final String stringCharArrayWithoutValidation;
         @CharArray(length = 5, strictLengthValidation = true)
@@ -413,38 +415,38 @@ class PacketValidatorTest {
         @Unsigned
         private final long longUnsigned;
         @Unsigned
-        private final Flags<TestEnum> flagsUnsigned;
+        private final TestSimpleStructure simpleStructureUnsigned;
         @Int(minValue = -2000000000, maxValue = 2000000000)
         private final int intInt;
         @StructureArray(length = 3)
-        private final TestStructure[] structureArray;
+        private final TestComplexStructure[] structureArray;
 
         protected ValidTestPacket(int size,
                                   PacketType type,
                                   int reqI,
                                   Character characterByte,
                                   boolean booleanByte,
-                                  Flags<TestEnum> flagsByte,
+                                  TestSimpleStructure simpleStructureByte,
                                   int intWord,
-                                  Flags<TestEnum> flagsWord,
-                                  TestCustomValueEnum customValieEnumWord,
+                                  TestSimpleStructure simpleStructureWord,
+                                  TestCustomValueEnum customValueEnumWord,
                                   String stringCharArrayWithoutValidation,
                                   String stringCharArray,
                                   long longUnsigned,
-                                  Flags<TestEnum> flagsUnsigned,
+                                  TestSimpleStructure simpleStructureUnsigned,
                                   int intInt,
-                                  TestStructure[] structureArray) {
+                                  TestComplexStructure[] structureArray) {
             super(size, type, reqI);
             this.characterByte = characterByte;
             this.booleanByte = booleanByte;
-            this.flagsByte = flagsByte;
+            this.simpleStructureByte = simpleStructureByte;
             this.intWord = intWord;
-            this.flagsWord = flagsWord;
-            this.customValieEnumWord = customValieEnumWord;
+            this.simpleStructureWord = simpleStructureWord;
+            this.customValueEnumWord = customValueEnumWord;
             this.stringCharArrayWithoutValidation = stringCharArrayWithoutValidation;
             this.stringCharArray = stringCharArray;
             this.longUnsigned = longUnsigned;
-            this.flagsUnsigned = flagsUnsigned;
+            this.simpleStructureUnsigned = simpleStructureUnsigned;
             this.intInt = intInt;
             this.structureArray = structureArray;
         }
@@ -593,10 +595,6 @@ class PacketValidatorTest {
         }
     }
 
-    private enum TestEnum {
-        VALUE1, VALUE2, VALUE3
-    }
-
     private enum TestCustomValueEnum implements EnumWithCustomValue {
         VALUE1, VALUE2, VALUE3;
 
@@ -606,12 +604,32 @@ class PacketValidatorTest {
         }
     }
 
+    private record TestSimpleStructure(
+            long value
+    ) implements ByteInstructionStructure, WordInstructionStructure, UnsignedInstructionStructure {
+
+        @Override
+            public short getByteValue() {
+                return (short) value;
+            }
+
+            @Override
+            public int getWordValue() {
+                return (int) value;
+            }
+
+            @Override
+            public long getUnsignedValue() {
+                return value;
+            }
+        }
+
     @SuppressWarnings("all")
-    private static class TestStructure implements InstructionStructure {
+    private static class TestComplexStructure implements ComplexInstructionStructure {
         @Byte
         private final short structureField;
 
-        private TestStructure(int structureField) {
+        private TestComplexStructure(int structureField) {
             this.structureField = (short) structureField;
         }
 

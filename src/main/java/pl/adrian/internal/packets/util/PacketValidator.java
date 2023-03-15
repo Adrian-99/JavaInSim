@@ -5,7 +5,9 @@ import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.internal.packets.enums.EnumWithCustomValue;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
-import pl.adrian.api.packets.flags.Flags;
+import pl.adrian.internal.packets.structures.base.ByteInstructionStructure;
+import pl.adrian.internal.packets.structures.base.UnsignedInstructionStructure;
+import pl.adrian.internal.packets.structures.base.WordInstructionStructure;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -81,10 +83,10 @@ public class PacketValidator {
                 intValue = charValue;
             } else if (value instanceof Enum<?> enumValue) {
                 intValue = enumValue.ordinal();
-            } else if (value instanceof Flags<?> flagsValue) {
-                intValue = flagsValue.getValue();
             } else if (value instanceof Boolean booleanValue) {
                 intValue = Boolean.TRUE.equals(booleanValue) ? 1 : 0;
+            } else if (value instanceof ByteInstructionStructure byteStructureValue) {
+                intValue = byteStructureValue.getByteValue();
             } else {
                 throw new PacketValidationException(field, typeName);
             }
@@ -116,10 +118,10 @@ public class PacketValidator {
             int intValue;
             if (value instanceof Integer integerValue) {
                 intValue = integerValue;
-            } else if (value instanceof Flags<? extends Enum<?>> flagsValue) {
-                intValue = flagsValue.getValue();
             } else if (value instanceof EnumWithCustomValue enumValue) {
                 intValue = enumValue.getValue();
+            } else if (value instanceof WordInstructionStructure wordStructureValue) {
+                intValue = wordStructureValue.getWordValue();
             } else {
                 throw new PacketValidationException(field, typeName);
             }
@@ -180,8 +182,8 @@ public class PacketValidator {
             long longValue;
             if (value instanceof Long lngValue) {
                 longValue = lngValue;
-            } else if (value instanceof Flags<?> flagsValue) {
-                longValue = flagsValue.getValue();
+            } else if (value instanceof UnsignedInstructionStructure unsignedStructureValue) {
+                longValue = unsignedStructureValue.getUnsignedValue();
             } else {
                 throw new PacketValidationException(field, typeName);
             }

@@ -8,6 +8,8 @@ import pl.adrian.api.packets.flags.RaceFlag;
 import pl.adrian.api.packets.flags.StaFlag;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.exceptions.PacketReadingException;
+import pl.adrian.internal.packets.structures.LapTiming;
+import pl.adrian.internal.packets.structures.RaceLaps;
 
 /**
  * This class is a helper that is used while converting byte array to appropriate {@link InfoPacket}.

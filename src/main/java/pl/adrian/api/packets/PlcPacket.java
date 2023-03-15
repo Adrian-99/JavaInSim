@@ -41,7 +41,7 @@ public class PlcPacket extends Packet implements InstructionPacket {
                 .writeZeroByte()
                 .writeByte(ucid)
                 .writeZeroBytes(3)
-                .writeUnsigned(cars.getValue())
+                .writeUnsigned(cars.getUnsignedValue())
                 .getBytes();
     }
 }

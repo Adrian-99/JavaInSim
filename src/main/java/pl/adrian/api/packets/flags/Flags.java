@@ -2,6 +2,9 @@ package pl.adrian.api.packets.flags;
 
 import pl.adrian.internal.packets.enums.EnumHelpers;
 import pl.adrian.internal.packets.flags.FlagWithCustomValue;
+import pl.adrian.internal.packets.structures.base.ByteInstructionStructure;
+import pl.adrian.internal.packets.structures.base.UnsignedInstructionStructure;
+import pl.adrian.internal.packets.structures.base.WordInstructionStructure;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +13,8 @@ import java.util.Set;
  * This class implements flags type used in communication with LFS.
  * @param <T> Enum that represents bits of flags field
  */
-public class Flags<T extends Enum<?>> {
+public class Flags<T extends Enum<?>> implements ByteInstructionStructure,
+        WordInstructionStructure, UnsignedInstructionStructure {
     private final Set<T> flagsSet;
 
     /**
@@ -45,15 +49,23 @@ public class Flags<T extends Enum<?>> {
         }
     }
 
-    /**
-     * @return integer value of flags
-     */
-    public int getValue() {
-        return flagsSet.stream().mapToInt(enumValue -> {
+    @Override
+    public short getByteValue() {
+        return (short) getUnsignedValue();
+    }
+
+    @Override
+    public int getWordValue() {
+        return (int) getUnsignedValue();
+    }
+
+    @Override
+    public long getUnsignedValue() {
+        return flagsSet.stream().mapToLong(enumValue -> {
             if (enumValue instanceof FlagWithCustomValue enumCustomValue) {
                 return enumCustomValue.getValue();
             } else {
-                return 1 << enumValue.ordinal();
+                return (long) 1 << enumValue.ordinal();
             }
         }).reduce(0, (all, curr) -> all | curr);
     }
