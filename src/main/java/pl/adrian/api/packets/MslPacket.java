@@ -2,8 +2,9 @@ package pl.adrian.api.packets;
 
 import pl.adrian.api.packets.enums.MessageSound;
 import pl.adrian.api.packets.enums.PacketType;
+import pl.adrian.internal.packets.annotations.Array;
 import pl.adrian.internal.packets.annotations.Byte;
-import pl.adrian.internal.packets.annotations.CharArray;
+import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
@@ -16,7 +17,8 @@ import pl.adrian.internal.packets.util.PacketValidator;
 public class MslPacket extends Packet implements InstructionPacket {
     @Byte
     private final MessageSound sound;
-    @CharArray(length = 128)
+    @Char
+    @Array(length = 128)
     private final String msg;
 
     /**

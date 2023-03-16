@@ -4,9 +4,10 @@ import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.Wind;
 import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.RaceFlag;
+import pl.adrian.internal.packets.annotations.Array;
+import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.structures.LapTiming;
 import pl.adrian.internal.packets.annotations.Byte;
-import pl.adrian.internal.packets.annotations.CharArray;
 import pl.adrian.internal.packets.annotations.Word;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
@@ -24,7 +25,8 @@ public class RstPacket extends Packet implements RequestablePacket {
     private final short numP;
     @Byte
     private final LapTiming timing;
-    @CharArray(length = 6)
+    @Char
+    @Array(length = 6)
     private final String track;
     @Byte
     private final short weather;

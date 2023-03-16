@@ -1,6 +1,7 @@
 package pl.adrian.api.packets;
 
-import pl.adrian.internal.packets.annotations.CharArray;
+import pl.adrian.internal.packets.annotations.Array;
+import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.base.InstructionPacket;
@@ -12,7 +13,8 @@ import pl.adrian.internal.packets.util.PacketValidator;
  * MSg Type - send to LFS to type message or command.
  */
 public class MstPacket extends Packet implements InstructionPacket {
-    @CharArray(length = 64)
+    @Char
+    @Array(length = 64)
     private final String msg;
 
     /**

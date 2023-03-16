@@ -3,7 +3,8 @@ package pl.adrian.api.packets;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.flags.Car;
 import pl.adrian.api.packets.structures.CarHandicaps;
-import pl.adrian.internal.packets.annotations.StructureArray;
+import pl.adrian.internal.packets.annotations.Array;
+import pl.adrian.internal.packets.annotations.Structure;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.internal.packets.enums.EnumHelpers;
@@ -19,7 +20,8 @@ import java.util.Map;
  * This can be useful for creating multi class hosts.
  */
 public class HcpPacket extends Packet implements InstructionPacket {
-    @StructureArray(length = 32)
+    @Structure
+    @Array(length = 32)
     private final CarHandicaps[] info;
 
     /**

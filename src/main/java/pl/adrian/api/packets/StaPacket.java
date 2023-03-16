@@ -3,11 +3,10 @@ package pl.adrian.api.packets;
 import pl.adrian.api.packets.enums.*;
 import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.StaFlag;
-import pl.adrian.internal.packets.structures.RaceLaps;
+import pl.adrian.internal.packets.annotations.*;
 import pl.adrian.internal.packets.annotations.Byte;
-import pl.adrian.internal.packets.annotations.CharArray;
 import pl.adrian.internal.packets.annotations.Float;
-import pl.adrian.internal.packets.annotations.Word;
+import pl.adrian.internal.packets.structures.RaceLaps;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
 
@@ -37,7 +36,8 @@ public class StaPacket extends Packet implements RequestablePacket {
     private final RaceLaps raceLaps;
     @Byte
     private final ServerStatus serverStatus;
-    @CharArray(length = 6)
+    @Char
+    @Array(length = 6)
     private final String track;
     @Byte
     private final short weather;

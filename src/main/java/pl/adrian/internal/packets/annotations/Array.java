@@ -7,18 +7,19 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation indicating that given field of packet is sent to and from LFS
- * in form of array of 1-byte characters.
+ * in form of array. The same field should also contain another annotation to specify
+ * type of array element.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface CharArray {
+public @interface Array {
     /**
-     * @return length of the character array
+     * @return length of the array
      */
     int length();
 
     /**
-     * @return whether length should be strictly validated
+     * @return whether array has dynamic length (may have fewer elements than maximum allowed)
      */
-    boolean strictLengthValidation() default false;
+    boolean dynamicLength() default false;
 }

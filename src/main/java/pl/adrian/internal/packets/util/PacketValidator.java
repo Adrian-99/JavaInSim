@@ -4,14 +4,17 @@ import pl.adrian.internal.packets.annotations.*;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.internal.packets.enums.EnumWithCustomValue;
+import pl.adrian.internal.packets.enums.ValidationFailureCategory;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.packets.structures.base.ByteInstructionStructure;
+import pl.adrian.internal.packets.structures.base.ComplexInstructionStructure;
 import pl.adrian.internal.packets.structures.base.UnsignedInstructionStructure;
 import pl.adrian.internal.packets.structures.base.WordInstructionStructure;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * This class is a helper that is used while validating packets.
@@ -50,13 +53,17 @@ public class PacketValidator {
                 field.setAccessible(true);
                 var anyAnnotationFound = tryToValidateByte(field, packetOrStructure) ||
                         tryToValidateWord(field, packetOrStructure) ||
-                        tryToValidateCharArray(field, packetOrStructure) ||
+                        tryToValidateChar(field, packetOrStructure) ||
                         tryToValidateUnsigned(field, packetOrStructure) ||
                         tryToValidateInt(field, packetOrStructure) ||
-                        tryToValidateStructureArray(field, packetOrStructure);
+                        tryToValidateStructure(field, packetOrStructure);
 
                 if (!anyAnnotationFound) {
-                    throw new PacketValidationException(field);
+                    throw new PacketValidationException(
+                            field.getName(),
+                            ValidationFailureCategory.INCORRECT_TYPE_ANNOTATION,
+                            "missing LFS type annotation"
+                    );
                 }
             } catch (IllegalAccessException e) {
                 throw new IllegalStateException(e);
@@ -74,7 +81,6 @@ public class PacketValidator {
     }
 
     private static void validateByte(Byte annotation, Field field, Object value) throws PacketValidationException {
-        var typeName = "Byte";
         if (value != null) {
             int intValue;
             if (value instanceof Short shortValue) {
@@ -88,17 +94,11 @@ public class PacketValidator {
             } else if (value instanceof ByteInstructionStructure byteStructureValue) {
                 intValue = byteStructureValue.getByteValue();
             } else {
-                throw new PacketValidationException(field, typeName);
+                throw getUnsupportedTypeException(field, Byte.class.getSimpleName());
             }
 
             if (intValue < annotation.minValue() || intValue > annotation.maxValue()) {
-                throw new PacketValidationException(
-                        field,
-                        annotation.minValue(),
-                        annotation.maxValue(),
-                        intValue,
-                        typeName
-                );
+                throw getValueOutOfRangeException(field, annotation.minValue(), annotation.maxValue(), intValue);
             }
         }
     }
@@ -113,7 +113,6 @@ public class PacketValidator {
     }
 
     private static void validateWord(Word annotation, Field field, Object value) throws PacketValidationException {
-        var typeName = "Word";
         if (value != null) {
             int intValue;
             if (value instanceof Integer integerValue) {
@@ -123,61 +122,56 @@ public class PacketValidator {
             } else if (value instanceof WordInstructionStructure wordStructureValue) {
                 intValue = wordStructureValue.getWordValue();
             } else {
-                throw new PacketValidationException(field, typeName);
+                throw getUnsupportedTypeException(field, Word.class.getSimpleName());
             }
 
             if (intValue < annotation.minValue() || intValue > annotation.maxValue()) {
-                throw new PacketValidationException(
-                        field,
-                        annotation.minValue(),
-                        annotation.maxValue(),
-                        intValue,
-                        typeName
-                );
+                throw getValueOutOfRangeException(field, annotation.minValue(), annotation.maxValue(), intValue);
             }
         }
     }
 
-    private static boolean tryToValidateCharArray(Field field, Object packetOrStructure) throws IllegalAccessException {
-        var annotation = field.getAnnotation(CharArray.class);
-        if (annotation != null) {
-            validateCharArray(annotation, field, field.get(packetOrStructure));
-            return true;
+    private static boolean tryToValidateChar(Field field, Object packetOrStructure) throws IllegalAccessException {
+        if (field.getAnnotation(Char.class) != null) {
+            if (field.getAnnotation(Array.class) != null) {
+                validateCharArray(field, field.get(packetOrStructure));
+                return true;
+            } else {
+                throw getMissingArrayAnnotationException(field);
+            }
         }
         return false;
     }
 
-    private static void validateCharArray(CharArray annotation, Field field, Object value) {
-        var typeName = "Char Array";
-        if (value != null) {
-            if (value instanceof String stringValue) {
-                if (annotation.strictLengthValidation() && stringValue.length() > annotation.length() - 1) {
-                    throw new PacketValidationException(
-                            field,
-                            stringValue.length(),
-                            annotation.length() - 1,
-                            false,
-                            "bytes",
-                            typeName
-                    );
-                }
-            } else {
-                throw new PacketValidationException(field, typeName);
-            }
+    private static void validateCharArray(Field field, Object value) {
+        if (value != null && !(value instanceof String)) {
+            throw getUnsupportedTypeException(
+                    field,
+                    String.format("%s %s", Char.class.getSimpleName(), Array.class.getSimpleName())
+            );
         }
     }
 
     private static boolean tryToValidateUnsigned(Field field, Object packetOrStructure) throws IllegalAccessException {
-        var annotation = field.getAnnotation(Unsigned.class);
-        if (annotation != null) {
-            validateUnsigned(annotation, field, field.get(packetOrStructure));
+        var unsignedAnnotation = field.getAnnotation(Unsigned.class);
+        if (unsignedAnnotation != null) {
+            var arrayAnnotation = field.getAnnotation(Array.class);
+            if (arrayAnnotation != null) {
+                validateArray(
+                        arrayAnnotation,
+                        field,
+                        field.get(packetOrStructure),
+                        element -> validateUnsigned(unsignedAnnotation, field, element)
+                );
+            } else {
+                validateUnsigned(unsignedAnnotation, field, field.get(packetOrStructure));
+            }
             return true;
         }
         return false;
     }
 
     private static void validateUnsigned(Unsigned annotation, Field field, Object value) {
-        var typeName = "Unsigned";
         if (value != null) {
             long longValue;
             if (value instanceof Long lngValue) {
@@ -185,17 +179,11 @@ public class PacketValidator {
             } else if (value instanceof UnsignedInstructionStructure unsignedStructureValue) {
                 longValue = unsignedStructureValue.getUnsignedValue();
             } else {
-                throw new PacketValidationException(field, typeName);
+                throw getUnsupportedTypeException(field, Unsigned.class.getSimpleName());
             }
 
             if (longValue < annotation.minValue() || longValue > annotation.maxValue()) {
-                throw new PacketValidationException(
-                        field,
-                        annotation.minValue(),
-                        annotation.maxValue(),
-                        longValue,
-                        typeName
-                );
+                throw getValueOutOfRangeException(field, annotation.minValue(), annotation.maxValue(), longValue);
             }
         }
     }
@@ -210,54 +198,107 @@ public class PacketValidator {
     }
 
     private static void validateInt(Int annotation, Field field, Object value) {
-        var typeName = "Int";
         if (value != null) {
             if (value instanceof Integer intValue) {
                 if (intValue < annotation.minValue() || intValue > annotation.maxValue()) {
-                    throw new PacketValidationException(
-                            field,
-                            annotation.minValue(),
-                            annotation.maxValue(),
-                            intValue,
-                            typeName
-                    );
+                    throw getValueOutOfRangeException(field, annotation.minValue(), annotation.maxValue(), intValue);
                 }
             } else {
-                throw new PacketValidationException(field, typeName);
+                throw getUnsupportedTypeException(field, Int.class.getSimpleName());
             }
         }
     }
 
-    private static boolean tryToValidateStructureArray(Field field, Object packetOrStructure) throws IllegalAccessException {
-        var annotation = field.getAnnotation(StructureArray.class);
-        if (annotation != null) {
-            validateStructureArray(annotation, field, field.get(packetOrStructure));
-            return true;
+    private static boolean tryToValidateStructure(Field field, Object packetOrStructure) throws IllegalAccessException {
+        if (field.getAnnotation(Structure.class) != null) {
+            var arrayAnnotation = field.getAnnotation(Array.class);
+            if (arrayAnnotation != null) {
+                validateArray(
+                        arrayAnnotation,
+                        field,
+                        field.get(packetOrStructure),
+                        element -> validateStructure(field, element)
+                );
+                return true;
+            } else {
+                throw getMissingArrayAnnotationException(field);
+            }
         }
         return false;
     }
 
-    private static void validateStructureArray(StructureArray annotation, Field field, Object value) {
-        var typeName = "StructureArray";
-        if (value instanceof Object[] arrayValue) {
-            if (arrayValue.length == annotation.length()) {
-                for (var arrayElement : arrayValue) {
-                    if (arrayElement != null) {
-                        validate(getAllStructureFields(arrayElement.getClass()), arrayElement);
+    private static void validateStructure(Field field, Object value) {
+        if (value != null) {
+            if (value instanceof ComplexInstructionStructure) {
+                validate(getAllStructureFields(value.getClass()), value);
+            } else {
+                throw getUnsupportedTypeException(field, Structure.class.getSimpleName());
+            }
+        }
+    }
+
+    private static void validateArray(Array annotation, Field field, Object value, Consumer<Object> elementValidator) {
+        if (value != null) {
+            if (value instanceof Object[] arrayValue) {
+                if ((annotation.dynamicLength() && arrayValue.length <= annotation.length()) ||
+                        arrayValue.length == annotation.length()) {
+                    for (var arrayElement : arrayValue) {
+                        elementValidator.accept(arrayElement);
                     }
+                } else {
+                    throw getWrongArrayLengthException(
+                            field,
+                            annotation.length(),
+                            arrayValue.length,
+                            annotation.dynamicLength()
+                    );
                 }
             } else {
-                throw new PacketValidationException(
-                        field,
-                        arrayValue.length,
-                        annotation.length(),
-                        true,
-                        "objects",
-                        typeName
-                );
+                throw getUnsupportedTypeException(field, Array.class.getSimpleName());
             }
-        } else {
-            throw new PacketValidationException(field, typeName);
         }
+    }
+
+    private static PacketValidationException getUnsupportedTypeException(Field field, String typeName) {
+        return new PacketValidationException(
+                field.getName(),
+                ValidationFailureCategory.UNSUPPORTED_TYPE,
+                String.format("type %s not supported as %s", field.getClass().getSimpleName(), typeName)
+        );
+    }
+
+    private static PacketValidationException getValueOutOfRangeException(Field field,
+                                                                         long minValue,
+                                                                         long maxValue,
+                                                                         long actualValue) {
+        throw new PacketValidationException(
+                field.getName(),
+                ValidationFailureCategory.VALUE_OUT_OF_RANGE,
+                String.format("expected value between %d and %d - was %d", minValue, maxValue, actualValue)
+        );
+    }
+
+    private static PacketValidationException getMissingArrayAnnotationException(Field field) {
+        return new PacketValidationException(
+                field.getName(),
+                ValidationFailureCategory.INCORRECT_TYPE_ANNOTATION,
+                "missing required Array annotation"
+        );
+    }
+
+    private static PacketValidationException getWrongArrayLengthException(Field field,
+                                                                          int expectedLength,
+                                                                          int actualLength,
+                                                                          boolean dynamicLength) {
+        return new PacketValidationException(
+                field.getName(),
+                ValidationFailureCategory.INCORRECT_VALUE_LENGTH,
+                String.format(
+                        "expected %s%d elements long array - was %d elements long",
+                        dynamicLength && actualLength > expectedLength ? "at most " : "",
+                        expectedLength,
+                        actualLength
+                )
+        );
     }
 }

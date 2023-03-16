@@ -2,8 +2,9 @@ package pl.adrian.api.packets;
 
 import pl.adrian.api.packets.enums.AcrResult;
 import pl.adrian.api.packets.enums.PacketType;
+import pl.adrian.internal.packets.annotations.Array;
 import pl.adrian.internal.packets.annotations.Byte;
-import pl.adrian.internal.packets.annotations.CharArray;
+import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.util.PacketUtils;
@@ -18,7 +19,8 @@ public class AcrPacket extends Packet implements InfoPacket {
     private final boolean isAdmin;
     @Byte
     private final AcrResult result;
-    @CharArray(length = 64)
+    @Char
+    @Array(length = 64)
     private final String text;
 
     /**

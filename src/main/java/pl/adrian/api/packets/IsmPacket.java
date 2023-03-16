@@ -1,8 +1,9 @@
 package pl.adrian.api.packets;
 
 import pl.adrian.api.packets.enums.PacketType;
+import pl.adrian.internal.packets.annotations.Array;
 import pl.adrian.internal.packets.annotations.Byte;
-import pl.adrian.internal.packets.annotations.CharArray;
+import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
 
@@ -12,7 +13,8 @@ import pl.adrian.internal.packets.base.RequestablePacket;
 public class IsmPacket extends Packet implements RequestablePacket {
     @Byte
     private final boolean isHost;
-    @CharArray(length = 32)
+    @Char
+    @Array(length = 32)
     private final String hName;
 
     /**

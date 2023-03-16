@@ -1,7 +1,8 @@
 package pl.adrian.api.packets;
 
+import pl.adrian.internal.packets.annotations.Array;
 import pl.adrian.internal.packets.annotations.Byte;
-import pl.adrian.internal.packets.annotations.CharArray;
+import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.Product;
@@ -11,9 +12,11 @@ import pl.adrian.internal.packets.base.RequestablePacket;
  * VERsion - version info. This version packet is sent on request.
  */
 public class VerPacket extends Packet implements RequestablePacket {
-    @CharArray(length = 8)
+    @Char
+    @Array(length = 8)
     private final String version;
-    @CharArray(length = 6)
+    @Char
+    @Array(length = 6)
     private final Product product;
     @Byte
     private final short inSimVer;

@@ -3,8 +3,9 @@ package pl.adrian.api.packets;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.NcnFlag;
+import pl.adrian.internal.packets.annotations.Array;
 import pl.adrian.internal.packets.annotations.Byte;
-import pl.adrian.internal.packets.annotations.CharArray;
+import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
 
@@ -14,9 +15,11 @@ import pl.adrian.internal.packets.base.RequestablePacket;
 public class NcnPacket extends Packet implements RequestablePacket {
     @Byte
     private final short ucid;
-    @CharArray(length = 24)
+    @Char
+    @Array(length = 24)
     private final String uName;
-    @CharArray(length = 24)
+    @Char
+    @Array(length = 24)
     private final String pName;
     @Byte
     private final boolean isAdmin;

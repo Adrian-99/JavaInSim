@@ -1,8 +1,9 @@
 package pl.adrian.api.packets;
 
+import pl.adrian.internal.packets.annotations.Array;
+import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.util.Constants;
 import pl.adrian.internal.packets.annotations.Byte;
-import pl.adrian.internal.packets.annotations.CharArray;
 import pl.adrian.internal.packets.annotations.Word;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
@@ -27,9 +28,11 @@ public class IsiPacket extends Packet implements InstructionPacket {
     private final Character prefix;
     @Word
     private final int interval;
-    @CharArray(length = 16, strictLengthValidation = true)
+    @Char
+    @Array(length = 16)
     private final String admin;
-    @CharArray(length = 16, strictLengthValidation = true)
+    @Char
+    @Array(length = 16)
     private final String iName;
 
     /**

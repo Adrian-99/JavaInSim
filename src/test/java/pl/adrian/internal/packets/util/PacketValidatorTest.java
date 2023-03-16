@@ -7,6 +7,7 @@ import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.enums.EnumWithCustomValue;
+import pl.adrian.internal.packets.enums.ValidationFailureCategory;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.packets.structures.base.ByteInstructionStructure;
 import pl.adrian.internal.packets.structures.base.ComplexInstructionStructure;
@@ -30,9 +31,9 @@ class PacketValidatorTest {
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
-                null,
                 112946L,
                 new TestSimpleStructure(150685),
+                new Long[] { 1564357L, 875643L },
                 1834749274,
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
@@ -52,15 +53,15 @@ class PacketValidatorTest {
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
-                null,
                 112946L,
                 new TestSimpleStructure(150685),
+                new Long[] { 1564357L, 875643L },
                 1834749274,
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
-        assertEquals("reqI", exception.getField().getName());
+        assertEquals(ValidationFailureCategory.VALUE_OUT_OF_RANGE, exception.getFailureCategory());
+        assertEquals("reqI", exception.getFieldName());
     }
 
     @Test
@@ -76,15 +77,15 @@ class PacketValidatorTest {
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
-                null,
                 112946L,
                 new TestSimpleStructure(150685),
+                new Long[] { 1564357L, 875643L },
                 1834749274,
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
-        assertEquals("reqI", exception.getField().getName());
+        assertEquals(ValidationFailureCategory.VALUE_OUT_OF_RANGE, exception.getFailureCategory());
+        assertEquals("reqI", exception.getFieldName());
     }
 
     @Test
@@ -100,15 +101,15 @@ class PacketValidatorTest {
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
-                null,
                 112946L,
                 new TestSimpleStructure(150685),
+                new Long[] { 1564357L, 875643L },
                 1834749274,
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
-        assertEquals("intWord", exception.getField().getName());
+        assertEquals(ValidationFailureCategory.VALUE_OUT_OF_RANGE, exception.getFailureCategory());
+        assertEquals("intWord", exception.getFieldName());
     }
 
     @Test
@@ -124,39 +125,15 @@ class PacketValidatorTest {
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
-                null,
                 112946L,
                 new TestSimpleStructure(150685),
+                new Long[] { 1564357L, 875643L },
                 1834749274,
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
-        assertEquals("intWord", exception.getField().getName());
-    }
-
-    @Test
-    void validate_withTooLongStringCharArray() {
-        var packet = new ValidTestPacket(
-                23,
-                PacketType.NONE,
-                54,
-                'a',
-                false,
-                new TestSimpleStructure(64),
-                354,
-                new TestSimpleStructure(28715),
-                TestCustomValueEnum.VALUE1,
-                "abcdefghij",
-                "abcdefghij",
-                112946L,
-                new TestSimpleStructure(150685),
-                1834749274,
-                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
-        );
-        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.INCORRECT_VALUE_LENGTH, exception.getFailureReason());
-        assertEquals("stringCharArray", exception.getField().getName());
+        assertEquals(ValidationFailureCategory.VALUE_OUT_OF_RANGE, exception.getFailureCategory());
+        assertEquals("intWord", exception.getFieldName());
     }
 
     @Test
@@ -172,15 +149,15 @@ class PacketValidatorTest {
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
-                "abc",
                 -35L,
                 new TestSimpleStructure(150685),
+                new Long[] { 1564357L, 875643L },
                 1834749274,
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
-        assertEquals("longUnsigned", exception.getField().getName());
+        assertEquals(ValidationFailureCategory.VALUE_OUT_OF_RANGE, exception.getFailureCategory());
+        assertEquals("longUnsigned", exception.getFieldName());
     }
 
     @Test
@@ -196,15 +173,63 @@ class PacketValidatorTest {
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
-                "abc",
                 5732985275L,
                 new TestSimpleStructure(150685),
+                new Long[] { 1564357L, 875643L },
                 1834749274,
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
-        assertEquals("longUnsigned", exception.getField().getName());
+        assertEquals(ValidationFailureCategory.VALUE_OUT_OF_RANGE, exception.getFailureCategory());
+        assertEquals("longUnsigned", exception.getFieldName());
+    }
+
+    @Test
+    void validate_withTooLongUnsignedArray() {
+        var packet = new ValidTestPacket(
+                23,
+                PacketType.NONE,
+                54,
+                'a',
+                false,
+                new TestSimpleStructure(64),
+                354,
+                new TestSimpleStructure(28715),
+                TestCustomValueEnum.VALUE1,
+                "abcdefghij",
+                112946L,
+                new TestSimpleStructure(150685),
+                new Long[] { 1564357L, 875643L, 65465L, 5465456L, 1434565L, 5436545L, 5676543L },
+                1834749274,
+                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
+        );
+        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
+        assertEquals(ValidationFailureCategory.INCORRECT_VALUE_LENGTH, exception.getFailureCategory());
+        assertEquals("longArrayUnsignedArrayDynamicLength", exception.getFieldName());
+    }
+
+    @Test
+    void validate_withIncorrectValueInsideUnsignedArray() {
+        var packet = new ValidTestPacket(
+                23,
+                PacketType.NONE,
+                54,
+                'a',
+                false,
+                new TestSimpleStructure(64),
+                354,
+                new TestSimpleStructure(28715),
+                TestCustomValueEnum.VALUE1,
+                "abcdefghij",
+                112946L,
+                new TestSimpleStructure(150685),
+                new Long[] { 1564357L, -65465L },
+                1834749274,
+                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
+        );
+        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
+        assertEquals(ValidationFailureCategory.VALUE_OUT_OF_RANGE, exception.getFailureCategory());
+        assertEquals("longArrayUnsignedArrayDynamicLength", exception.getFieldName());
     }
 
     @Test
@@ -220,15 +245,15 @@ class PacketValidatorTest {
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
-                "abc",
                 112946L,
                 new TestSimpleStructure(150685),
+                new Long[] { 1564357L, 875643L },
                 -2134749274,
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
-        assertEquals("intInt", exception.getField().getName());
+        assertEquals(ValidationFailureCategory.VALUE_OUT_OF_RANGE, exception.getFailureCategory());
+        assertEquals("intInt", exception.getFieldName());
     }
 
     @Test
@@ -244,15 +269,15 @@ class PacketValidatorTest {
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
-                "abc",
                 112946L,
                 new TestSimpleStructure(150685),
+                new Long[] { 1564357L, 875643L },
                 2134749274,
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
-        assertEquals("intInt", exception.getField().getName());
+        assertEquals(ValidationFailureCategory.VALUE_OUT_OF_RANGE, exception.getFailureCategory());
+        assertEquals("intInt", exception.getFieldName());
     }
 
     @Test
@@ -268,15 +293,15 @@ class PacketValidatorTest {
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
-                null,
                 112946L,
                 new TestSimpleStructure(150685),
+                new Long[] { 1564357L, 875643L },
                 1834749274,
                 new TestComplexStructure[] { new TestComplexStructure(55), null }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.INCORRECT_VALUE_LENGTH, exception.getFailureReason());
-        assertEquals("structureArray", exception.getField().getName());
+        assertEquals(ValidationFailureCategory.INCORRECT_VALUE_LENGTH, exception.getFailureCategory());
+        assertEquals("structureArray", exception.getFieldName());
     }
 
     @Test
@@ -292,15 +317,15 @@ class PacketValidatorTest {
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
                 "abcdefghij",
-                null,
                 112946L,
                 new TestSimpleStructure(150685),
+                new Long[] { 1564357L, 875643L },
                 1834749274,
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(-15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.VALUE_OUT_OF_RANGE, exception.getFailureReason());
-        assertEquals("structureField", exception.getField().getName());
+        assertEquals(ValidationFailureCategory.VALUE_OUT_OF_RANGE, exception.getFailureCategory());
+        assertEquals("structureField", exception.getFieldName());
     }
 
     @Test
@@ -312,8 +337,8 @@ class PacketValidatorTest {
                 15
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.MISSING_TYPE_ANNOTATION, exception.getFailureReason());
-        assertEquals("fieldWithNoAnnotation", exception.getField().getName());
+        assertEquals(ValidationFailureCategory.INCORRECT_TYPE_ANNOTATION, exception.getFailureCategory());
+        assertEquals("fieldWithNoAnnotation", exception.getFieldName());
     }
 
     @Test
@@ -325,8 +350,8 @@ class PacketValidatorTest {
                 "15"
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.UNSUPPORTED_TYPE, exception.getFailureReason());
-        assertEquals("stringByte", exception.getField().getName());
+        assertEquals(ValidationFailureCategory.UNSUPPORTED_TYPE, exception.getFailureCategory());
+        assertEquals("stringByte", exception.getFieldName());
     }
 
     @Test
@@ -338,8 +363,8 @@ class PacketValidatorTest {
                 "15"
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.UNSUPPORTED_TYPE, exception.getFailureReason());
-        assertEquals("stringWord", exception.getField().getName());
+        assertEquals(ValidationFailureCategory.UNSUPPORTED_TYPE, exception.getFailureCategory());
+        assertEquals("stringWord", exception.getFieldName());
     }
 
     @Test
@@ -351,8 +376,21 @@ class PacketValidatorTest {
                 15
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.UNSUPPORTED_TYPE, exception.getFailureReason());
-        assertEquals("intCharArray", exception.getField().getName());
+        assertEquals(ValidationFailureCategory.UNSUPPORTED_TYPE, exception.getFailureCategory());
+        assertEquals("intCharArray", exception.getFieldName());
+    }
+
+    @Test
+    void validate_packetWithMissingArrayAnnotationForChar() {
+        var packet = new PacketWithMissingArrayAnnotationForChar(
+                8,
+                PacketType.NONE,
+                54,
+                "15"
+        );
+        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
+        assertEquals(ValidationFailureCategory.INCORRECT_TYPE_ANNOTATION, exception.getFailureCategory());
+        assertEquals("stringChar", exception.getFieldName());
     }
 
     @Test
@@ -364,8 +402,8 @@ class PacketValidatorTest {
                 "15"
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.UNSUPPORTED_TYPE, exception.getFailureReason());
-        assertEquals("stringUnsigned", exception.getField().getName());
+        assertEquals(ValidationFailureCategory.UNSUPPORTED_TYPE, exception.getFailureCategory());
+        assertEquals("stringUnsigned", exception.getFieldName());
     }
 
     @Test
@@ -377,8 +415,8 @@ class PacketValidatorTest {
                 "15"
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.UNSUPPORTED_TYPE, exception.getFailureReason());
-        assertEquals("stringInt", exception.getField().getName());
+        assertEquals(ValidationFailureCategory.UNSUPPORTED_TYPE, exception.getFailureCategory());
+        assertEquals("stringInt", exception.getFieldName());
     }
 
     @Test
@@ -390,8 +428,34 @@ class PacketValidatorTest {
                 "15"
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
-        assertEquals(PacketValidationException.FailureReason.UNSUPPORTED_TYPE, exception.getFailureReason());
-        assertEquals("stringStructureArray", exception.getField().getName());
+        assertEquals(ValidationFailureCategory.UNSUPPORTED_TYPE, exception.getFailureCategory());
+        assertEquals("stringStructureArray", exception.getFieldName());
+    }
+
+    @Test
+    void validate_packetWithMissingArrayAnnotationForStructure() {
+        var packet = new PacketWithMissingArrayAnnotationForStructure(
+                8,
+                PacketType.NONE,
+                54,
+                new TestSimpleStructure(5)
+        );
+        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
+        assertEquals(ValidationFailureCategory.INCORRECT_TYPE_ANNOTATION, exception.getFailureCategory());
+        assertEquals("simpleStructure", exception.getFieldName());
+    }
+
+    @Test
+    void validate_packetWithInvalidStructureType() {
+        var packet = new PacketWithInvalidStructureType(
+                8,
+                PacketType.NONE,
+                54,
+                new String[] { "abc", "def" }
+        );
+        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
+        assertEquals(ValidationFailureCategory.UNSUPPORTED_TYPE, exception.getFailureCategory());
+        assertEquals("stringStructureArray", exception.getFieldName());
     }
 
     @SuppressWarnings("all")
@@ -408,17 +472,20 @@ class PacketValidatorTest {
         private final TestSimpleStructure simpleStructureWord;
         @Word
         private final TestCustomValueEnum customValueEnumWord;
-        @CharArray(length = 5)
-        private final String stringCharArrayWithoutValidation;
-        @CharArray(length = 5, strictLengthValidation = true)
+        @Char
+        @Array(length = 5)
         private final String stringCharArray;
         @Unsigned
         private final long longUnsigned;
         @Unsigned
         private final TestSimpleStructure simpleStructureUnsigned;
+        @Unsigned
+        @Array(length = 5, dynamicLength = true)
+        private final Long[] longArrayUnsignedArrayDynamicLength;
         @Int(minValue = -2000000000, maxValue = 2000000000)
         private final int intInt;
-        @StructureArray(length = 3)
+        @Structure
+        @Array(length = 3)
         private final TestComplexStructure[] structureArray;
 
         protected ValidTestPacket(int size,
@@ -430,10 +497,10 @@ class PacketValidatorTest {
                                   int intWord,
                                   TestSimpleStructure simpleStructureWord,
                                   TestCustomValueEnum customValueEnumWord,
-                                  String stringCharArrayWithoutValidation,
                                   String stringCharArray,
                                   long longUnsigned,
                                   TestSimpleStructure simpleStructureUnsigned,
+                                  Long[] longArrayUnsignedArrayDynamicLength,
                                   int intInt,
                                   TestComplexStructure[] structureArray) {
             super(size, type, reqI);
@@ -443,10 +510,10 @@ class PacketValidatorTest {
             this.intWord = intWord;
             this.simpleStructureWord = simpleStructureWord;
             this.customValueEnumWord = customValueEnumWord;
-            this.stringCharArrayWithoutValidation = stringCharArrayWithoutValidation;
             this.stringCharArray = stringCharArray;
             this.longUnsigned = longUnsigned;
             this.simpleStructureUnsigned = simpleStructureUnsigned;
+            this.longArrayUnsignedArrayDynamicLength = longArrayUnsignedArrayDynamicLength;
             this.intInt = intInt;
             this.structureArray = structureArray;
         }
@@ -518,7 +585,8 @@ class PacketValidatorTest {
     @SuppressWarnings("all")
     private static class PacketWithInvalidCharArrayType extends Packet implements InstructionPacket {
 
-        @CharArray(length = 5)
+        @Char
+        @Array(length = 5)
         private final int intCharArray;
 
         protected PacketWithInvalidCharArrayType(int size,
@@ -527,6 +595,26 @@ class PacketValidatorTest {
                                                  int intCharArray) {
             super(size, type, reqI);
             this.intCharArray = intCharArray;
+        }
+
+        @Override
+        public byte[] getBytes() {
+            return new byte[0];
+        }
+    }
+
+    @SuppressWarnings("all")
+    private static class PacketWithMissingArrayAnnotationForChar extends Packet implements InstructionPacket {
+
+        @Char
+        private final String stringChar;
+
+        protected PacketWithMissingArrayAnnotationForChar(int size,
+                                                          PacketType type,
+                                                          int reqI,
+                                                          String stringChar) {
+            super(size, type, reqI);
+            this.stringChar = stringChar;
         }
 
         @Override
@@ -578,13 +666,55 @@ class PacketValidatorTest {
     @SuppressWarnings("all")
     private static class PacketWithInvalidStructureArrayType extends Packet implements InstructionPacket {
 
-        @StructureArray(length = 2)
+        @Structure
+        @Array(length = 2)
         private final String stringStructureArray;
 
         protected PacketWithInvalidStructureArrayType(int size,
                                                       PacketType type,
                                                       int reqI,
                                                       String stringStructureArray) {
+            super(size, type, reqI);
+            this.stringStructureArray = stringStructureArray;
+        }
+
+        @Override
+        public byte[] getBytes() {
+            return new byte[0];
+        }
+    }
+
+    @SuppressWarnings("all")
+    private static class PacketWithMissingArrayAnnotationForStructure extends Packet implements InstructionPacket {
+
+        @Structure
+        private final TestSimpleStructure simpleStructure;
+
+        protected PacketWithMissingArrayAnnotationForStructure(int size,
+                                                               PacketType type,
+                                                               int reqI,
+                                                               TestSimpleStructure simpleStructure) {
+            super(size, type, reqI);
+            this.simpleStructure = simpleStructure;
+        }
+
+        @Override
+        public byte[] getBytes() {
+            return new byte[0];
+        }
+    }
+
+    @SuppressWarnings("all")
+    private static class PacketWithInvalidStructureType extends Packet implements InstructionPacket {
+
+        @Structure
+        @Array(length = 2)
+        private final String[] stringStructureArray;
+
+        protected PacketWithInvalidStructureType(int size,
+                                                 PacketType type,
+                                                 int reqI,
+                                                 String[] stringStructureArray) {
             super(size, type, reqI);
             this.stringStructureArray = stringStructureArray;
         }

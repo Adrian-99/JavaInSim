@@ -1,7 +1,8 @@
 package pl.adrian.api.packets;
 
 import pl.adrian.api.packets.enums.PacketType;
-import pl.adrian.internal.packets.annotations.CharArray;
+import pl.adrian.internal.packets.annotations.Array;
+import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
@@ -12,7 +13,8 @@ import pl.adrian.internal.packets.util.PacketValidator;
  * MSg eXtended - like {@link MstPacket} but longer (not for commands).
  */
 public class MsxPacket extends Packet implements InstructionPacket {
-    @CharArray(length = 96)
+    @Char
+    @Array(length = 96)
     private final String msg;
 
     /**

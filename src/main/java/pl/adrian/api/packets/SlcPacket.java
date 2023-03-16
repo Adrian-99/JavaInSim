@@ -1,8 +1,9 @@
 package pl.adrian.api.packets;
 
 import pl.adrian.api.packets.enums.PacketType;
+import pl.adrian.internal.packets.annotations.Array;
 import pl.adrian.internal.packets.annotations.Byte;
-import pl.adrian.internal.packets.annotations.CharArray;
+import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
 
@@ -13,7 +14,8 @@ import pl.adrian.internal.packets.base.RequestablePacket;
 public class SlcPacket extends Packet implements RequestablePacket {
     @Byte
     private final short ucid;
-    @CharArray(length = 4)
+    @Char
+    @Array(length = 4)
     private final String cName;
 
     /**
