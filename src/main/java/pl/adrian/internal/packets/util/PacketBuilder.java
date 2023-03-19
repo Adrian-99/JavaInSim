@@ -2,6 +2,7 @@ package pl.adrian.internal.packets.util;
 
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.structures.base.ComplexInstructionStructure;
+import pl.adrian.internal.packets.structures.base.UnsignedInstructionStructure;
 
 /**
  * This class is a helper that is used while converting packets to their byte array representation.
@@ -139,6 +140,22 @@ public class PacketBuilder {
                 .writeByte((int) (value >> 8))
                 .writeByte((int) (value >> 16))
                 .writeByte((int) (value >> 24));
+    }
+
+    /**
+     * Appends to byte array unsigned array.
+     * @param value unsigned array value
+     * @return packet builder
+     */
+    public PacketBuilder writeUnsignedArray(UnsignedInstructionStructure[] value) {
+        for (var unsigned : value) {
+            if (unsigned != null) {
+                writeUnsigned(unsigned.getUnsignedValue());
+            } else {
+                writeZeroBytes(4);
+            }
+        }
+        return this;
     }
 
     /**

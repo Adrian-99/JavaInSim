@@ -34,7 +34,7 @@ public class MsoPacket extends Packet implements InfoPacket {
      * @param msg message
      */
     public MsoPacket(short ucid, short plid, MessageType userType, short textStart, String msg) {
-        super(8 + PacketUtils.getLfsCharArraySize(msg, 128), PacketType.MSO, 0);
+        super(PacketUtils.getPacketSize(8, msg, 128), PacketType.MSO, 0);
         this.ucid = ucid;
         this.plid = plid;
         this.userType = userType;

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.structures.base.ComplexInstructionStructure;
+import pl.adrian.internal.packets.structures.base.UnsignedInstructionStructure;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -12,7 +13,7 @@ class PacketBuilderTest {
 
     @BeforeEach
     void beforeEach() {
-        TestStructure.resetMethodCallsCounter();
+        TestComplexStructure.resetMethodCallsCounter();
     }
 
     @Test
@@ -336,6 +337,36 @@ class PacketBuilderTest {
     }
 
     @Test
+    void writeUnsignedArray_withNullValues() {
+        var packetBuilder = new PacketBuilder((short) 16, PacketType.fromOrdinal(1), (short) 154);
+        packetBuilder.writeUnsignedArray(new TestUnsignedStructure[] {
+                new TestUnsignedStructure(896523),
+                null,
+                new TestUnsignedStructure(1235675645)
+        });
+        packetBuilder.writeByte(55);
+        var bytes = packetBuilder.getBytes();
+
+        assertEquals(16, bytes.length);
+        assertEquals(4, bytes[0]);
+        assertEquals(1, bytes[1]);
+        assertEquals(-102, bytes[2]);
+        assertEquals(11, bytes[3]);
+        assertEquals(-82, bytes[4]);
+        assertEquals(13, bytes[5]);
+        assertEquals(0, bytes[6]);
+        assertEquals(0, bytes[7]);
+        assertEquals(0, bytes[8]);
+        assertEquals(0, bytes[9]);
+        assertEquals(0, bytes[10]);
+        assertEquals(-3, bytes[11]);
+        assertEquals(-23, bytes[12]);
+        assertEquals(-90, bytes[13]);
+        assertEquals(73, bytes[14]);
+        assertEquals(55, bytes[15]);
+    }
+
+    @Test
     void writeInt_fromPositiveNumber() {
         var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
         packetBuilder.writeInt(172);
@@ -375,11 +406,11 @@ class PacketBuilderTest {
     void writeStructureArray_fromRegularArray() {
         var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
         packetBuilder.writeStructureArray(
-                new TestStructure[] {
-                        new TestStructure(5),
-                        new TestStructure(6),
-                        new TestStructure(7),
-                        new TestStructure(8),
+                new TestComplexStructure[] {
+                        new TestComplexStructure(5),
+                        new TestComplexStructure(6),
+                        new TestComplexStructure(7),
+                        new TestComplexStructure(8),
                 },
                 1
         );
@@ -395,18 +426,18 @@ class PacketBuilderTest {
         assertEquals(7, bytes[5]);
         assertEquals(8, bytes[6]);
         assertEquals(55, bytes[7]);
-        assertEquals(4, TestStructure.getAppendBytesMethodCallsCount());
+        assertEquals(4, TestComplexStructure.getAppendBytesMethodCallsCount());
     }
 
     @Test
     void writeStructureArray_fromArrayWithNulls() {
         var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
         packetBuilder.writeStructureArray(
-                new TestStructure[] {
-                        new TestStructure(5),
+                new TestComplexStructure[] {
+                        new TestComplexStructure(5),
                         null,
                         null,
-                        new TestStructure(8),
+                        new TestComplexStructure(8),
                 },
                 1
         );
@@ -422,16 +453,16 @@ class PacketBuilderTest {
         assertEquals(0, bytes[5]);
         assertEquals(8, bytes[6]);
         assertEquals(55, bytes[7]);
-        assertEquals(2, TestStructure.getAppendBytesMethodCallsCount());
+        assertEquals(2, TestComplexStructure.getAppendBytesMethodCallsCount());
     }
 
-    private static class TestStructure implements ComplexInstructionStructure {
+    private static class TestComplexStructure implements ComplexInstructionStructure {
         @Byte
         private final short structureField;
 
         private static int appendBytesMethodCallsCount = 0;
 
-        private TestStructure(int structureField) {
+        private TestComplexStructure(int structureField) {
             this.structureField = (short) structureField;
         }
 
@@ -447,6 +478,13 @@ class PacketBuilderTest {
 
         public static int getAppendBytesMethodCallsCount() {
             return appendBytesMethodCallsCount;
+        }
+    }
+
+    private record TestUnsignedStructure(long value) implements UnsignedInstructionStructure {
+        @Override
+        public long getUnsignedValue() {
+            return value;
         }
     }
 }

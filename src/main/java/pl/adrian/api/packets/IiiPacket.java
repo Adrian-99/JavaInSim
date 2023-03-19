@@ -27,7 +27,7 @@ public class IiiPacket extends Packet implements InfoPacket {
      * @param msg message
      */
     public IiiPacket(short ucid, short plid, String msg) {
-        super(8 + PacketUtils.getLfsCharArraySize(msg, 64), PacketType.III, 0);
+        super(PacketUtils.getPacketSize(8, msg, 64), PacketType.III, 0);
         this.ucid = ucid;
         this.plid = plid;
         this.msg = msg;

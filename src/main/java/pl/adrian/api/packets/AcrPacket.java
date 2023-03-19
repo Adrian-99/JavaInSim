@@ -31,7 +31,7 @@ public class AcrPacket extends Packet implements InfoPacket {
      * @param text command text
      */
     public AcrPacket(short ucid, boolean isAdmin, AcrResult result, String text) {
-        super(8 + PacketUtils.getLfsCharArraySize(text, 64), PacketType.ACR, 0);
+        super(PacketUtils.getPacketSize(8, text, 64), PacketType.ACR, 0);
         this.ucid = ucid;
         this.isAdmin = isAdmin;
         this.result = result;

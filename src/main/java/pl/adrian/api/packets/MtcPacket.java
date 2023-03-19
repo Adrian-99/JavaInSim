@@ -35,7 +35,7 @@ public class MtcPacket extends Packet implements InstructionPacket {
      * @throws PacketValidationException if validation of any field in packet fails
      */
     public MtcPacket(MessageSound sound, int ucid, int plid, String text) throws PacketValidationException {
-        super(8 + PacketUtils.getLfsCharArraySize(text, 128), PacketType.MTC, 0);
+        super(PacketUtils.getPacketSize(8, text, 128), PacketType.MTC, 0);
         this.sound = sound;
         this.ucid = (short) ucid;
         this.plid = (short) plid;

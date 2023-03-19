@@ -114,13 +114,13 @@ public enum TinySubtype {
      */
     AXM,
     /**
-     * 26 - info request: send IS_SLC packets for all connections
+     * 26 - info request: send {@link SlcPacket} packets for all connections
      */
     SLC(SlcPacket.class, true),
     /**
-     * 27 - info request: send IS_MAL listing the currently allowed mods
+     * 27 - info request: send {@link MalPacket} listing the currently allowed mods
      */
-    MAL;
+    MAL(MalPacket.class);
 
     private final Class<? extends RequestablePacket> requestablePacketClass;
     private final boolean multiPacketResponse;

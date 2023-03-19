@@ -12,6 +12,10 @@ public class Constants {
      * Size (in bytes) of header of each packet
      */
     public static final short PACKET_HEADER_SIZE = 3;
+    /**
+     * Maximum number of mods can be allowed to be used on host
+     */
+    public static final short MAX_MODS = 120;
 
     private Constants() {}
 }

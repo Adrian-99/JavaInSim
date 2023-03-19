@@ -271,7 +271,7 @@ public enum PacketType {
     /**
      * 65 - both ways: set mods allowed
      */
-    MAL;
+    MAL(MalPacket.class);
 
     private final Class<? extends Packet> packetClass;
 

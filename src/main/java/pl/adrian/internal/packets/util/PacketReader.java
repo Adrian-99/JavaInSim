@@ -84,6 +84,7 @@ public class PacketReader {
             case NCN -> readNcnPacket();
             case NCI -> readNciPacket();
             case SLC -> readSlcPacket();
+            case MAL -> readMalPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -260,6 +261,15 @@ public class PacketReader {
         return new SlcPacket(packetReqI, ucid, cName);
     }
 
+    private MalPacket readMalPacket() {
+        var numM = readByte();
+        var ucid = readByte();
+        skipZeroBytes(3);
+        var skinId = readUnsignedArray(numM);
+
+        return new MalPacket(packetReqI, numM, ucid, skinId);
+    }
+
     private short readByte() {
         return convertByte(dataBytes[dataBytesReaderIndex++]);
     }
@@ -292,6 +302,14 @@ public class PacketReader {
 
     private long readUnsigned() {
         return readByte() + ((long) readByte() << 8) + ((long) readByte() << 16) + ((long) readByte() << 24);
+    }
+
+    private long[] readUnsignedArray(int arrayLength) {
+        var result = new long[arrayLength];
+        for (var i = 0; i < arrayLength; i++) {
+            result[i] = readUnsigned();
+        }
+        return result;
     }
 
     private float readFloat() {
