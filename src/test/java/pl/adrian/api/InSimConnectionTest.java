@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.awaitility.Awaitility.await;
@@ -145,6 +146,26 @@ class InSimConnectionTest {
         assertEquals(2, tinyPacketListener1Calls.get());
         assertEquals(2, tinyPacketListener2Calls.get());
         assertEquals(1, smallPacketListenerCalls.get());
+    }
+
+    @Test
+    void listen_withThrowingCallback() throws IOException {
+        var firstListenerCalled = new AtomicBoolean();
+        var secondListenerCalled = new AtomicBoolean();
+
+        inSimConnection.listen(TinyPacket.class, (inSimConnection1, packet) -> {
+            firstListenerCalled.set(true);
+            throw new RuntimeException("Exception in listener callback");
+        });
+        inSimConnection.listen(TinyPacket.class, (inSimConnection1, packet) -> secondListenerCalled.set(true));
+
+        lfsMock.send(KEEP_ALIVE_PACKET_BYTES);
+
+        assertConditionMet(
+                () -> firstListenerCalled.get() && secondListenerCalled.get(),
+                1000,
+                100
+        );
     }
 
     @Test
@@ -285,6 +306,31 @@ class InSimConnectionTest {
         lfsMock.send(responsePacketBytes);
 
         assertConditionNotMet(() -> receivedResponsesCount.get() > 3, 1000);
+    }
+
+    @Test
+    void request_withThrowingCallback() throws IOException {
+        var firstRequestCalled = new AtomicBoolean();
+        var secondRequestCalled = new AtomicBoolean();
+
+        inSimConnection.request(TinySubtype.ALC, (inSimConnection1, packet) -> {
+            firstRequestCalled.set(true);
+            throw new RuntimeException("Exception in request callback");
+        });
+
+        var lfsReceivedPackets = lfsMock.awaitReceivedPackets(2);
+        var responsePacketBytes = new byte[] { 2, 4, lfsReceivedPackets.get(1)[2], 8, 17, 49, 0, 0 };
+        lfsMock.send(responsePacketBytes);
+
+        assertConditionMet(() -> firstRequestCalled.get() && !secondRequestCalled.get(), 1000, 100);
+
+        inSimConnection.request(TinySubtype.ALC, (inSimConnection1, packet) -> secondRequestCalled.set(true));
+
+        lfsReceivedPackets = lfsMock.awaitReceivedPackets(3);
+        responsePacketBytes = new byte[] { 2, 4, lfsReceivedPackets.get(2)[2], 8, 17, 49, 0, 0 };
+        lfsMock.send(responsePacketBytes);
+
+        assertConditionMet(secondRequestCalled::get, 1000, 100);
     }
 
     @Test

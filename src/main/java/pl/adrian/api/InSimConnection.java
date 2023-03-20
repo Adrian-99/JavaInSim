@@ -1,5 +1,7 @@
 package pl.adrian.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.adrian.api.packets.SmallPacket;
 import pl.adrian.api.packets.TinyPacket;
 import pl.adrian.api.packets.enums.SmallSubtype;
@@ -12,7 +14,6 @@ import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.RequestablePacket;
 import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.api.packets.enums.PacketType;
-import pl.adrian.internal.packets.exceptions.PacketReadingException;
 import pl.adrian.internal.packets.util.PacketReader;
 
 import java.io.*;
@@ -30,6 +31,7 @@ import java.util.stream.IntStream;
  * This class is responsible for connecting and communicating with LFS.
  */
 public class InSimConnection implements Closeable {
+    private final Logger logger = LoggerFactory.getLogger(InSimConnection.class);
     private final Socket socket;
     private final OutputStream out;
     private final InputStream in;
@@ -61,6 +63,7 @@ public class InSimConnection implements Closeable {
      * @throws IOException if I/O error occurs when creating a connection
      */
     public InSimConnection(String hostname, int port, IsiPacket initializationPacket) throws IOException {
+        logger.debug("Creating InSim connection");
         socket = new Socket(hostname, port);
         out = socket.getOutputStream();
         in = socket.getInputStream();
@@ -77,6 +80,7 @@ public class InSimConnection implements Closeable {
 
     @Override
     public void close() throws IOException {
+        logger.debug("Closing InSim connection");
         if (isConnected && !socket.isClosed()) {
             var closePacket = new TinyPacket(TinySubtype.CLOSE);
             send(closePacket);
@@ -102,6 +106,7 @@ public class InSimConnection implements Closeable {
      * @throws IOException if I/O error occurs while sending packet
      */
     public void send(InstructionPacket packet) throws IOException {
+        logger.debug("Sending {} packet", packet.getType());
         var bytes = packet.getBytes();
         out.write(bytes);
     }
@@ -120,6 +125,7 @@ public class InSimConnection implements Closeable {
                                                        PacketListener<T> packetListener) {
         if (packetClass != null && packetListener != null) {
             var packetType = PacketType.fromPacketClass(packetClass);
+            logger.debug("Registering listener for {} packets", packetType);
             registeredListeners.computeIfAbsent(packetType, type -> new HashSet<>());
             registeredListeners.get(packetType).add(packetListener);
         }
@@ -138,6 +144,7 @@ public class InSimConnection implements Closeable {
             var packetType = PacketType.fromPacketClass(packetClass);
             if (registeredListeners.containsKey(packetType) &&
                     registeredListeners.get(packetType).contains(packetListener)) {
+                logger.debug("Unregistering listener for {} packets", packetType);
                 if (registeredListeners.get(packetType).size() == 1) {
                     registeredListeners.remove(packetType);
                 } else {
@@ -160,6 +167,7 @@ public class InSimConnection implements Closeable {
     public <T extends Packet & RequestablePacket> void request(Class<T> packetClass,
                                                                PacketListener<T> callback) throws IOException {
         var packetType = PacketType.fromPacketClass(packetClass);
+        logger.debug("Requested {} packet(s)", packetType);
         var tinySubtype = TinySubtype.fromRequestablePacketClass(packetClass);
         handleRequest(packetType, tinySubtype, callback);
     }
@@ -175,6 +183,7 @@ public class InSimConnection implements Closeable {
      */
     public void request(TinySubtype tinySubtype, PacketListener<SmallPacket> callback) throws IOException {
         if (tinySubtype.equals(TinySubtype.ALC)) {
+            logger.debug("Requested SMALL {} packet", tinySubtype);
             handleRequest(PacketType.SMALL, tinySubtype, callback);
         }
     }
@@ -196,6 +205,7 @@ public class InSimConnection implements Closeable {
         send(tinyPacket);
 
         if (clearPacketRequestsThread == null || clearPacketRequestsThread.isCancelled()) {
+            logger.debug("Scheduling clearing timed out packet requests thread");
             clearPacketRequestsThread = threadsExecutor.scheduleAtFixedRate(
                     this::clearTimedOutPacketRequests,
                     packetRequestTimeoutMs,
@@ -206,25 +216,34 @@ public class InSimConnection implements Closeable {
     }
 
     private void readIncomingPackets() {
+        logger.debug("Started packet reading thread");
         try {
             byte[] headerBytes;
             while ((headerBytes = in.readNBytes(Constants.PACKET_HEADER_SIZE)).length == Constants.PACKET_HEADER_SIZE) {
-                var packetReader = new PacketReader(headerBytes);
-                if (shouldPacketBeRead(packetReader.getPacketType(), packetReader.getPacketReqI())) {
-                    var dataBytes = in.readNBytes(packetReader.getDataBytesCount());
-                    var packet = packetReader.read(dataBytes);
-                    handleReadPacket(packet);
-                } else {
-                    in.skipNBytes(packetReader.getDataBytesCount());
-                }
+                onPacketReceived(headerBytes);
             }
             isConnected = false;
         } catch (IOException exception) {
-            if (exception.getMessage().equals("Socket closed")) {
-                isConnected = false;
+            isConnected = false;
+            logger.error("Error occurred while reading packet header bytes: {}", exception.getMessage());
+        }
+        logger.debug("Stopping packet reading thread");
+    }
+
+    private void onPacketReceived(byte[] headerBytes) {
+        try {
+            var packetReader = new PacketReader(headerBytes);
+            if (shouldPacketBeRead(packetReader.getPacketType(), packetReader.getPacketReqI())) {
+                logger.atDebug().log("Received {} packet - reading", packetReader.getPacketType());
+                var dataBytes = in.readNBytes(packetReader.getDataBytesCount());
+                var packet = packetReader.read(dataBytes);
+                handleReadPacket(packet);
             } else {
-                throw new PacketReadingException("Error occurred while reading packet bytes", exception);
+                logger.atDebug().log("Received {} packet - skipping", packetReader.getPacketType());
+                in.skipNBytes(packetReader.getDataBytesCount());
             }
+        } catch (Exception exception) {
+            logger.error("Error occurred while reading packet: {}", exception.getMessage());
         }
     }
 
@@ -249,6 +268,7 @@ public class InSimConnection implements Closeable {
         } else if (packet.getType().equals(PacketType.TINY)) {
             var tinyPacket = (TinyPacket) packet;
             if (tinyPacket.getReqI() == 0 && tinyPacket.getSubT().equals(TinySubtype.NONE)) {
+                logger.debug("Received keep alive packet");
                 send(tinyPacket);
                 isConnected = true;
             }
@@ -260,7 +280,12 @@ public class InSimConnection implements Closeable {
         if (registeredListeners.containsKey(packet.getType())) {
             threadsExecutor.submit(() -> {
                 for (var listener : registeredListeners.get(packet.getType())) {
-                    listener.onPacketReceived(this, packet);
+                    try {
+                        listener.onPacketReceived(this, packet);
+                    } catch (Exception exception) {
+                        logger.error("Error occurred in packet listener callback: {}", exception.getMessage());
+                        logStackTrace("listener callback", exception);
+                    }
                 }
             });
         }
@@ -268,26 +293,31 @@ public class InSimConnection implements Closeable {
 
     @SuppressWarnings("unchecked")
     private void handleReadPacketForPacketRequests(InfoPacket packet) {
-        if (!packetRequests.isEmpty()) {
-            for (var packetRequest : packetRequests) {
-                if (packetRequest.getPacketType().equals(packet.getType()) &&
-                        packetRequest.getReqI() == packet.getReqI()) {
-                    threadsExecutor.submit(() ->
-                            packetRequest.getCallback().onPacketReceived(this, packet)
-                    );
-                    if (!packetRequest.isExpectMultiPacketResponse()) {
-                        packetRequests.remove(packetRequest);
-                        tryToStopClearPacketRequestsThread();
-                    } else {
-                        packetRequest.setLastUpdateNow();
+        for (var packetRequest : packetRequests) {
+            if (packetRequest.getPacketType().equals(packet.getType()) &&
+                    packetRequest.getReqI() == packet.getReqI()) {
+                threadsExecutor.submit(() -> {
+                    try {
+                        packetRequest.getCallback().onPacketReceived(this, packet);
+                    } catch (Exception exception) {
+                        logger.error("Error occurred in packet request callback: {}", exception.getMessage());
+                        logStackTrace("packet request callback", exception);
                     }
-                    break;
+                });
+                if (!packetRequest.isExpectMultiPacketResponse()) {
+                    logger.debug("Removing {} packet request - packet has been received", packetRequest.getPacketType());
+                    packetRequests.remove(packetRequest);
+                    tryToStopClearPacketRequestsThread();
+                } else {
+                    packetRequest.setLastUpdateNow();
                 }
+                break;
             }
         }
     }
 
     private void clearTimedOutPacketRequests() {
+        logger.debug("Trying to remove timed out packet requests");
         packetRequests.removeIf(
                 packetRequest -> packetRequest.getLastUpdateAt()
                         .until(LocalDateTime.now(), ChronoUnit.MILLIS) >
@@ -298,7 +328,23 @@ public class InSimConnection implements Closeable {
 
     private void tryToStopClearPacketRequestsThread() {
         if (packetRequests.isEmpty() && clearPacketRequestsThread != null) {
+            logger.debug("Stopping clearing timed out packet requests thread - no packet requests left");
             clearPacketRequestsThread.cancel(false);
+        }
+    }
+
+    private void logStackTrace(String step, Exception exception) {
+        if (logger.isDebugEnabled()) {
+            var messageBuilder = new StringBuilder(exception.getClass().getSimpleName())
+                    .append(" thrown in ")
+                    .append(step)
+                    .append(": ")
+                    .append(exception.getMessage());
+            for (var stackTraceElement : exception.getStackTrace()) {
+                messageBuilder.append("\nat ")
+                        .append(stackTraceElement.toString());
+            }
+            logger.debug(messageBuilder.toString());
         }
     }
 }
