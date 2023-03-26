@@ -6,15 +6,12 @@ package pl.adrian.internal.packets.enums;
  * @param <T> type of enum that is handler by helper instance
  */
 public class EnumHelper<T extends Enum<?>> {
+    private final Class<T> enumClass;
     private final T[] allValuesCached;
 
-    @SuppressWarnings("unchecked")
     EnumHelper(Class<T> enumClass) {
-        try {
-            this.allValuesCached = (T[]) enumClass.getMethod("values").invoke(enumClass);
-        } catch (Exception exception) {
-            throw new IllegalStateException("Something went wrong while creating EnumHelper", exception);
-        }
+        this.enumClass = enumClass;
+        this.allValuesCached = enumClass.getEnumConstants();
     }
 
     /**
@@ -30,6 +27,15 @@ public class EnumHelper<T extends Enum<?>> {
      * @return enum value
      */
     public T fromOrdinal(int ordinal) {
-        return allValuesCached[ordinal];
+        if (EnumWithCustomValue.class.isAssignableFrom(enumClass)) {
+            for (var enumValue : allValuesCached) {
+                if (((EnumWithCustomValue) enumValue).getValue() == ordinal) {
+                    return enumValue;
+                }
+            }
+            return allValuesCached[0];
+        } else {
+            return allValuesCached[ordinal];
+        }
     }
 }

@@ -85,6 +85,7 @@ public class PacketReader {
             case NCI -> readNciPacket();
             case SLC -> readSlcPacket();
             case MAL -> readMalPacket();
+            case CIM -> readCimPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -268,6 +269,16 @@ public class PacketReader {
         var skinId = readUnsignedArray(numM);
 
         return new MalPacket(packetReqI, numM, ucid, skinId);
+    }
+
+    private CimPacket readCimPacket() {
+        var ucid = readByte();
+        var mode = InterfaceMode.fromOrdinal(readByte());
+        var subMode = readByte();
+        var selType = SelectedObjectType.fromOrdinal(readByte());
+        skipZeroByte();
+
+        return new CimPacket(ucid, mode, subMode, selType);
     }
 
     private short readByte() {

@@ -267,7 +267,7 @@ public enum PacketType {
     /**
      * 64 - info: connection's interface mode
      */
-    CIM,
+    CIM(CimPacket.class),
     /**
      * 65 - both ways: set mods allowed
      */
