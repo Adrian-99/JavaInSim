@@ -3,7 +3,7 @@ package pl.adrian.internal.packets.util;
 import org.junit.jupiter.api.Test;
 import pl.adrian.api.packets.*;
 import pl.adrian.api.packets.enums.*;
-import pl.adrian.api.packets.flags.Car;
+import pl.adrian.api.packets.enums.DefaultCar;
 import pl.adrian.api.packets.flags.NcnFlag;
 import pl.adrian.api.packets.flags.RaceFlag;
 import pl.adrian.api.packets.flags.StaFlag;
@@ -141,7 +141,7 @@ class PacketReaderTest {
         assertEquals(804864, castedReadPacket.getUVal());
         assertTrue(castedReadPacket.getVoteAction().isEmpty());
         assertTrue(castedReadPacket.getCars().isPresent());
-        assertFlagsEqual(Car.class, Set.of(Car.FOX, Car.FO8, Car.BF1, Car.FBM), castedReadPacket.getCars().get());
+        assertFlagsEqual(DefaultCar.class, Set.of(DefaultCar.FOX, DefaultCar.FO8, DefaultCar.BF1, DefaultCar.FBM), castedReadPacket.getCars().get());
     }
 
     @Test
@@ -386,7 +386,7 @@ class PacketReaderTest {
     }
 
     @Test
-    void readSlcPacket() {
+    void readSlcPacket_withDefaultCar() {
         var headerBytes = new byte[] { 2, 62, -112 };
         var dataBytes = new byte[] { 9, 88, 82, 84, 0 };
         var packetReader = new PacketReader(headerBytes);
@@ -401,7 +401,31 @@ class PacketReaderTest {
 
         assertPacketHeaderEquals(8, PacketType.SLC, 144, castedReadPacket);
         assertEquals(9, castedReadPacket.getUcid());
-        assertEquals("XRT", castedReadPacket.getCName());
+        assertTrue(castedReadPacket.getCar().getDefaultCar().isPresent());
+        assertEquals(DefaultCar.XRT, castedReadPacket.getCar().getDefaultCar().get());
+        assertEquals("XRT", castedReadPacket.getCar().getSkinId());
+        assertFalse(castedReadPacket.getCar().isMod());
+    }
+
+    @Test
+    void readSlcPacket_withModCar() {
+        var headerBytes = new byte[] { 2, 62, -112 };
+        var dataBytes = new byte[] { 9, -63, 104, 74, 0 };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertPacketHeaderEquals(5, PacketType.SLC, 144, packetReader);
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof SlcPacket);
+
+        var castedReadPacket = (SlcPacket) readPacket;
+
+        assertPacketHeaderEquals(8, PacketType.SLC, 144, castedReadPacket);
+        assertEquals(9, castedReadPacket.getUcid());
+        assertTrue(castedReadPacket.getCar().getDefaultCar().isEmpty());
+        assertEquals("4A68C1", castedReadPacket.getCar().getSkinId());
+        assertTrue(castedReadPacket.getCar().isMod());
     }
 
     @Test

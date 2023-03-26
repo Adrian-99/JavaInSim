@@ -3,7 +3,7 @@ package pl.adrian.api.packets;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.SmallSubtype;
 import pl.adrian.api.packets.enums.VoteAction;
-import pl.adrian.api.packets.flags.Car;
+import pl.adrian.api.packets.enums.DefaultCar;
 import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.LcsFlag;
 import pl.adrian.internal.packets.annotations.Byte;
@@ -62,7 +62,7 @@ public class SmallPacket extends Packet implements InstructionPacket, InfoPacket
      * Creates small packet for setting allowed cars on host.
      * @param cars allowed cars
      */
-    public SmallPacket(Car... cars) {
+    public SmallPacket(DefaultCar... cars) {
         this(SmallSubtype.ALC, new Flags<>(cars).getUnsignedValue(), 0);
     }
 
@@ -89,8 +89,6 @@ public class SmallPacket extends Packet implements InstructionPacket, InfoPacket
     }
 
     /**
-     * Warning! Method should be used only if {@link #getSubT() subtype}
-     * is equal to {@link SmallSubtype#VTA}.
      * @return vote action, or empty optional if {@link #getSubT() subtype} is
      * not equal to {@link SmallSubtype#VTA}
      */
@@ -103,14 +101,12 @@ public class SmallPacket extends Packet implements InstructionPacket, InfoPacket
     }
 
     /**
-     * Warning! method should be used only if {@link #getSubT() subtype}
-     * is equal to {@link SmallSubtype#ALC}.
      * @return allowed cars, or empty optional if {@link #getSubT() subtype} is
      * not equal to {@link SmallSubtype#ALC}
      */
-    public Optional<Flags<Car>> getCars() {
+    public Optional<Flags<DefaultCar>> getCars() {
         if (subT.equals(SmallSubtype.ALC)) {
-            return Optional.of(new Flags<>(Car.class, (int) uVal));
+            return Optional.of(new Flags<>(DefaultCar.class, (int) uVal));
         } else {
             return Optional.empty();
         }

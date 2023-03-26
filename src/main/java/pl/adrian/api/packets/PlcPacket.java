@@ -1,7 +1,7 @@
 package pl.adrian.api.packets;
 
 import pl.adrian.api.packets.enums.PacketType;
-import pl.adrian.api.packets.flags.Car;
+import pl.adrian.api.packets.enums.DefaultCar;
 import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Unsigned;
@@ -20,7 +20,7 @@ public class PlcPacket extends Packet implements InstructionPacket {
     @Byte
     private final short ucid;
     @Unsigned
-    private final Flags<Car> cars;
+    private final Flags<DefaultCar> cars;
 
     /**
      * Creates player cars packet.
@@ -28,7 +28,7 @@ public class PlcPacket extends Packet implements InstructionPacket {
      * @param cars allowed cars
      * @throws PacketValidationException if validation of any field in packet fails
      */
-    public PlcPacket(int ucid, Flags<Car> cars) throws PacketValidationException {
+    public PlcPacket(int ucid, Flags<DefaultCar> cars) throws PacketValidationException {
         super(12, PacketType.PLC, 0);
         this.ucid = (short) ucid;
         this.cars = cars;

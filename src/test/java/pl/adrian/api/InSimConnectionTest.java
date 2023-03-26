@@ -7,7 +7,7 @@ import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.Product;
 import pl.adrian.api.packets.enums.SmallSubtype;
 import pl.adrian.api.packets.enums.TinySubtype;
-import pl.adrian.api.packets.flags.Car;
+import pl.adrian.api.packets.enums.DefaultCar;
 import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.IsiFlag;
 import pl.adrian.api.packets.flags.NcnFlag;
@@ -242,7 +242,7 @@ class InSimConnectionTest {
             assertEquals(12561, packet.getUVal());
             assertTrue(packet.getVoteAction().isEmpty());
             assertTrue(packet.getCars().isPresent());
-            assertFlagsEqual(Car.class, Set.of(Car.XFG, Car.FXO, Car.UF1, Car.XFR, Car.UFR), packet.getCars().get());
+            assertFlagsEqual(DefaultCar.class, Set.of(DefaultCar.XFG, DefaultCar.FXO, DefaultCar.UF1, DefaultCar.XFR, DefaultCar.UFR), packet.getCars().get());
             receivedResponsesCount.getAndIncrement();
         });
 

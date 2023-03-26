@@ -1,9 +1,13 @@
-package pl.adrian.api.packets.flags;
+package pl.adrian.api.packets.enums;
+
+import pl.adrian.internal.packets.enums.EnumHelpers;
+
+import java.util.Optional;
 
 /**
- * Enumeration for cars.
+ * Enumeration for default cars.
  */
-public enum Car {
+public enum DefaultCar {
     /**
      * bit 0, value 1: XF GTI
      */
@@ -83,5 +87,19 @@ public enum Car {
     /**
      * bit 19, value 524288: FORMULA BMW FB02
      */
-    FBM
+    FBM;
+
+    /**
+     * Converts string value to enum value.
+     * @param carName string value
+     * @return enum value
+     */
+    public static Optional<DefaultCar> fromString(String carName) {
+        for (var enumValue : EnumHelpers.get(DefaultCar.class).getAllValuesCached()) {
+            if (enumValue.name().equalsIgnoreCase(carName)) {
+                return Optional.of(enumValue);
+            }
+        }
+        return Optional.empty();
+    }
 }

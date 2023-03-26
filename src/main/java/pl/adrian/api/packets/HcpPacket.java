@@ -1,7 +1,7 @@
 package pl.adrian.api.packets;
 
 import pl.adrian.api.packets.enums.PacketType;
-import pl.adrian.api.packets.flags.Car;
+import pl.adrian.api.packets.enums.DefaultCar;
 import pl.adrian.api.packets.structures.CarHandicaps;
 import pl.adrian.internal.packets.annotations.Array;
 import pl.adrian.internal.packets.annotations.Structure;
@@ -26,13 +26,13 @@ public class HcpPacket extends Packet implements InstructionPacket {
 
     /**
      * Creates handicaps packet.
-     * @param info map containing handicaps for default LFS {@link Car Cars}.
+     * @param info map containing handicaps for {@link DefaultCar default LFS cars}.
      * @throws PacketValidationException if validation of any field in packet fails
      */
-    public HcpPacket(Map<Car, CarHandicaps> info) throws PacketValidationException {
+    public HcpPacket(Map<DefaultCar, CarHandicaps> info) throws PacketValidationException {
         super(68, PacketType.HCP, 0);
         this.info = new CarHandicaps[32];
-        for (var car : EnumHelpers.get(Car.class).getAllValuesCached()) {
+        for (var car : EnumHelpers.get(DefaultCar.class).getAllValuesCached()) {
             if (info.containsKey(car)) {
                 this.info[car.ordinal()] = info.get(car);
             }

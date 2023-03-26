@@ -2,7 +2,7 @@ package pl.adrian.api.packets;
 
 import org.junit.jupiter.api.Test;
 import pl.adrian.api.packets.enums.SmallSubtype;
-import pl.adrian.api.packets.flags.Car;
+import pl.adrian.api.packets.enums.DefaultCar;
 import pl.adrian.api.packets.flags.LcsFlag;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -44,7 +44,7 @@ class SmallPacketTest {
 
     @Test
     void createSmallPacket_withCars() {
-        var packet = new SmallPacket(Car.FXR, Car.XRR, Car.FZR);
+        var packet = new SmallPacket(DefaultCar.FXR, DefaultCar.XRR, DefaultCar.FZR);
         var bytes = packet.getBytes();
         var expectedBytes = new byte[] {
                 2, 4, 0, 8, 0, -128, 3, 0

@@ -6,6 +6,7 @@ import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.NcnFlag;
 import pl.adrian.api.packets.flags.RaceFlag;
 import pl.adrian.api.packets.flags.StaFlag;
+import pl.adrian.api.packets.structures.Car;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.exceptions.PacketReadingException;
 import pl.adrian.internal.packets.structures.LapTiming;
@@ -257,9 +258,9 @@ public class PacketReader {
 
     private SlcPacket readSlcPacket() {
         var ucid = readByte();
-        var cName = readCharArray(4);
+        var car = new Car(readRawBytes(4));
 
-        return new SlcPacket(packetReqI, ucid, cName);
+        return new SlcPacket(packetReqI, ucid, car);
     }
 
     private MalPacket readMalPacket() {
@@ -330,6 +331,13 @@ public class PacketReader {
                 ((dataBytes[dataBytesReaderIndex + 3] & 0xFF) << 24);
         dataBytesReaderIndex += 4;
         return Float.intBitsToFloat(asInt);
+    }
+
+    private byte[] readRawBytes(int count) {
+        var resultBytes = new byte[count];
+        System.arraycopy(dataBytes, dataBytesReaderIndex, resultBytes, 0, count);
+        dataBytesReaderIndex += count;
+        return resultBytes;
     }
 
     private short convertByte(byte value) {
