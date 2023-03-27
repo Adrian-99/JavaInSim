@@ -87,7 +87,7 @@ public enum PacketType {
     /**
      * 19 - info: connection left
      */
-    CNL,
+    CNL(CnlPacket.class),
     /**
      * 20 - info: connection renamed
      */
