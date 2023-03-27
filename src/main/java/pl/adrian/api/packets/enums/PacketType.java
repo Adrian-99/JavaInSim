@@ -91,7 +91,7 @@ public enum PacketType {
     /**
      * 20 - info: connection renamed
      */
-    CPR,
+    CPR(CprPacket.class),
     /**
      * 21 - info: new player (joined race)
      */

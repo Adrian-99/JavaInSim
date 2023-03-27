@@ -88,6 +88,7 @@ public class PacketReader {
             case MAL -> readMalPacket();
             case CIM -> readCimPacket();
             case CNL -> readCnlPacket();
+            case CPR -> readCprPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -290,6 +291,14 @@ public class PacketReader {
         skipZeroBytes(2);
 
         return new CnlPacket(ucid, reason, total);
+    }
+
+    private CprPacket readCprPacket() {
+        var ucid = readByte();
+        var pName = readCharArray(24);
+        var plate = readCharArray(8);
+
+        return new CprPacket(ucid, pName, plate);
     }
 
     private short readByte() {
