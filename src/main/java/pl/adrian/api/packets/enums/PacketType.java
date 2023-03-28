@@ -99,7 +99,7 @@ public enum PacketType {
     /**
      * 22 - info: player pit (keeps slot in race)
      */
-    PLP,
+    PLP(PlpPacket.class),
     /**
      * 23 - info: player leave (spectate - loses slot)
      */
