@@ -95,7 +95,7 @@ public enum PacketType {
     /**
      * 21 - info: new player (joined race)
      */
-    NPL,
+    NPL(NplPacket.class),
     /**
      * 22 - info: player pit (keeps slot in race)
      */

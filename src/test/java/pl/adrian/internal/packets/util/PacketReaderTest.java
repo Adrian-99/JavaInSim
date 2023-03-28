@@ -4,16 +4,16 @@ import org.junit.jupiter.api.Test;
 import pl.adrian.api.packets.*;
 import pl.adrian.api.packets.enums.*;
 import pl.adrian.api.packets.enums.DefaultCar;
-import pl.adrian.api.packets.flags.NcnFlag;
-import pl.adrian.api.packets.flags.RaceFlag;
-import pl.adrian.api.packets.flags.StaFlag;
+import pl.adrian.api.packets.flags.*;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.exceptions.PacketReadingException;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static pl.adrian.testutil.FlagsTestUtils.assertFlagsEqual;
+import static pl.adrian.testutil.AssertionUtils.assertCarEquals;
+import static pl.adrian.testutil.AssertionUtils.assertFlagsEqual;
 
 class PacketReaderTest {
 
@@ -386,29 +386,7 @@ class PacketReaderTest {
     }
 
     @Test
-    void readSlcPacket_withDefaultCar() {
-        var headerBytes = new byte[] { 2, 62, -112 };
-        var dataBytes = new byte[] { 9, 88, 82, 84, 0 };
-        var packetReader = new PacketReader(headerBytes);
-
-        assertPacketHeaderEquals(5, PacketType.SLC, 144, packetReader);
-
-        var readPacket = packetReader.read(dataBytes);
-
-        assertTrue(readPacket instanceof SlcPacket);
-
-        var castedReadPacket = (SlcPacket) readPacket;
-
-        assertPacketHeaderEquals(8, PacketType.SLC, 144, castedReadPacket);
-        assertEquals(9, castedReadPacket.getUcid());
-        assertTrue(castedReadPacket.getCar().getDefaultCar().isPresent());
-        assertEquals(DefaultCar.XRT, castedReadPacket.getCar().getDefaultCar().get());
-        assertEquals("XRT", castedReadPacket.getCar().getSkinId());
-        assertFalse(castedReadPacket.getCar().isMod());
-    }
-
-    @Test
-    void readSlcPacket_withModCar() {
+    void readSlcPacket() {
         var headerBytes = new byte[] { 2, 62, -112 };
         var dataBytes = new byte[] { 9, -63, 104, 74, 0 };
         var packetReader = new PacketReader(headerBytes);
@@ -423,9 +401,7 @@ class PacketReaderTest {
 
         assertPacketHeaderEquals(8, PacketType.SLC, 144, castedReadPacket);
         assertEquals(9, castedReadPacket.getUcid());
-        assertTrue(castedReadPacket.getCar().getDefaultCar().isEmpty());
-        assertEquals("4A68C1", castedReadPacket.getCar().getSkinId());
-        assertTrue(castedReadPacket.getCar().isMod());
+        assertCarEquals("4A68C1", castedReadPacket.getCar());
     }
 
     @Test
@@ -588,6 +564,74 @@ class PacketReaderTest {
         assertEquals(21, castedReadPacket.getUcid());
         assertEquals("^1New ^2Player ^3Name", castedReadPacket.getPName());
         assertEquals("AD36 RFY", castedReadPacket.getPlate());
+    }
+
+    @Test
+    void readNplPacket() {
+        var headerBytes = new byte[] { 19, 21, -112 };
+        var dataBytes = new byte[] {
+                57, 23, 6, 9, 50, 80, 108, 97, 121, 101, 114, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 77, 121, 32,
+                80, 108, 97, 116, 101, 85, 70, 49, 0, 100, 101, 102, 97, 117, 108, 116,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 0, 0, 0,
+                100, 0, 0, 0, 0, 7, 3, 1, 54
+        };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertPacketHeaderEquals(73, PacketType.NPL, 144, packetReader);
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof NplPacket);
+
+        var castedReadPacket = (NplPacket) readPacket;
+
+        assertPacketHeaderEquals(76, PacketType.NPL, 144, castedReadPacket);
+        assertEquals(57, castedReadPacket.getPlid());
+        assertEquals(23, castedReadPacket.getUcid());
+        assertFlagsEqual(PlayerTypeFlag.class, Set.of(PlayerTypeFlag.AI, PlayerTypeFlag.REMOTE), castedReadPacket.getPType());
+        assertFlagsEqual(
+                PlayerFlag.class,
+                Set.of(
+                        PlayerFlag.LEFTSIDE,
+                        PlayerFlag.AUTOGEARS,
+                        PlayerFlag.AUTOCLUTCH,
+                        PlayerFlag.KB_STABILISED,
+                        PlayerFlag.CUSTOM_VIEW
+                ),
+                castedReadPacket.getFlags()
+        );
+        assertEquals("Player", castedReadPacket.getPName());
+        assertEquals("My Plate", castedReadPacket.getPlate());
+        assertCarEquals(DefaultCar.UF1, castedReadPacket.getCar());
+        assertEquals("default", castedReadPacket.getSName());
+        assertEquals(
+                List.of(
+                        TyreCompound.ROAD_NORMAL,
+                        TyreCompound.ROAD_NORMAL,
+                        TyreCompound.ROAD_NORMAL,
+                        TyreCompound.ROAD_NORMAL
+                ),
+                castedReadPacket.getTyres()
+        );
+        assertEquals(0, castedReadPacket.getHMass());
+        assertEquals(0, castedReadPacket.getHTRes());
+        assertEquals(0, castedReadPacket.getModel());
+        assertFlagsEqual(
+                PassengerFlag.class,
+                Set.of(PassengerFlag.REAR_LEFT_MAN, PassengerFlag.REAR_MIDDLE_WOMAN, PassengerFlag.REAR_RIGHT_MAN),
+                castedReadPacket.getPass()
+        );
+        assertEquals(0, castedReadPacket.getRWAdj());
+        assertEquals(0, castedReadPacket.getFWAdj());
+        assertFlagsEqual(
+                SetupFlag.class,
+                Set.of(SetupFlag.SYMM_WHEELS, SetupFlag.TC_ENABLE, SetupFlag.ABS_ENABLE),
+                castedReadPacket.getSetF()
+        );
+        assertEquals(3, castedReadPacket.getNumP());
+        assertEquals(1, castedReadPacket.getConfig());
+        assertEquals(54, castedReadPacket.getFuel());
     }
 
     private void assertPacketHeaderEquals(int expectedDataBytesCount,

@@ -2,15 +2,14 @@ package pl.adrian.internal.packets.util;
 
 import pl.adrian.api.packets.*;
 import pl.adrian.api.packets.enums.*;
-import pl.adrian.api.packets.flags.Flags;
-import pl.adrian.api.packets.flags.NcnFlag;
-import pl.adrian.api.packets.flags.RaceFlag;
-import pl.adrian.api.packets.flags.StaFlag;
+import pl.adrian.api.packets.flags.*;
 import pl.adrian.api.packets.structures.Car;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.exceptions.PacketReadingException;
 import pl.adrian.internal.packets.structures.LapTiming;
 import pl.adrian.internal.packets.structures.RaceLaps;
+
+import java.util.List;
 
 /**
  * This class is a helper that is used while converting byte array to appropriate {@link InfoPacket}.
@@ -89,6 +88,7 @@ public class PacketReader {
             case CIM -> readCimPacket();
             case CNL -> readCnlPacket();
             case CPR -> readCprPacket();
+            case NPL -> readNplPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -260,7 +260,7 @@ public class PacketReader {
 
     private SlcPacket readSlcPacket() {
         var ucid = readByte();
-        var car = new Car(readRawBytes(4));
+        var car = new Car(readCNameBytes());
 
         return new SlcPacket(packetReqI, ucid, car);
     }
@@ -299,6 +299,57 @@ public class PacketReader {
         var plate = readCharArray(8);
 
         return new CprPacket(ucid, pName, plate);
+    }
+
+    private NplPacket readNplPacket() {
+        var plid = readByte();
+        var ucid = readByte();
+        var pType = new Flags<>(PlayerTypeFlag.class, readByte());
+        var flags = new Flags<>(PlayerFlag.class, readWord());
+        var pName = readCharArray(24);
+        var plate = readCharArray(8);
+        var car = new Car(readCNameBytes());
+        var sName = readCharArray(16);
+        var tyres = List.of(
+                TyreCompound.fromOrdinal(readByte()),
+                TyreCompound.fromOrdinal(readByte()),
+                TyreCompound.fromOrdinal(readByte()),
+                TyreCompound.fromOrdinal(readByte())
+        );
+        var hMass = readByte();
+        var hTRes = readByte();
+        var model = readByte();
+        var pass = new Flags<>(PassengerFlag.class, readByte());
+        var rWAdj = readByte();
+        var fWAdj = readByte();
+        skipZeroBytes(2);
+        var setF = new Flags<>(SetupFlag.class, readByte());
+        var numP = readByte();
+        var config = readByte();
+        var fuel = readByte();
+
+        return new NplPacket(
+                packetReqI,
+                plid,
+                ucid,
+                pType,
+                flags,
+                pName,
+                plate,
+                car,
+                sName,
+                tyres,
+                hMass,
+                hTRes,
+                model,
+                pass,
+                rWAdj,
+                fWAdj,
+                setF,
+                numP,
+                config,
+                fuel
+        );
     }
 
     private short readByte() {
@@ -352,10 +403,10 @@ public class PacketReader {
         return Float.intBitsToFloat(asInt);
     }
 
-    private byte[] readRawBytes(int count) {
-        var resultBytes = new byte[count];
-        System.arraycopy(dataBytes, dataBytesReaderIndex, resultBytes, 0, count);
-        dataBytesReaderIndex += count;
+    private byte[] readCNameBytes() {
+        var resultBytes = new byte[4];
+        System.arraycopy(dataBytes, dataBytesReaderIndex, resultBytes, 0, 4);
+        dataBytesReaderIndex += 4;
         return resultBytes;
     }
 

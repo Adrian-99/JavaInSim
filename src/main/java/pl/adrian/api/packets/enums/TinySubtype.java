@@ -66,9 +66,9 @@ public enum TinySubtype {
      */
     NCN(NcnPacket.class, true),
     /**
-     * 14 - info request: get all players
+     * 14 - info request: get {@link NplPacket} for all players
      */
-    NPL,
+    NPL(NplPacket.class, true),
     /**
      * 15 - info request: get all results
      */

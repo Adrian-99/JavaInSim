@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
-import static pl.adrian.testutil.FlagsTestUtils.assertFlagsEqual;
+import static pl.adrian.testutil.AssertionUtils.assertFlagsEqual;
 
 class InSimConnectionTest {
     private static final int LFS_MOCK_PORT = 49999;
