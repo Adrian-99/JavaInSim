@@ -652,6 +652,42 @@ class PacketReaderTest {
         assertEquals(31, castedReadPacket.getPlid());
     }
 
+    @Test
+    void readPllPacket() {
+        var headerBytes = new byte[] { 1, 23, 0 };
+        var dataBytes = new byte[] { 26 };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertPacketHeaderEquals(1, PacketType.PLL, 0, packetReader);
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof PllPacket);
+
+        var castedReadPacket = (PllPacket) readPacket;
+
+        assertPacketHeaderEquals(4, PacketType.PLL, 0, castedReadPacket);
+        assertEquals(26, castedReadPacket.getPlid());
+    }
+
+    @Test
+    void readCrsPacket() {
+        var headerBytes = new byte[] { 1, 41, 0 };
+        var dataBytes = new byte[] { 5 };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertPacketHeaderEquals(1, PacketType.CRS, 0, packetReader);
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof CrsPacket);
+
+        var castedReadPacket = (CrsPacket) readPacket;
+
+        assertPacketHeaderEquals(4, PacketType.CRS, 0, castedReadPacket);
+        assertEquals(5, castedReadPacket.getPlid());
+    }
+
     private void assertPacketHeaderEquals(int expectedDataBytesCount,
                                           PacketType expectedPacketType,
                                           int expectedReqI,

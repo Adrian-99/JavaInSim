@@ -90,6 +90,8 @@ public class PacketReader {
             case CPR -> readCprPacket();
             case NPL -> readNplPacket();
             case PLP -> readPlpPacket();
+            case PLL -> readPllPacket();
+            case CRS -> readCrsPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -357,6 +359,18 @@ public class PacketReader {
         var plid = readByte();
 
         return new PlpPacket(plid);
+    }
+
+    private PllPacket readPllPacket() {
+        var plid = readByte();
+
+        return new PllPacket(plid);
+    }
+
+    private CrsPacket readCrsPacket() {
+        var plid = readByte();
+
+        return new CrsPacket(plid);
     }
 
     private short readByte() {

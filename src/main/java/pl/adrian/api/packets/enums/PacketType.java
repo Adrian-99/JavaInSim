@@ -103,7 +103,7 @@ public enum PacketType {
     /**
      * 23 - info: player leave (spectate - loses slot)
      */
-    PLL,
+    PLL(PllPacket.class),
     /**
      * 24 - info: lap time
      */
@@ -175,7 +175,7 @@ public enum PacketType {
     /**
      * 41 - info: car reset
      */
-    CRS,
+    CRS(CrsPacket.class),
     /**
      * 42 - both ways: delete buttons / receive button requests
      */
