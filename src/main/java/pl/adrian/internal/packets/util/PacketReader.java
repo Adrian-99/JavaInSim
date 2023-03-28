@@ -93,6 +93,7 @@ public class PacketReader {
             case PLL -> readPllPacket();
             case CRS -> readCrsPacket();
             case LAP -> readLapPacket();
+            case SPX -> readSpxPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -386,6 +387,18 @@ public class PacketReader {
         var fuel200 = readByte();
 
         return new LapPacket(plid, lTime, eTime, lapsDone, flags, penalty, numStops, fuel200);
+    }
+
+    private SpxPacket readSpxPacket() {
+        var plid = readByte();
+        var sTime = readUnsigned();
+        var eTime = readUnsigned();
+        var split = readByte();
+        var penalty = PenaltyValue.fromOrdinal(readByte());
+        var numStops = readByte();
+        var fuel200 = readByte();
+
+        return new SpxPacket(plid, sTime, eTime, split, penalty, numStops, fuel200);
     }
 
     private short readByte() {

@@ -720,6 +720,32 @@ class PacketReaderTest {
         assertEquals(115, castedReadPacket.getFuel200());
     }
 
+    @Test
+    void readSpxPacket() {
+        var headerBytes = new byte[] { 4, 25, 0 };
+        var dataBytes = new byte[] {
+                29, 78, 102, 0, 0, 16, 37, 2, 0, 1, 0, 2, 86
+        };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertPacketHeaderEquals(13, PacketType.SPX, 0, packetReader);
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof SpxPacket);
+
+        var castedReadPacket = (SpxPacket) readPacket;
+
+        assertPacketHeaderEquals(16, PacketType.SPX, 0, castedReadPacket);
+        assertEquals(29, castedReadPacket.getPlid());
+        assertEquals(26190, castedReadPacket.getSTime());
+        assertEquals(140560, castedReadPacket.getETime());
+        assertEquals(1, castedReadPacket.getSplit());
+        assertEquals(PenaltyValue.NONE, castedReadPacket.getPenalty());
+        assertEquals(2, castedReadPacket.getNumStops());
+        assertEquals(86, castedReadPacket.getFuel200());
+    }
+
     private void assertPacketHeaderEquals(int expectedDataBytesCount,
                                           PacketType expectedPacketType,
                                           int expectedReqI,

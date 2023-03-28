@@ -111,7 +111,7 @@ public enum PacketType {
     /**
      * 25 - info: split x time
      */
-    SPX,
+    SPX(SpxPacket.class),
     /**
      * 26 - info: pit stop start
      */
