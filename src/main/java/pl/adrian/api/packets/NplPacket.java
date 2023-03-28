@@ -83,7 +83,7 @@ public class NplPacket extends Packet implements RequestablePacket {
      * @param setF setup flags
      * @param numP number in race - ZERO if this is a join request
      * @param config car configuration
-     * @param fuel fuel percent (if /showfuel yes), 255 otherwise
+     * @param fuel fuel percent (if /showfuel yes, 255 otherwise)
      */
     @SuppressWarnings("java:S107")
     public NplPacket(short reqI,

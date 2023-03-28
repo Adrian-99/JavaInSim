@@ -92,6 +92,7 @@ public class PacketReader {
             case PLP -> readPlpPacket();
             case PLL -> readPllPacket();
             case CRS -> readCrsPacket();
+            case LAP -> readLapPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -371,6 +372,20 @@ public class PacketReader {
         var plid = readByte();
 
         return new CrsPacket(plid);
+    }
+
+    private LapPacket readLapPacket() {
+        var plid = readByte();
+        var lTime = readUnsigned();
+        var eTime = readUnsigned();
+        var lapsDone = readWord();
+        var flags = new Flags<>(PlayerFlag.class, readWord());
+        skipZeroByte();
+        var penalty = PenaltyValue.fromOrdinal(readByte());
+        var numStops = readByte();
+        var fuel200 = readByte();
+
+        return new LapPacket(plid, lTime, eTime, lapsDone, flags, penalty, numStops, fuel200);
     }
 
     private short readByte() {

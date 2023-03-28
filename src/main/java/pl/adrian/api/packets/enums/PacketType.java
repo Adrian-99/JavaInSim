@@ -107,7 +107,7 @@ public enum PacketType {
     /**
      * 24 - info: lap time
      */
-    LAP,
+    LAP(LapPacket.class),
     /**
      * 25 - info: split x time
      */
