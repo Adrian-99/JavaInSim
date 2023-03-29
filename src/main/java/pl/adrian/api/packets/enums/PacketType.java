@@ -119,7 +119,7 @@ public enum PacketType {
     /**
      * 27 - info: pit stop finish
      */
-    PSF,
+    PSF(PsfPacket.class),
     /**
      * 28 - info: pit lane enter / leave
      */

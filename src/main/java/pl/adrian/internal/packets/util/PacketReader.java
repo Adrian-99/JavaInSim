@@ -94,6 +94,7 @@ public class PacketReader {
             case LAP -> readLapPacket();
             case SPX -> readSpxPacket();
             case PIT -> readPitPacket();
+            case PSF -> readPsfPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -409,6 +410,14 @@ public class PacketReader {
         skipZeroBytes(4);
 
         return new PitPacket(plid, lapsDone, flags, fuelAdd, penalty, numStops, tyres, work);
+    }
+
+    private PsfPacket readPsfPacket() {
+        var plid = readByte();
+        var sTime = readUnsigned();
+        skipZeroBytes(4);
+
+        return new PsfPacket(plid, sTime);
     }
 
     private short readByte() {
