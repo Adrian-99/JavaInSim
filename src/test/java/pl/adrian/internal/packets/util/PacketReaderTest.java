@@ -807,6 +807,25 @@ class PacketReaderTest {
         assertEquals(137120, castedReadPacket.getSTime());
     }
 
+    @Test
+    void readPlaPacket() {
+        var headerBytes = new byte[] { 2, 28, 0 };
+        var dataBytes = new byte[] { 19, 2, 0, 0, 0 };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertPacketHeaderEquals(5, PacketType.PLA, 0, packetReader);
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof PlaPacket);
+
+        var castedReadPacket = (PlaPacket) readPacket;
+
+        assertPacketHeaderEquals(8, PacketType.PLA, 0, castedReadPacket);
+        assertEquals(19, castedReadPacket.getPlid());
+        assertEquals(PitLaneFact.NO_PURPOSE, castedReadPacket.getFact());
+    }
+
     private void assertPacketHeaderEquals(int expectedDataBytesCount,
                                           PacketType expectedPacketType,
                                           int expectedReqI,

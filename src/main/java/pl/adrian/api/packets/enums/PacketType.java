@@ -123,7 +123,7 @@ public enum PacketType {
     /**
      * 28 - info: pit lane enter / leave
      */
-    PLA,
+    PLA(PlaPacket.class),
     /**
      * 29 - info: camera changed
      */

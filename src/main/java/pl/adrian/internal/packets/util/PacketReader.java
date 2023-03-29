@@ -95,6 +95,7 @@ public class PacketReader {
             case SPX -> readSpxPacket();
             case PIT -> readPitPacket();
             case PSF -> readPsfPacket();
+            case PLA -> readPlaPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -418,6 +419,14 @@ public class PacketReader {
         skipZeroBytes(4);
 
         return new PsfPacket(plid, sTime);
+    }
+
+    private PlaPacket readPlaPacket() {
+        var plid = readByte();
+        var fact = PitLaneFact.fromOrdinal(readByte());
+        skipZeroBytes(3);
+
+        return new PlaPacket(plid, fact);
     }
 
     private short readByte() {
