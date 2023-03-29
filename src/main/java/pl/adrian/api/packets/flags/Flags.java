@@ -29,20 +29,20 @@ public class Flags<T extends Enum<?>> implements ByteInstructionStructure,
     /**
      * Creates flags out of their binary representation.
      * @param enumClass class of the enum that holds possible values for these flags
-     * @param wordValue binary representation of flags
+     * @param value binary representation of flags
      */
-    public Flags(Class<T> enumClass, int wordValue) {
+    public Flags(Class<T> enumClass, long value) {
         flagsSet = new HashSet<>();
         for (var enumValue : EnumHelpers.get(enumClass).getAllValuesCached()) {
             if (enumValue instanceof FlagWithCustomValue enumCustomValue) {
                 var flagValue = enumCustomValue.getValue();
                 var requiredZeros = enumCustomValue.getValueMask() - flagValue;
-                if ((wordValue & flagValue) == flagValue && (wordValue & requiredZeros) == 0) {
+                if ((value & flagValue) == flagValue && (value & requiredZeros) == 0) {
                     flagsSet.add(enumValue);
                 }
             } else {
                 var flagValue = 1 << enumValue.ordinal();
-                if ((wordValue & flagValue) == flagValue) {
+                if ((value & flagValue) == flagValue) {
                     flagsSet.add(enumValue);
                 }
             }

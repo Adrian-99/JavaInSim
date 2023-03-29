@@ -226,6 +226,7 @@ public class InSimConnection implements Closeable {
         } catch (IOException exception) {
             isConnected = false;
             logger.error("Error occurred while reading packet header bytes: {}", exception.getMessage());
+            logStackTrace("reading packet header", exception);
         }
         logger.debug("Stopping packet reading thread");
     }
@@ -244,6 +245,7 @@ public class InSimConnection implements Closeable {
             }
         } catch (Exception exception) {
             logger.error("Error occurred while reading packet: {}", exception.getMessage());
+            logStackTrace("reading packet", exception);
         }
     }
 

@@ -115,7 +115,7 @@ public enum PacketType {
     /**
      * 26 - info: pit stop start
      */
-    PIT,
+    PIT(PitPacket.class),
     /**
      * 27 - info: pit stop finish
      */

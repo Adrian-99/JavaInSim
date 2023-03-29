@@ -1,17 +1,15 @@
 package pl.adrian.api.packets;
 
 import pl.adrian.api.packets.enums.PacketType;
-import pl.adrian.api.packets.enums.TyreCompound;
 import pl.adrian.api.packets.flags.*;
 import pl.adrian.api.packets.structures.Car;
+import pl.adrian.api.packets.structures.Tyres;
 import pl.adrian.internal.packets.annotations.Array;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.annotations.Word;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
-
-import java.util.List;
 
 /**
  * New PLayer joining race. The packet is sent by LFS when player joins race
@@ -40,7 +38,7 @@ public class NplPacket extends Packet implements RequestablePacket {
     private final String sName;
     @Byte
     @Array(length = 4)
-    private final List<TyreCompound> tyres;
+    private final Tyres tyres;
     @Byte
     private final short hMass;
     @Byte
@@ -95,7 +93,7 @@ public class NplPacket extends Packet implements RequestablePacket {
                      String plate,
                      Car car,
                      String sName,
-                     List<TyreCompound> tyres,
+                     Tyres tyres,
                      short hMass,
                      short hTRes,
                      short model,
@@ -189,7 +187,7 @@ public class NplPacket extends Packet implements RequestablePacket {
     /**
      * @return compounds
      */
-    public List<TyreCompound> getTyres() {
+    public Tyres getTyres() {
         return tyres;
     }
 

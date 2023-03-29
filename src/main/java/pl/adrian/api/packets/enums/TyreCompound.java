@@ -7,9 +7,9 @@ import pl.adrian.internal.packets.enums.EnumHelpers;
  */
 public enum TyreCompound {
     /**
-     * value 0: spare
+     * value 0: tyre not changed
      */
-    RESERVED,
+    NO_CHANGE,
     /**
      * value 1: slick R2
      */
@@ -45,6 +45,10 @@ public enum TyreCompound {
      * @return enum value
      */
     public static TyreCompound fromOrdinal(int ordinal) {
-        return EnumHelpers.get(TyreCompound.class).fromOrdinal(ordinal);
+        if (ordinal == 255) {
+            return NO_CHANGE;
+        } else {
+            return EnumHelpers.get(TyreCompound.class).fromOrdinal(ordinal);
+        }
     }
 }

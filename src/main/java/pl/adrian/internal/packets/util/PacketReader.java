@@ -4,12 +4,11 @@ import pl.adrian.api.packets.*;
 import pl.adrian.api.packets.enums.*;
 import pl.adrian.api.packets.flags.*;
 import pl.adrian.api.packets.structures.Car;
+import pl.adrian.api.packets.structures.Tyres;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.exceptions.PacketReadingException;
 import pl.adrian.internal.packets.structures.LapTiming;
 import pl.adrian.internal.packets.structures.RaceLaps;
-
-import java.util.List;
 
 /**
  * This class is a helper that is used while converting byte array to appropriate {@link InfoPacket}.
@@ -94,6 +93,7 @@ public class PacketReader {
             case CRS -> readCrsPacket();
             case LAP -> readLapPacket();
             case SPX -> readSpxPacket();
+            case PIT -> readPitPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -315,12 +315,7 @@ public class PacketReader {
         var plate = readCharArray(8);
         var car = new Car(readCNameBytes());
         var sName = readCharArray(16);
-        var tyres = List.of(
-                TyreCompound.fromOrdinal(readByte()),
-                TyreCompound.fromOrdinal(readByte()),
-                TyreCompound.fromOrdinal(readByte()),
-                TyreCompound.fromOrdinal(readByte())
-        );
+        var tyres = new Tyres(readUnsigned());
         var hMass = readByte();
         var hTRes = readByte();
         var model = readByte();
@@ -399,6 +394,21 @@ public class PacketReader {
         var fuel200 = readByte();
 
         return new SpxPacket(plid, sTime, eTime, split, penalty, numStops, fuel200);
+    }
+
+    private PitPacket readPitPacket() {
+        var plid = readByte();
+        var lapsDone = readWord();
+        var flags = new Flags<>(PlayerFlag.class, readWord());
+        var fuelAdd = readByte();
+        var penalty = PenaltyValue.fromOrdinal(readByte());
+        var numStops = readByte();
+        skipZeroByte();
+        var tyres = new Tyres(readUnsigned());
+        var work = new Flags<>(PitWorkFlag.class, readUnsigned());
+        skipZeroBytes(4);
+
+        return new PitPacket(plid, lapsDone, flags, fuelAdd, penalty, numStops, tyres, work);
     }
 
     private short readByte() {
