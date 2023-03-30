@@ -65,6 +65,7 @@ public class PacketReader {
      * @throws PacketReadingException if reading given packet type (type is extracted from header bytes)
      * is not supported
      */
+    @SuppressWarnings("java:S1479")
     public InfoPacket read(byte[] dataBytes) throws PacketReadingException {
         this.dataBytes = dataBytes;
         dataBytesReaderIndex = 0;
@@ -99,6 +100,7 @@ public class PacketReader {
             case CCH -> readCchPacket();
             case PEN -> readPenPacket();
             case TOC -> readTocPacket();
+            case FLG -> readFlgPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -457,6 +459,16 @@ public class PacketReader {
         skipZeroBytes(2);
 
         return new TocPacket(plid, oldUcid, newUcid);
+    }
+
+    private FlgPacket readFlgPacket() {
+        var plid = readByte();
+        var isOn = readByte() != 0;
+        var flag = FlagType.fromOrdinal(readByte());
+        var carBehind = readByte();
+        skipZeroByte();
+
+        return new FlgPacket(plid, isOn, flag, carBehind);
     }
 
     private short readByte() {

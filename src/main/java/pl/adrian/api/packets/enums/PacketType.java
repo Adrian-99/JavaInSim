@@ -139,7 +139,7 @@ public enum PacketType {
     /**
      * 32 - info: flag (yellow or blue)
      */
-    FLG,
+    FLG(FlgPacket.class),
     /**
      * 33 - info: player flags (help flags)
      */
