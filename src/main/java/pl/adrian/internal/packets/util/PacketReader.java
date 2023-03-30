@@ -96,6 +96,7 @@ public class PacketReader {
             case PIT -> readPitPacket();
             case PSF -> readPsfPacket();
             case PLA -> readPlaPacket();
+            case CCH -> readCchPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -427,6 +428,14 @@ public class PacketReader {
         skipZeroBytes(3);
 
         return new PlaPacket(plid, fact);
+    }
+
+    private CchPacket readCchPacket() {
+        var plid = readByte();
+        var camera = ViewIdentifier.fromOrdinal(readByte());
+        skipZeroBytes(3);
+
+        return new CchPacket(plid, camera);
     }
 
     private short readByte() {

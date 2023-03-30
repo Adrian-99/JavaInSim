@@ -826,6 +826,25 @@ class PacketReaderTest {
         assertEquals(PitLaneFact.NO_PURPOSE, castedReadPacket.getFact());
     }
 
+    @Test
+    void readCchPacket() {
+        var headerBytes = new byte[] { 2, 29, 0 };
+        var dataBytes = new byte[] { 11, 1, 0, 0, 0 };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertPacketHeaderEquals(5, PacketType.CCH, 0, packetReader);
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof CchPacket);
+
+        var castedReadPacket = (CchPacket) readPacket;
+
+        assertPacketHeaderEquals(8, PacketType.CCH, 0, castedReadPacket);
+        assertEquals(11, castedReadPacket.getPlid());
+        assertEquals(ViewIdentifier.HELI, castedReadPacket.getCamera());
+    }
+
     private void assertPacketHeaderEquals(int expectedDataBytesCount,
                                           PacketType expectedPacketType,
                                           int expectedReqI,

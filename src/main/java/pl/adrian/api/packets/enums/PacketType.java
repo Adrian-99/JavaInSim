@@ -127,7 +127,7 @@ public enum PacketType {
     /**
      * 29 - info: camera changed
      */
-    CCH,
+    CCH(CchPacket.class),
     /**
      * 30 - info: penalty given or cleared
      */
