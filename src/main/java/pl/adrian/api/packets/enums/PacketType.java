@@ -135,7 +135,7 @@ public enum PacketType {
     /**
      * 31 - info: take over car
      */
-    TOC,
+    TOC(TocPacket.class),
     /**
      * 32 - info: flag (yellow or blue)
      */

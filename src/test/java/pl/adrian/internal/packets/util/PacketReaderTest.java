@@ -866,6 +866,26 @@ class PacketReaderTest {
         assertEquals(PenaltyReason.FALSE_START, castedReadPacket.getReason());
     }
 
+    @Test
+    void readTocPacket() {
+        var headerBytes = new byte[] { 2, 31, 0 };
+        var dataBytes = new byte[] { 7, 25, 31, 0, 0 };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertPacketHeaderEquals(5, PacketType.TOC, 0, packetReader);
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof TocPacket);
+
+        var castedReadPacket = (TocPacket) readPacket;
+
+        assertPacketHeaderEquals(8, PacketType.TOC, 0, castedReadPacket);
+        assertEquals(7, castedReadPacket.getPlid());
+        assertEquals(25, castedReadPacket.getOldUcid());
+        assertEquals(31, castedReadPacket.getNewUcid());
+    }
+
     private void assertPacketHeaderEquals(int expectedDataBytesCount,
                                           PacketType expectedPacketType,
                                           int expectedReqI,

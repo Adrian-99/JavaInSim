@@ -98,6 +98,7 @@ public class PacketReader {
             case PLA -> readPlaPacket();
             case CCH -> readCchPacket();
             case PEN -> readPenPacket();
+            case TOC -> readTocPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -447,6 +448,15 @@ public class PacketReader {
         skipZeroByte();
 
         return new PenPacket(plid, oldPen, newPen, reason);
+    }
+
+    private TocPacket readTocPacket() {
+        var plid = readByte();
+        var oldUcid = readByte();
+        var newUcid = readByte();
+        skipZeroBytes(2);
+
+        return new TocPacket(plid, oldUcid, newUcid);
     }
 
     private short readByte() {
