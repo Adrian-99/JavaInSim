@@ -143,7 +143,7 @@ public enum PacketType {
     /**
      * 33 - info: player flags (help flags)
      */
-    PFL,
+    PFL(PflPacket.class),
     /**
      * 34 - info: finished race
      */

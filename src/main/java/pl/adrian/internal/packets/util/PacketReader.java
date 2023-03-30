@@ -101,6 +101,7 @@ public class PacketReader {
             case PEN -> readPenPacket();
             case TOC -> readTocPacket();
             case FLG -> readFlgPacket();
+            case PFL -> readPflPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -469,6 +470,14 @@ public class PacketReader {
         skipZeroByte();
 
         return new FlgPacket(plid, isOn, flag, carBehind);
+    }
+
+    private PflPacket readPflPacket() {
+        var plid = readByte();
+        var flags = new Flags<>(PlayerFlag.class, readWord());
+        skipZeroBytes(2);
+
+        return new PflPacket(plid, flags);
     }
 
     private short readByte() {
