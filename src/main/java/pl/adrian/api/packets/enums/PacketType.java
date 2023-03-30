@@ -131,7 +131,7 @@ public enum PacketType {
     /**
      * 30 - info: penalty given or cleared
      */
-    PEN,
+    PEN(PenPacket.class),
     /**
      * 31 - info: take over car
      */
