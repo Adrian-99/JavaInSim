@@ -147,7 +147,7 @@ public enum PacketType {
     /**
      * 34 - info: finished race
      */
-    FIN,
+    FIN(FinPacket.class),
     /**
      * 35 - info: result confirmed
      */

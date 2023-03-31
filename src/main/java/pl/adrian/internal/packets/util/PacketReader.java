@@ -102,6 +102,7 @@ public class PacketReader {
             case TOC -> readTocPacket();
             case FLG -> readFlgPacket();
             case PFL -> readPflPacket();
+            case FIN -> readFinPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -478,6 +479,20 @@ public class PacketReader {
         skipZeroBytes(2);
 
         return new PflPacket(plid, flags);
+    }
+
+    private FinPacket readFinPacket() {
+        var plid = readByte();
+        var tTime = readUnsigned();
+        var bTime = readUnsigned();
+        skipZeroByte();
+        var numStops = readByte();
+        var confirm = new Flags<>(ConfirmationFlag.class, readByte());
+        skipZeroByte();
+        var lapsDone = readWord();
+        var flags = new Flags<>(PlayerFlag.class, readWord());
+
+        return new FinPacket(plid, tTime, bTime, numStops, confirm, lapsDone, flags);
     }
 
     private short readByte() {
