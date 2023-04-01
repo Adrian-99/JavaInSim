@@ -151,7 +151,7 @@ public enum PacketType {
     /**
      * 35 - info: result confirmed
      */
-    RES,
+    RES(ResPacket.class),
     /**
      * 36 - both ways: reorder (info or instruction)
      */

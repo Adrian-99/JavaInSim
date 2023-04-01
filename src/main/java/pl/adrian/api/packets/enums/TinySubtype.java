@@ -16,7 +16,7 @@ public enum TinySubtype {
     /**
      * 1 - info request: get version
      */
-    VER(VerPacket.class),
+    VER(VerPacket.class, false),
     /**
      * 2 - instruction: close insim
      */
@@ -40,7 +40,7 @@ public enum TinySubtype {
     /**
      * 7 - info request: send state info
      */
-    SST(StaPacket.class),
+    SST(StaPacket.class, false),
     /**
      * 8 - info request: get time in hundredths (i.e. SMALL_RTP)
      */
@@ -50,9 +50,9 @@ public enum TinySubtype {
      */
     MPE,
     /**
-     * 10 - info request: get multiplayer info (i.e. ISP_ISM)
+     * 10 - info request: get multiplayer info (i.e. {@link IsmPacket})
      */
-    ISM(IsmPacket.class),
+    ISM(IsmPacket.class, false),
     /**
      * 11 - info: race end (return to race setup screen)
      */
@@ -70,9 +70,9 @@ public enum TinySubtype {
      */
     NPL(NplPacket.class, true),
     /**
-     * 15 - info request: get all results
+     * 15 - info request: get {@link ResPacket} for all players
      */
-    RES,
+    RES(ResPacket.class, true),
     /**
      * 16 - info request: send an IS_NLP
      */
@@ -88,7 +88,7 @@ public enum TinySubtype {
     /**
      * 19 - info request: send an {@link RstPacket}
      */
-    RST(RstPacket.class),
+    RST(RstPacket.class, false),
     /**
      * 20 - info request: send an IS_AXI - AutoX Info
      */
@@ -120,7 +120,7 @@ public enum TinySubtype {
     /**
      * 27 - info request: send {@link MalPacket} listing the currently allowed mods
      */
-    MAL(MalPacket.class);
+    MAL(MalPacket.class, false);
 
     private final Class<? extends RequestablePacket> requestablePacketClass;
     private final boolean multiPacketResponse;
@@ -128,11 +128,6 @@ public enum TinySubtype {
     TinySubtype(Class<? extends RequestablePacket> requestablePacketClass, boolean multiPacketResponse) {
         this.requestablePacketClass = requestablePacketClass;
         this.multiPacketResponse = multiPacketResponse;
-    }
-
-    TinySubtype(Class<? extends RequestablePacket> requestablePacketClass) {
-        this.requestablePacketClass = requestablePacketClass;
-        this.multiPacketResponse = false;
     }
 
     TinySubtype() {

@@ -103,6 +103,7 @@ public class PacketReader {
             case FLG -> readFlgPacket();
             case PFL -> readPflPacket();
             case FIN -> readFinPacket();
+            case RES -> readResPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -493,6 +494,44 @@ public class PacketReader {
         var flags = new Flags<>(PlayerFlag.class, readWord());
 
         return new FinPacket(plid, tTime, bTime, numStops, confirm, lapsDone, flags);
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    private ResPacket readResPacket() {
+        var plid = readByte();
+        var uName = readCharArray(24);
+        var pName = readCharArray(24);
+        var plate = readCharArray(8);
+        var car = new Car(readCNameBytes());
+        var tTime = readUnsigned();
+        var bTime = readUnsigned();
+        skipZeroByte();
+        var numStops = readByte();
+        var confirm = new Flags<>(ConfirmationFlag.class, readByte());
+        skipZeroByte();
+        var lapsDone = readWord();
+        var flags = new Flags<>(PlayerFlag.class, readWord());
+        var resultNum = readByte();
+        var numRes = readByte();
+        var pSeconds = readWord();
+
+        return new ResPacket(
+                packetReqI,
+                plid,
+                uName,
+                pName,
+                plate,
+                car,
+                tTime,
+                bTime,
+                numStops,
+                confirm,
+                lapsDone,
+                flags,
+                resultNum,
+                numRes,
+                pSeconds
+        );
     }
 
     private short readByte() {

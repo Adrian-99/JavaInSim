@@ -12,7 +12,7 @@ import pl.adrian.internal.packets.base.Packet;
 
 /**
  * FINished race notification. The packet is sent by LFS when any player finishes race
- * (not a final result - use IS_RES).
+ * (not a final result - use {@link ResPacket}).
  */
 public class FinPacket extends Packet implements InfoPacket {
     @Byte
