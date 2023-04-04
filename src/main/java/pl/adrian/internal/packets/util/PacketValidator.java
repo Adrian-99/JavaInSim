@@ -72,9 +72,19 @@ public class PacketValidator {
     }
 
     private static boolean tryToValidateByte(Field field, Object packetOrStructure) throws IllegalAccessException {
-        var annotation = field.getAnnotation(Byte.class);
-        if (annotation != null) {
-            validateByte(annotation, field, field.get(packetOrStructure));
+        var byteAnnotation = field.getAnnotation(Byte.class);
+        if (byteAnnotation != null) {
+            var arrayAnnotation = field.getAnnotation(Array.class);
+            if (arrayAnnotation != null) {
+                validateArray(
+                        arrayAnnotation,
+                        field,
+                        field.get(packetOrStructure),
+                        element -> validateByte(byteAnnotation, field, element)
+                );
+            } else {
+                validateByte(byteAnnotation, field, field.get(packetOrStructure));
+            }
             return true;
         }
         return false;
@@ -239,22 +249,27 @@ public class PacketValidator {
 
     private static void validateArray(Array annotation, Field field, Object value, Consumer<Object> elementValidator) {
         if (value != null) {
+            Object[] valuesArray;
             if (value instanceof Object[] arrayValue) {
-                if ((annotation.dynamicLength() && arrayValue.length <= annotation.length()) ||
-                        arrayValue.length == annotation.length()) {
-                    for (var arrayElement : arrayValue) {
-                        elementValidator.accept(arrayElement);
-                    }
-                } else {
-                    throw getWrongArrayLengthException(
-                            field,
-                            annotation.length(),
-                            arrayValue.length,
-                            annotation.dynamicLength()
-                    );
-                }
+                valuesArray = arrayValue;
+            } else if (value instanceof List<?> listValue) {
+                valuesArray = listValue.toArray();
             } else {
                 throw getUnsupportedTypeException(field, Array.class.getSimpleName());
+            }
+
+            if ((annotation.dynamicLength() && valuesArray.length <= annotation.length()) ||
+                    valuesArray.length == annotation.length()) {
+                for (var listElement : valuesArray) {
+                    elementValidator.accept(listElement);
+                }
+            } else {
+                throw getWrongArrayLengthException(
+                        field,
+                        annotation.length(),
+                        valuesArray.length,
+                        annotation.dynamicLength()
+                );
             }
         }
     }

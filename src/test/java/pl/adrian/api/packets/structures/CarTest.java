@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CarTest {
     @Test
     void create_forDefaultCar() {
-        var cNameBytes = new byte[] { 76, 88, 54, 0 };
+        var cNameBytes = new short[] { 76, 88, 54, 0 };
         var car = new Car(cNameBytes);
 
         assertTrue(car.getDefaultCar().isPresent());
@@ -20,7 +20,7 @@ class CarTest {
 
     @Test
     void create_forModCar() {
-        var cNameBytes = new byte[] { 9, -34, 53, 0 };
+        var cNameBytes = new short[] { 9, 222, 53, 0 };
         var car = new Car(cNameBytes);
 
         assertTrue(car.getDefaultCar().isEmpty());
@@ -30,13 +30,13 @@ class CarTest {
 
     @Test
     void create_withIncorrectCNameBytesLength() {
-        var cNameBytes = new byte[] { 15, 112, -35, 67, 0 };
+        var cNameBytes = new short[] { 15, 112, 221, 67, 0 };
         assertThrows(PacketReadingException.class, () -> new Car(cNameBytes));
     }
 
     @Test
     void create_withIncorrectCNameBytesContent() {
-        var cNameBytes = new byte[] { 15, 112, -35, 67 };
+        var cNameBytes = new short[] { 15, 112, 221, 67 };
         assertThrows(PacketReadingException.class, () -> new Car(cNameBytes));
     }
 }

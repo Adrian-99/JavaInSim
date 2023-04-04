@@ -4,6 +4,8 @@ import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.structures.base.ComplexInstructionStructure;
 import pl.adrian.internal.packets.structures.base.UnsignedInstructionStructure;
 
+import java.util.List;
+
 /**
  * This class is a helper that is used while converting packets to their byte array representation.
  */
@@ -26,7 +28,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array byte, that is converted from short value.
+     * Appends to packet bytes byte, that is converted from short value.
      * @param value byte value
      * @return packet builder
      */
@@ -35,7 +37,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array byte, that is converted from int value.
+     * Appends to packet bytes byte, that is converted from int value.
      * @param value byte value
      * @return packet builder
      */
@@ -52,7 +54,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array byte, that is converted from Character value.
+     * Appends to packet bytes byte, that is converted from Character value.
      * @param value byte value
      * @return packet builder
      */
@@ -65,7 +67,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array byte, that is converted from boolean value.
+     * Appends to packet bytes byte, that is converted from boolean value.
      * @param value boolean value
      * @return packet builder
      */
@@ -75,7 +77,24 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array byte with value 0.
+     * Appends to packet bytes byte array.
+     * @param value byte array value
+     * @param length desired length of array - if value is shorter trailing zeros will be added
+     * @return packet builder
+     */
+    public PacketBuilder writeByteArray(List<Short> value, int length) {
+        for (var i = 0; i < length && i < value.size(); i++) {
+            if (value.get(i) != null) {
+                writeByte(value.get(i));
+            } else {
+                writeZeroByte();
+            }
+        }
+        return writeZeroBytes(length - value.size());
+    }
+
+    /**
+     * Appends to packet bytes byte with value 0.
      * @return packet builder
      */
     public PacketBuilder writeZeroByte() {
@@ -84,7 +103,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array multiple bytes with value 0.
+     * Appends to packet bytes multiple bytes with value 0.
      * @param count count of zero bytes to be appended
      * @return packet builder
      */
@@ -94,7 +113,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array word (2 bytes), that is converted from int value.
+     * Appends to packet bytes word (2 bytes), that is converted from int value.
      * @param value word value
      * @return packet builder
      */
@@ -104,7 +123,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array char array, that is converted from String value.
+     * Appends to packet bytes char array, that is converted from String value.
      * @param value char array value
      * @param length length of the char array that should be appended
      * @param variableLength whether length of char array is variable (the lowest possible multiply of 4)
@@ -131,7 +150,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array unsigned (4 bytes), that is converted from long value.
+     * Appends to packet bytes unsigned (4 bytes), that is converted from long value.
      * @param value unsigned value
      * @return packet builder
      */
@@ -143,7 +162,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array unsigned array.
+     * Appends to packet bytes unsigned array.
      * @param value unsigned array value
      * @return packet builder
      */
@@ -159,7 +178,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array int (4 bytes), that is converted from int value.
+     * Appends to packet bytes int (4 bytes), that is converted from int value.
      * @param value int value
      * @return packet builder
      */
@@ -168,7 +187,7 @@ public class PacketBuilder {
     }
 
     /**
-     * Appends to byte array complex structures array.
+     * Appends to packet bytes complex structures array.
      * @param value structures array value
      * @param singleStructureSize size (in bytes) of single structure
      * @return packet builder

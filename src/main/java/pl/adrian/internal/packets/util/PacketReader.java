@@ -104,6 +104,7 @@ public class PacketReader {
             case PFL -> readPflPacket();
             case FIN -> readFinPacket();
             case RES -> readResPacket();
+            case REO -> readReoPacket();
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
@@ -275,7 +276,7 @@ public class PacketReader {
 
     private SlcPacket readSlcPacket() {
         var ucid = readByte();
-        var car = new Car(readCNameBytes());
+        var car = new Car(readByteArray(4));
 
         return new SlcPacket(packetReqI, ucid, car);
     }
@@ -323,7 +324,7 @@ public class PacketReader {
         var flags = new Flags<>(PlayerFlag.class, readWord());
         var pName = readCharArray(24);
         var plate = readCharArray(8);
-        var car = new Car(readCNameBytes());
+        var car = new Car(readByteArray(4));
         var sName = readCharArray(16);
         var tyres = new Tyres(readUnsigned());
         var hMass = readByte();
@@ -502,7 +503,7 @@ public class PacketReader {
         var uName = readCharArray(24);
         var pName = readCharArray(24);
         var plate = readCharArray(8);
-        var car = new Car(readCNameBytes());
+        var car = new Car(readByteArray(4));
         var tTime = readUnsigned();
         var bTime = readUnsigned();
         skipZeroByte();
@@ -534,8 +535,24 @@ public class PacketReader {
         );
     }
 
+    private ReoPacket readReoPacket() {
+        var numP = readByte();
+        var plid = readByteArray(numP);
+        skipZeroBytes(40 - numP);
+
+        return new ReoPacket(packetReqI, plid);
+    }
+
     private short readByte() {
         return convertByte(dataBytes[dataBytesReaderIndex++]);
+    }
+
+    private short[] readByteArray(int length) {
+        var result = new short[length];
+        for (var i = 0; i < length; i++) {
+            result[i] = readByte();
+        }
+        return result;
     }
 
     private void skipZeroByte() {
@@ -583,13 +600,6 @@ public class PacketReader {
                 ((dataBytes[dataBytesReaderIndex + 3] & 0xFF) << 24);
         dataBytesReaderIndex += 4;
         return Float.intBitsToFloat(asInt);
-    }
-
-    private byte[] readCNameBytes() {
-        var resultBytes = new byte[4];
-        System.arraycopy(dataBytes, dataBytesReaderIndex, resultBytes, 0, 4);
-        dataBytesReaderIndex += 4;
-        return resultBytes;
     }
 
     private short convertByte(byte value) {

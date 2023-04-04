@@ -1,5 +1,8 @@
 package pl.adrian.internal.packets.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class contains useful methods for dealing with packets.
  */
@@ -42,5 +45,18 @@ public class PacketUtils {
             calculatedSize += 4 - (calculatedSize % 4);
         }
         return calculatedSize;
+    }
+
+    /**
+     * Converts array of short values into list of short values.
+     * @param array array of short values
+     * @return list of short values
+     */
+    public static List<Short> toList(short[] array) {
+        var result = new ArrayList<Short>();
+        for (var element : array) {
+            result.add(element);
+        }
+        return result;
     }
 }

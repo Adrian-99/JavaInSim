@@ -18,20 +18,22 @@ public class Car {
      * Creates car information.
      * @param cNameBytes car name bytes - should be 4 bytes long and last element should equal to 0
      */
-    public Car(byte[] cNameBytes) {
+    public Car(short[] cNameBytes) {
         if (cNameBytes.length == 4 && cNameBytes[3] == 0) {
-            defaultCar = DefaultCar.fromString(new String(cNameBytes, 0, 3));
+            var bytes = new byte[3];
+            for (var i = 0; i < 3; i++) {
+                bytes[i] = cNameBytes[i] > 127 ?
+                        (byte) (cNameBytes[i] - 256) :
+                        (byte) cNameBytes[i];
+            }
+            defaultCar = DefaultCar.fromString(new String(bytes));
             if (defaultCar.isPresent()) {
                 skinId = defaultCar.get().name();
             } else {
                 var cNameLong = 0L;
                 for (var i = 2; i >= 0; i--) {
-                    var nonNegativeValue = (short) cNameBytes[i];
-                    if (nonNegativeValue < 0) {
-                        nonNegativeValue += 256;
-                    }
                     cNameLong <<= 8;
-                    cNameLong |= nonNegativeValue;
+                    cNameLong |= cNameBytes[i];
                 }
                 skinId = new ModSkinId(cNameLong).getStringValue();
             }

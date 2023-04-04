@@ -2,6 +2,8 @@ package pl.adrian.internal.packets.util;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PacketUtilsTest {
@@ -37,5 +39,13 @@ class PacketUtilsTest {
         var size = PacketUtils.getPacketSize(4, "testtesttesttesttest", 16);
 
         assertEquals(20, size);
+    }
+
+    @Test
+    void toList() {
+        var array = new short[] { (short) 15, (short) 5, (short) 36, (short) 20 };
+        var expectedList = List.of((short) 15, (short) 5, (short) 36, (short) 20);
+
+        assertEquals(expectedList, PacketUtils.toList(array));
     }
 }

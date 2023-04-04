@@ -155,7 +155,7 @@ public enum PacketType {
     /**
      * 36 - both ways: reorder (info or instruction)
      */
-    REO,
+    REO(ReoPacket.class),
     /**
      * 37 - info: node and lap packet
      */

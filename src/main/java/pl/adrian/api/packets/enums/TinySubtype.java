@@ -82,9 +82,9 @@ public enum TinySubtype {
      */
     MCI,
     /**
-     * 18 - info request: send an IS_REO
+     * 18 - info request: send an {@link ReoPacket}
      */
-    REO,
+    REO(ReoPacket.class, false),
     /**
      * 19 - info request: send an {@link RstPacket}
      */

@@ -14,6 +14,8 @@ import pl.adrian.internal.packets.structures.base.ComplexInstructionStructure;
 import pl.adrian.internal.packets.structures.base.UnsignedInstructionStructure;
 import pl.adrian.internal.packets.structures.base.WordInstructionStructure;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PacketValidatorTest {
@@ -27,6 +29,7 @@ class PacketValidatorTest {
                 null,
                 true,
                 new TestSimpleStructure(64),
+                List.of((short) 1, (short) 2, (short) 3),
                 354,
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
@@ -49,6 +52,7 @@ class PacketValidatorTest {
                 null,
                 true,
                 new TestSimpleStructure(64),
+                List.of((short) 1, (short) 2, (short) 3),
                 354,
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
@@ -73,6 +77,7 @@ class PacketValidatorTest {
                 null,
                 true,
                 new TestSimpleStructure(64),
+                List.of((short) 1, (short) 2, (short) 3),
                 354,
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
@@ -89,6 +94,56 @@ class PacketValidatorTest {
     }
 
     @Test
+    void validate_withTooLongByteArray() {
+        var packet = new ValidTestPacket(
+                23,
+                PacketType.NONE,
+                54,
+                null,
+                true,
+                new TestSimpleStructure(64),
+                List.of((short) 1, (short) 2, (short) 3, (short) 4),
+                354,
+                new TestSimpleStructure(28715),
+                TestCustomValueEnum.VALUE1,
+                "abcdefghij",
+                112946L,
+                new TestSimpleStructure(150685),
+                new Long[] { 1564357L, 875643L },
+                1834749274,
+                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
+        );
+        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
+        assertEquals(ValidationFailureCategory.INCORRECT_VALUE_LENGTH, exception.getFailureCategory());
+        assertEquals("shortListByteArray", exception.getFieldName());
+    }
+
+    @Test
+    void validate_withIncorrectValueInsideByteArray() {
+        var packet = new ValidTestPacket(
+                23,
+                PacketType.NONE,
+                54,
+                null,
+                true,
+                new TestSimpleStructure(64),
+                List.of((short) 1, (short) -15, (short) 3),
+                354,
+                new TestSimpleStructure(28715),
+                TestCustomValueEnum.VALUE1,
+                "abcdefghij",
+                112946L,
+                new TestSimpleStructure(150685),
+                new Long[] { 1564357L, 875643L },
+                1834749274,
+                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
+        );
+        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
+        assertEquals(ValidationFailureCategory.VALUE_OUT_OF_RANGE, exception.getFailureCategory());
+        assertEquals("shortListByteArray", exception.getFieldName());
+    }
+
+    @Test
     void validate_withTooLowIntWord() {
         var packet = new ValidTestPacket(
                 23,
@@ -97,6 +152,7 @@ class PacketValidatorTest {
                 null,
                 true,
                 new TestSimpleStructure(64),
+                List.of((short) 1, (short) 2, (short) 3),
                 -15,
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
@@ -121,6 +177,7 @@ class PacketValidatorTest {
                 'a',
                 false,
                 new TestSimpleStructure(64),
+                List.of((short) 1, (short) 2, (short) 3),
                 74956,
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
@@ -145,6 +202,7 @@ class PacketValidatorTest {
                 'a',
                 false,
                 new TestSimpleStructure(64),
+                List.of((short) 1, (short) 2, (short) 3),
                 354,
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
@@ -169,6 +227,7 @@ class PacketValidatorTest {
                 'a',
                 false,
                 new TestSimpleStructure(64),
+                List.of((short) 1, (short) 2, (short) 3),
                 354,
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
@@ -193,6 +252,7 @@ class PacketValidatorTest {
                 'a',
                 false,
                 new TestSimpleStructure(64),
+                List.of((short) 1, (short) 2, (short) 3),
                 354,
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
@@ -217,6 +277,7 @@ class PacketValidatorTest {
                 'a',
                 false,
                 new TestSimpleStructure(64),
+                List.of((short) 1, (short) 2, (short) 3),
                 354,
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
@@ -241,6 +302,7 @@ class PacketValidatorTest {
                 'a',
                 false,
                 new TestSimpleStructure(64),
+                List.of((short) 1, (short) 2, (short) 3),
                 354,
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
@@ -265,6 +327,7 @@ class PacketValidatorTest {
                 'a',
                 false,
                 new TestSimpleStructure(64),
+                List.of((short) 1, (short) 2, (short) 3),
                 354,
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
@@ -289,6 +352,7 @@ class PacketValidatorTest {
                 null,
                 true,
                 new TestSimpleStructure(64),
+                List.of((short) 1, (short) 2, (short) 3),
                 354,
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
@@ -313,6 +377,7 @@ class PacketValidatorTest {
                 null,
                 true,
                 new TestSimpleStructure(64),
+                List.of((short) 1, (short) 2, (short) 3),
                 354,
                 new TestSimpleStructure(28715),
                 TestCustomValueEnum.VALUE1,
@@ -466,6 +531,9 @@ class PacketValidatorTest {
         private final boolean booleanByte;
         @Byte
         private final TestSimpleStructure simpleStructureByte;
+        @Byte
+        @Array(length = 3)
+        private final List<Short> shortListByteArray;
         @Word
         private final int intWord;
         @Word
@@ -494,6 +562,7 @@ class PacketValidatorTest {
                                   Character characterByte,
                                   boolean booleanByte,
                                   TestSimpleStructure simpleStructureByte,
+                                  List<Short> shortListByteArray,
                                   int intWord,
                                   TestSimpleStructure simpleStructureWord,
                                   TestCustomValueEnum customValueEnumWord,
@@ -507,6 +576,7 @@ class PacketValidatorTest {
             this.characterByte = characterByte;
             this.booleanByte = booleanByte;
             this.simpleStructureByte = simpleStructureByte;
+            this.shortListByteArray = shortListByteArray;
             this.intWord = intWord;
             this.simpleStructureWord = simpleStructureWord;
             this.customValueEnumWord = customValueEnumWord;
