@@ -9,6 +9,7 @@ import pl.adrian.internal.packets.annotations.Unsigned;
 import pl.adrian.internal.packets.annotations.Word;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * FINished race notification. The packet is sent by LFS when any player finishes race
@@ -31,30 +32,20 @@ public class FinPacket extends Packet implements InfoPacket {
     private final Flags<PlayerFlag> flags;
 
     /**
-     * Creates finished race notification packet.
-     * @param plid player's unique id (0 = player left before result was sent)
-     * @param tTime race time (ms)
-     * @param bTime best lap (ms)
-     * @param numStops number of pit stops
-     * @param confirm confirmation flags
-     * @param lapsDone laps completed
-     * @param flags player flags
+     * Creates finished race notification packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public FinPacket(short plid,
-                     long tTime,
-                     long bTime,
-                     short numStops,
-                     Flags<ConfirmationFlag> confirm,
-                     int lapsDone,
-                     Flags<PlayerFlag> flags) {
+    public FinPacket(PacketDataBytes packetDataBytes) {
         super(20, PacketType.FIN, 0);
-        this.plid = plid;
-        this.tTime = tTime;
-        this.bTime = bTime;
-        this.numStops = numStops;
-        this.confirm = confirm;
-        this.lapsDone = lapsDone;
-        this.flags = flags;
+        plid = packetDataBytes.readByte();
+        tTime = packetDataBytes.readUnsigned();
+        bTime = packetDataBytes.readUnsigned();
+        packetDataBytes.skipZeroByte();
+        numStops = packetDataBytes.readByte();
+        confirm = new Flags<>(ConfirmationFlag.class, packetDataBytes.readByte());
+        packetDataBytes.skipZeroByte();
+        lapsDone = packetDataBytes.readWord();
+        flags = new Flags<>(PlayerFlag.class, packetDataBytes.readWord());
     }
 
     /**

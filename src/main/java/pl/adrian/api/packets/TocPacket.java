@@ -4,6 +4,7 @@ import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * Take Over Car. The packet is sent by LFS when car take over happens.
@@ -17,16 +18,15 @@ public class TocPacket extends Packet implements InfoPacket {
     private final short newUcid;
 
     /**
-     * Creates take over car packet.
-     * @param plid player's unique id
-     * @param oldUcid old connection's unique id
-     * @param newUcid new connection's unique id
+     * Creates take over car packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public TocPacket(short plid, short oldUcid, short newUcid) {
+    public TocPacket(PacketDataBytes packetDataBytes) {
         super(8, PacketType.TOC, 0);
-        this.plid = plid;
-        this.oldUcid = oldUcid;
-        this.newUcid = newUcid;
+        plid = packetDataBytes.readByte();
+        oldUcid = packetDataBytes.readByte();
+        newUcid = packetDataBytes.readByte();
+        packetDataBytes.skipZeroBytes(2);
     }
 
     /**

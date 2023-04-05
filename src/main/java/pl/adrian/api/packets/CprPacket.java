@@ -6,6 +6,7 @@ import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * Conn Player Rename. The packet is sent by LFS when player renames.
@@ -21,16 +22,14 @@ public class CprPacket extends Packet implements InfoPacket {
     private final String plate;
 
     /**
-     * Creates conn player rename packet.
-     * @param ucid unique id of the connection
-     * @param pName new name
-     * @param plate number plate
+     * Creates conn player rename packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public CprPacket(short ucid, String pName, String plate) {
+    public CprPacket(PacketDataBytes packetDataBytes) {
         super(36, PacketType.CPR, 0);
-        this.ucid = ucid;
-        this.pName = pName;
-        this.plate = plate;
+        ucid = packetDataBytes.readByte();
+        pName = packetDataBytes.readCharArray(24);
+        plate = packetDataBytes.readCharArray(8);
     }
 
     /**

@@ -5,6 +5,7 @@ import pl.adrian.api.packets.enums.ViewIdentifier;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * Camera CHange. The packet is sent by LFS when any player changes the camera.<br>
@@ -21,14 +22,14 @@ public class CchPacket extends Packet implements InfoPacket {
     private final ViewIdentifier camera;
 
     /**
-     * Creates camera change packet.
-     * @param plid player's unique id
-     * @param camera view identifier
+     * Creates camera change packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public CchPacket(short plid, ViewIdentifier camera) {
+    public CchPacket(PacketDataBytes packetDataBytes) {
         super(8, PacketType.CCH, 0);
-        this.plid = plid;
-        this.camera = camera;
+        plid = packetDataBytes.readByte();
+        camera = ViewIdentifier.fromOrdinal(packetDataBytes.readByte());
+        packetDataBytes.skipZeroBytes(3);
     }
 
     /**

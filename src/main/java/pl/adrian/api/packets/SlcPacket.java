@@ -7,6 +7,7 @@ import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * SeLected Car. The packet is sent by LFS when a connection selects a car (empty if no car).
@@ -21,15 +22,14 @@ public class SlcPacket extends Packet implements RequestablePacket {
     private final Car car;
 
     /**
-     * Creates selected car packet.
+     * Creates selected car packet. Constructor used only internally.
      * @param reqI 0 unless this is a reply to a {@link pl.adrian.api.packets.enums.TinySubtype#SLC Tiny SLC} request
-     * @param ucid connection's unique id (0 = host)
-     * @param car car
+     * @param packetDataBytes packet data bytes
      */
-    public SlcPacket(short reqI, short ucid, Car car) {
+    public SlcPacket(short reqI, PacketDataBytes packetDataBytes) {
         super(8, PacketType.SLC, reqI);
-        this.ucid = ucid;
-        this.car = car;
+        ucid = packetDataBytes.readByte();
+        car = new Car(packetDataBytes.readByteArray(4));
     }
 
     /**

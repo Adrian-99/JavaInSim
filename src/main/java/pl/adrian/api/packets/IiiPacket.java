@@ -6,7 +6,7 @@ import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.InfoPacket;
-import pl.adrian.internal.packets.util.PacketUtils;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * InsIm Info - /i message from user to host's InSim - variable size.
@@ -21,16 +21,17 @@ public class IiiPacket extends Packet implements InfoPacket {
     private final String msg;
 
     /**
-     * Creates InSim info packet.
-     * @param ucid connection's unique id (0 = host)
-     * @param plid player's unique id (if zero, use ucid)
-     * @param msg message
+     * Creates InSim info packet. Constructor used only internally.
+     * @param size packet size
+     * @param packetDataBytes packet data bytes
      */
-    public IiiPacket(short ucid, short plid, String msg) {
-        super(PacketUtils.getPacketSize(8, msg, 64), PacketType.III, 0);
-        this.ucid = ucid;
-        this.plid = plid;
-        this.msg = msg;
+    public IiiPacket(short size, PacketDataBytes packetDataBytes) {
+        super(size, PacketType.III, 0);
+        packetDataBytes.skipZeroByte();
+        ucid = packetDataBytes.readByte();
+        plid = packetDataBytes.readByte();
+        packetDataBytes.skipZeroBytes(2);
+        msg = packetDataBytes.readCharArray(size - 8);
     }
 
     /**

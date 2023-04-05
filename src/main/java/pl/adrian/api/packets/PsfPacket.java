@@ -5,6 +5,7 @@ import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Unsigned;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * Pit Stop Finished. The packet is sent by LFS when any player finishes their pit stop.
@@ -16,14 +17,14 @@ public class PsfPacket extends Packet implements InfoPacket {
     private final long sTime;
 
     /**
-     * Creates pit stop finished packet.
-     * @param plid player's unique id
-     * @param sTime stop time (ms)
+     * Creates pit stop finished packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public PsfPacket(short plid, long sTime) {
+    public PsfPacket(PacketDataBytes packetDataBytes) {
         super(12, PacketType.PSF, 0);
-        this.plid = plid;
-        this.sTime = sTime;
+        plid = packetDataBytes.readByte();
+        sTime = packetDataBytes.readUnsigned();
+        packetDataBytes.skipZeroBytes(4);
     }
 
     /**

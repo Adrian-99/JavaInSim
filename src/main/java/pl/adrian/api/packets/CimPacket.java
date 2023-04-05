@@ -4,6 +4,7 @@ import pl.adrian.api.packets.enums.*;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 import java.util.Optional;
 
@@ -21,18 +22,16 @@ public class CimPacket extends Packet implements InfoPacket {
     private final SelectedObjectType selType;
 
     /**
-     * Creates connection's interface mode packet.
-     * @param ucid connection's unique id (0 = local)
-     * @param mode interface mode
-     * @param subMode submode identifier
-     * @param selType selected object type
+     * Creates connection's interface mode packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public CimPacket(short ucid, InterfaceMode mode, short subMode, SelectedObjectType selType) {
+    public CimPacket(PacketDataBytes packetDataBytes) {
         super(8, PacketType.CIM, 0);
-        this.ucid = ucid;
-        this.mode = mode;
-        this.subMode = subMode;
-        this.selType = selType;
+        ucid = packetDataBytes.readByte();
+        mode = InterfaceMode.fromOrdinal(packetDataBytes.readByte());
+        subMode = packetDataBytes.readByte();
+        selType = SelectedObjectType.fromOrdinal(packetDataBytes.readByte());
+        packetDataBytes.skipZeroByte();
     }
 
     /**

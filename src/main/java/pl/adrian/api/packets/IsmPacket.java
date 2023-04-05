@@ -6,9 +6,10 @@ import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
- * InSim Multi - LFS will send this packet when a host is started or joined.
+ * InSim Multi. The packet is sent by LFS when a host is started or joined.
  */
 public class IsmPacket extends Packet implements RequestablePacket {
     @Byte
@@ -18,15 +19,16 @@ public class IsmPacket extends Packet implements RequestablePacket {
     private final String hName;
 
     /**
-     * Creates InSim multi packet.
-     * @param reqI usually 0 / or if a reply: ReqI as received in the TINY_ISM
-     * @param isHost whether is a host
-     * @param hName the name of the host joined or started
+     * Creates InSim multi packet. Constructor used only internally.
+     * @param reqI usually 0 / or if a reply: ReqI as received in the {@link pl.adrian.api.packets.enums.TinySubtype#ISM Tiny ISM}
+     * @param packetDataBytes packet data bytes
      */
-    public IsmPacket(short reqI, boolean isHost, String hName) {
+    public IsmPacket(short reqI, PacketDataBytes packetDataBytes) {
         super(40, PacketType.ISM, reqI);
-        this.isHost = isHost;
-        this.hName = hName;
+        packetDataBytes.skipZeroByte();
+        isHost = packetDataBytes.readByte() != 0;
+        packetDataBytes.skipZeroBytes(3);
+        hName = packetDataBytes.readCharArray(32);
     }
 
     /**

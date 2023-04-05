@@ -6,6 +6,7 @@ import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Unsigned;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * New Conn Info. The packet is sent by LFS when there is a new connection.
@@ -22,19 +23,17 @@ public class NciPacket extends Packet implements RequestablePacket {
     private final long ipAddress;
 
     /**
-     * Creates new connection info packet.
+     * Creates new connection info packet. Constructor used only internally.
      * @param reqI 0 unless this is a reply to a {@link pl.adrian.api.packets.enums.TinySubtype#NCI Tiny NCI} request
-     * @param ucid connection's unique id (0 = host)
-     * @param language language
-     * @param userId LFS UserID
-     * @param ipAddress IP address
+     * @param packetDataBytes packet data bytes
      */
-    public NciPacket(short reqI, short ucid, Language language, long userId, long ipAddress) {
+    public NciPacket(short reqI, PacketDataBytes packetDataBytes) {
         super(16, PacketType.NCI, reqI);
-        this.ucid = ucid;
-        this.language = language;
-        this.userId = userId;
-        this.ipAddress = ipAddress;
+        ucid = packetDataBytes.readByte();
+        language = Language.fromOrdinal(packetDataBytes.readByte());
+        packetDataBytes.skipZeroBytes(3);
+        userId = packetDataBytes.readUnsigned();
+        ipAddress = packetDataBytes.readUnsigned();
     }
 
     /**

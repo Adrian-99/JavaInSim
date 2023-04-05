@@ -7,6 +7,7 @@ import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Word;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * Player FLags. The packet is sent by LFS when flags of any player change.
@@ -18,14 +19,14 @@ public class PflPacket extends Packet implements InfoPacket {
     private final Flags<PlayerFlag> flags;
 
     /**
-     * Creates player flags packet.
-     * @param plid player's unique id
-     * @param flags player flags
+     * Creates player flags packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public PflPacket(short plid, Flags<PlayerFlag> flags) {
+    public PflPacket(PacketDataBytes packetDataBytes) {
         super(8, PacketType.PFL, 0);
-        this.plid = plid;
-        this.flags = flags;
+        plid = packetDataBytes.readByte();
+        flags = new Flags<>(PlayerFlag.class, packetDataBytes.readWord());
+        packetDataBytes.skipZeroBytes(2);
     }
 
     /**

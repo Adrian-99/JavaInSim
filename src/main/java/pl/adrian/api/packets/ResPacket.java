@@ -9,6 +9,7 @@ import pl.adrian.internal.packets.annotations.*;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * RESult (qualify or confirmed finish).
@@ -48,53 +49,28 @@ public class ResPacket extends Packet implements RequestablePacket {
     private final int pSeconds;
 
     /**
-     * Creates result packet.
+     * Creates result packet. Constructor used only internally.
      * @param reqI 0 unless this is a reply to a {@link pl.adrian.api.packets.enums.TinySubtype#RES Tiny RES} request
-     * @param plid player's unique id (0 = player left before result was sent)
-     * @param uName username
-     * @param pName nickname
-     * @param plate number plate
-     * @param car car
-     * @param tTime (ms) race or autocross: total time / qualify: session time
-     * @param bTime (ms) best lap
-     * @param numStops number of pit stops
-     * @param confirm confirmation flags
-     * @param lapsDone laps completed
-     * @param flags player flags
-     * @param resultNum finish or qualify pos (0 = win / 255 = not added to table)
-     * @param numRes total number of results (qualify doesn't always add a new one)
-     * @param pSeconds penalty time in seconds (already included in race time)
+     * @param packetDataBytes packet data bytes
      */
-    public ResPacket(short reqI,
-                     short plid,
-                     String uName,
-                     String pName,
-                     String plate,
-                     Car car,
-                     long tTime,
-                     long bTime,
-                     short numStops,
-                     Flags<ConfirmationFlag> confirm,
-                     int lapsDone,
-                     Flags<PlayerFlag> flags,
-                     short resultNum,
-                     short numRes,
-                     int pSeconds) {
+    public ResPacket(short reqI, PacketDataBytes packetDataBytes) {
         super(84, PacketType.RES, reqI);
-        this.plid = plid;
-        this.uName = uName;
-        this.pName = pName;
-        this.plate = plate;
-        this.car = car;
-        this.tTime = tTime;
-        this.bTime = bTime;
-        this.numStops = numStops;
-        this.confirm = confirm;
-        this.lapsDone = lapsDone;
-        this.flags = flags;
-        this.resultNum = resultNum;
-        this.numRes = numRes;
-        this.pSeconds = pSeconds;
+        plid = packetDataBytes.readByte();
+        uName = packetDataBytes.readCharArray(24);
+        pName = packetDataBytes.readCharArray(24);
+        plate = packetDataBytes.readCharArray(8);
+        car = new Car(packetDataBytes.readByteArray(4));
+        tTime = packetDataBytes.readUnsigned();
+        bTime = packetDataBytes.readUnsigned();
+        packetDataBytes.skipZeroByte();
+        numStops = packetDataBytes.readByte();
+        confirm = new Flags<>(ConfirmationFlag.class, packetDataBytes.readByte());
+        packetDataBytes.skipZeroByte();
+        lapsDone = packetDataBytes.readWord();
+        flags = new Flags<>(PlayerFlag.class, packetDataBytes.readWord());
+        resultNum = packetDataBytes.readByte();
+        numRes = packetDataBytes.readByte();
+        pSeconds = packetDataBytes.readWord();
     }
 
     /**
@@ -189,7 +165,7 @@ public class ResPacket extends Packet implements RequestablePacket {
     }
 
     /**
-     * @return penalty time in seconds (already included in race time)
+     * @return penalty time in seconds (alpacketDataBytes.ready included in race time)
      */
     public int getpSeconds() {
         return pSeconds;

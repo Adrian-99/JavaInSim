@@ -5,6 +5,7 @@ import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * ConN Leave. The packet is sent by LFS when connection leaves.
@@ -18,16 +19,15 @@ public class CnlPacket extends Packet implements InfoPacket {
     private final short total;
 
     /**
-     * Creates conn leave packet.
-     * @param ucid unique id of the connection which left
-     * @param reason leave reason
-     * @param total number of connections including host
+     * Creates conn leave packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public CnlPacket(short ucid, LeaveReason reason, short total) {
+    public CnlPacket(PacketDataBytes packetDataBytes) {
         super(8, PacketType.CNL, 0);
-        this.ucid = ucid;
-        this.reason = reason;
-        this.total = total;
+        ucid = packetDataBytes.readByte();
+        reason = LeaveReason.fromOrdinal(packetDataBytes.readByte());
+        total = packetDataBytes.readByte();
+        packetDataBytes.skipZeroBytes(2);
     }
 
     /**

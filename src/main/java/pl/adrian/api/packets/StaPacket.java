@@ -9,6 +9,7 @@ import pl.adrian.internal.packets.annotations.Float;
 import pl.adrian.internal.packets.structures.RaceLaps;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * STAte. LFS will send this packet any time the info in it changes.
@@ -45,54 +46,28 @@ public class StaPacket extends Packet implements RequestablePacket {
     private final Wind wind;
 
     /**
-     * Creates state packet.
+     * Creates state packet. Constructor used only internally.
      * @param reqI non-zero if replying to a request packet
-     * @param replaySpeed replay speed - 1.0 is normal speed
-     * @param flags state flags
-     * @param inGameCam which type of camera is selected
-     * @param viewPlid unique ID of viewed player (0 = none)
-     * @param numP number of players in race
-     * @param numConns number of connections including host
-     * @param numFinished number finished or qualified
-     * @param raceInProg race progress
-     * @param qualMins number of minutes of qualifications
-     * @param raceLaps number of race laps (or hours)
-     * @param serverStatus server status
-     * @param track short name for track e.g. FE2R
-     * @param weather weather - 0,1,2...
-     * @param wind wind type
+     * @param packetDataBytes packet data bytes
      */
-    @SuppressWarnings("java:S107")
-    public StaPacket(int reqI,
-                     float replaySpeed,
-                     Flags<StaFlag> flags,
-                     ViewIdentifier inGameCam,
-                     short viewPlid,
-                     short numP,
-                     short numConns,
-                     short numFinished,
-                     RaceProgress raceInProg,
-                     short qualMins,
-                     RaceLaps raceLaps,
-                     ServerStatus serverStatus,
-                     String track,
-                     short weather,
-                     Wind wind) {
+    public StaPacket(short reqI, PacketDataBytes packetDataBytes) {
         super(28, PacketType.STA, reqI);
-        this.replaySpeed = replaySpeed;
-        this.flags = flags;
-        this.inGameCam = inGameCam;
-        this.viewPlid = viewPlid;
-        this.numP = numP;
-        this.numConns = numConns;
-        this.numFinished = numFinished;
-        this.raceInProg = raceInProg;
-        this.qualMins = qualMins;
-        this.raceLaps = raceLaps;
-        this.serverStatus = serverStatus;
-        this.track = track;
-        this.weather = weather;
-        this.wind = wind;
+        packetDataBytes.skipZeroByte();
+        replaySpeed = packetDataBytes.readFloat();
+        flags = new Flags<>(StaFlag.class, packetDataBytes.readWord());
+        inGameCam = ViewIdentifier.fromOrdinal(packetDataBytes.readByte());
+        viewPlid = packetDataBytes.readByte();
+        numP = packetDataBytes.readByte();
+        numConns = packetDataBytes.readByte();
+        numFinished = packetDataBytes.readByte();
+        raceInProg = RaceProgress.fromOrdinal(packetDataBytes.readByte());
+        qualMins = packetDataBytes.readByte();
+        raceLaps = new RaceLaps(packetDataBytes.readByte());
+        packetDataBytes.skipZeroByte();
+        serverStatus = ServerStatus.fromOrdinal(packetDataBytes.readByte());
+        track = packetDataBytes.readCharArray(6);
+        weather = packetDataBytes.readByte();
+        wind = Wind.fromOrdinal(packetDataBytes.readByte());
     }
 
     /**

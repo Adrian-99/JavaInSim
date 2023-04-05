@@ -5,6 +5,7 @@ import pl.adrian.api.packets.enums.PitLaneFact;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * Pit LAne. The packet is sent by LFS when any player enters or leaves pit lane.
@@ -16,14 +17,14 @@ public class PlaPacket extends Packet implements InfoPacket {
     private final PitLaneFact fact;
 
     /**
-     * Creates pit lane packet.
-     * @param plid player's unique id
-     * @param fact pit lane fact
+     * Creates pit lane packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public PlaPacket(short plid, PitLaneFact fact) {
+    public PlaPacket(PacketDataBytes packetDataBytes) {
         super(8, PacketType.PLA, 0);
-        this.plid = plid;
-        this.fact = fact;
+        plid = packetDataBytes.readByte();
+        fact = PitLaneFact.fromOrdinal(packetDataBytes.readByte());
+        packetDataBytes.skipZeroBytes(3);
     }
 
     /**

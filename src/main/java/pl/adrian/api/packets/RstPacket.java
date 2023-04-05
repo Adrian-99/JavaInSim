@@ -12,6 +12,7 @@ import pl.adrian.internal.packets.annotations.Word;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
 import pl.adrian.internal.packets.structures.RaceLaps;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * Race STart. The packet is sent by LFS when race starts.
@@ -46,55 +47,30 @@ public class RstPacket extends Packet implements RequestablePacket {
     private final int split3;
 
     /**
-     * Creates race start packet.
+     * Creates race start packet. Constructor used only internally.
      * @param reqI 0 unless this is a reply to an {@link pl.adrian.api.packets.enums.TinySubtype#RST Tiny RST} request
-     * @param raceLaps race laps, 0 if qualifying
-     * @param qualMins qualifications minutes, 0 if race
-     * @param numP number of players in race
-     * @param timing lap timing
-     * @param track short track name
-     * @param weather weather
-     * @param wind wind type
-     * @param flags race flags
-     * @param numNodes total number of nodes in the path
-     * @param finish node index - finish line
-     * @param split1 node index - split 1
-     * @param split2 node index - split 2
-     * @param split3 node index - split 3
+     * @param packetDataBytes packet data bytes
      */
-    @SuppressWarnings("java:S107")
-    public RstPacket(short reqI,
-                     RaceLaps raceLaps,
-                     short qualMins,
-                     short numP,
-                     LapTiming timing,
-                     String track,
-                     short weather,
-                     Wind wind,
-                     Flags<RaceFlag> flags,
-                     int numNodes,
-                     int finish,
-                     int split1,
-                     int split2,
-                     int split3) {
+    public RstPacket(short reqI, PacketDataBytes packetDataBytes) {
         super(28, PacketType.RST, reqI);
-        this.raceLaps = raceLaps;
-        this.qualMins = qualMins;
-        this.numP = numP;
-        this.timing = timing;
-        this.track = track;
-        this.weather = weather;
-        this.wind = wind;
-        this.flags = flags;
-        this.numNodes = numNodes;
-        this.finish = finish;
-        this.split1 = split1;
-        this.split2 = split2;
-        this.split3 = split3;
+        packetDataBytes.skipZeroByte();
+        raceLaps = new RaceLaps(packetDataBytes.readByte());
+        qualMins = packetDataBytes.readByte();
+        numP = packetDataBytes.readByte();
+        timing = new LapTiming(packetDataBytes.readByte());
+        track = packetDataBytes.readCharArray(6);
+        weather = packetDataBytes.readByte();
+        wind = Wind.fromOrdinal(packetDataBytes.readByte());
+        flags = new Flags<>(RaceFlag.class, packetDataBytes.readWord());
+        numNodes = packetDataBytes.readWord();
+        finish = packetDataBytes.readWord();
+        split1 = packetDataBytes.readWord();
+        split2 = packetDataBytes.readWord();
+        split3 = packetDataBytes.readWord();
     }
 
     /**
-     * @return race laps, 0 if qualifying
+     * @return race laps
      */
     public RaceLaps getRaceLaps() {
         return raceLaps;

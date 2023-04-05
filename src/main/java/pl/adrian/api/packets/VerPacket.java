@@ -7,6 +7,7 @@ import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.Product;
 import pl.adrian.internal.packets.base.RequestablePacket;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * VERsion - version info. This version packet is sent on request.
@@ -24,15 +25,14 @@ public class VerPacket extends Packet implements RequestablePacket {
     /**
      * Creates version packet.
      * @param reqI as received in the request packet
-     * @param version LFS version, e.g. 0.3G
-     * @param product LFS product
-     * @param inSimVer InSim version
+     * @param packetDataBytes packet data bytes
      */
-    public VerPacket(int reqI, String version, Product product, int inSimVer) {
+    public VerPacket(short reqI, PacketDataBytes packetDataBytes) {
         super(20, PacketType.VER, reqI);
-        this.version = version;
-        this.product = product;
-        this.inSimVer = (short) inSimVer;
+        packetDataBytes.skipZeroByte();
+        version = packetDataBytes.readCharArray(8);
+        product = Product.fromString(packetDataBytes.readCharArray(6));
+        inSimVer = packetDataBytes.readByte();
     }
 
     /**

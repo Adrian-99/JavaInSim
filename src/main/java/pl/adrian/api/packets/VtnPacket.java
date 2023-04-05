@@ -5,6 +5,7 @@ import pl.adrian.api.packets.enums.VoteAction;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.InfoPacket;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * VoTe Notification. LFS notifies the external program of any votes to restart or qualify.
@@ -16,14 +17,15 @@ public class VtnPacket extends Packet implements InfoPacket {
     private final VoteAction action;
 
     /**
-     * Creates vote notification packet.
-     * @param ucid connection's unique id
-     * @param action vote action
+     * Creates vote notification packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public VtnPacket(short ucid, VoteAction action) {
+    public VtnPacket(PacketDataBytes packetDataBytes) {
         super(8, PacketType.VTN, 0);
-        this.ucid = ucid;
-        this.action = action;
+        packetDataBytes.skipZeroByte();
+        ucid = packetDataBytes.readByte();
+        action = VoteAction.fromOrdinal(packetDataBytes.readByte());
+        packetDataBytes.skipZeroBytes(2);
     }
 
     /**

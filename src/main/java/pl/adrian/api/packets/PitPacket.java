@@ -12,6 +12,7 @@ import pl.adrian.internal.packets.annotations.Unsigned;
 import pl.adrian.internal.packets.annotations.Word;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * PIT stop. The packet is sent by LFS when any player stops at pit garage.
@@ -36,34 +37,21 @@ public class PitPacket extends Packet implements InfoPacket {
     private final Flags<PitWorkFlag> work;
 
     /**
-     * Creates pit stop packet.
-     * @param plid player's unique id
-     * @param lapsDone laps completed
-     * @param flags player flags
-     * @param fuelAdd fuel added percent (if /showfuel yes, 255 otherwise)
-     * @param penalty current penalty value
-     * @param numStops number of pit stops
-     * @param tyres tyres changed
-     * @param work pit work
+     * Creates pit stop packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    @SuppressWarnings("java:S107")
-    public PitPacket(short plid,
-                     int lapsDone,
-                     Flags<PlayerFlag> flags,
-                     short fuelAdd,
-                     PenaltyValue penalty,
-                     short numStops,
-                     Tyres tyres,
-                     Flags<PitWorkFlag> work) {
+    public PitPacket(PacketDataBytes packetDataBytes) {
         super(24, PacketType.PIT, 0);
-        this.plid = plid;
-        this.lapsDone = lapsDone;
-        this.flags = flags;
-        this.fuelAdd = fuelAdd;
-        this.penalty = penalty;
-        this.numStops = numStops;
-        this.tyres = tyres;
-        this.work = work;
+        plid = packetDataBytes.readByte();
+        lapsDone = packetDataBytes.readWord();
+        flags = new Flags<>(PlayerFlag.class, packetDataBytes.readWord());
+        fuelAdd = packetDataBytes.readByte();
+        penalty = PenaltyValue.fromOrdinal(packetDataBytes.readByte());
+        numStops = packetDataBytes.readByte();
+        packetDataBytes.skipZeroByte();
+        tyres = new Tyres(packetDataBytes.readUnsigned());
+        work = new Flags<>(PitWorkFlag.class, packetDataBytes.readUnsigned());
+        packetDataBytes.skipZeroBytes(4);
     }
 
     /**

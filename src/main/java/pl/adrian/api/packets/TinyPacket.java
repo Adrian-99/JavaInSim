@@ -8,6 +8,7 @@ import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.packets.util.PacketBuilder;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 import pl.adrian.internal.packets.util.PacketValidator;
 
 /**
@@ -19,23 +20,24 @@ public class TinyPacket extends Packet implements InstructionPacket, InfoPacket 
 
     /**
      * Creates tiny packet.
-     * @param subT subtype
-     * @throws PacketValidationException if validation of any field in packet fails
-     */
-    public TinyPacket(TinySubtype subT) throws PacketValidationException {
-        this(subT, 0);
-    }
-
-    /**
-     * Creates tiny packet.
-     * @param subT subtype
      * @param reqI 0 unless it is an info request or a reply to an info request
+     * @param subT subtype
      * @throws PacketValidationException if validation of any field in packet fails
      */
-    public TinyPacket(TinySubtype subT, int reqI) throws PacketValidationException {
+    public TinyPacket(int reqI, TinySubtype subT) throws PacketValidationException {
         super(4, PacketType.TINY, reqI);
         this.subT = subT;
         PacketValidator.validate(this);
+    }
+
+    /**
+     * Creates tiny packet. Constructor used only internally.
+     * @param reqI 0 unless it is an info request or a reply to an info request
+     * @param packetDataBytes packet data bytes
+     */
+    public TinyPacket(short reqI, PacketDataBytes packetDataBytes) throws PacketValidationException {
+        super(4, PacketType.TINY, reqI);
+        subT = TinySubtype.fromOrdinal(packetDataBytes.readByte());
     }
 
     @Override

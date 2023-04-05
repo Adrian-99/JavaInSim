@@ -13,6 +13,7 @@ import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.packets.util.PacketBuilder;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 import pl.adrian.internal.packets.util.PacketValidator;
 
 import java.util.Optional;
@@ -33,37 +34,37 @@ public class SmallPacket extends Packet implements InstructionPacket, InfoPacket
      * @throws PacketValidationException if validation of any field in packet fails
      */
     public SmallPacket(SmallSubtype subT, long uVal) throws PacketValidationException {
-        this(subT, uVal, 0);
-    }
-
-    /**
-     * Creates small packet.
-     * @param subT subtype
-     * @param uVal value
-     * @param reqI 0 unless it is an info request or a reply to an info request
-     * @throws PacketValidationException if validation of any field in packet fails
-     */
-    public SmallPacket(SmallSubtype subT, long uVal, int reqI) throws PacketValidationException {
-        super(8, PacketType.SMALL, reqI);
+        super(8, PacketType.SMALL, 0);
         this.subT = subT;
         this.uVal = uVal;
         PacketValidator.validate(this);
     }
 
     /**
+     * Creates small packet. Constructor used only internally.
+     * @param reqI 0 unless it is an info request or a reply to an info request
+     * @param packetDataBytes packet data bytes
+     */
+    public SmallPacket(short reqI, PacketDataBytes packetDataBytes) {
+        super(8, PacketType.SMALL, reqI);
+        subT = SmallSubtype.fromOrdinal(packetDataBytes.readByte());
+        uVal = packetDataBytes.readUnsigned();
+    }
+
+    /**
      * Creates small packet for local car switches.
      * @param lcsFlags local car switches
      */
-    public SmallPacket(LcsFlag... lcsFlags) {
-        this(SmallSubtype.LCS, new Flags<>(lcsFlags).getUnsignedValue(), 0);
+    public SmallPacket(LcsFlag... lcsFlags) throws PacketValidationException {
+        this(SmallSubtype.LCS, new Flags<>(lcsFlags).getUnsignedValue());
     }
 
     /**
      * Creates small packet for setting allowed cars on host.
      * @param cars allowed cars
      */
-    public SmallPacket(DefaultCar... cars) {
-        this(SmallSubtype.ALC, new Flags<>(cars).getUnsignedValue(), 0);
+    public SmallPacket(DefaultCar... cars) throws PacketValidationException {
+        this(SmallSubtype.ALC, new Flags<>(cars).getUnsignedValue());
     }
 
     @Override

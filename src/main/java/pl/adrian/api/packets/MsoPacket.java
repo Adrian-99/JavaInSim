@@ -7,7 +7,7 @@ import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.InfoPacket;
-import pl.adrian.internal.packets.util.PacketUtils;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * MSg Out - system messages and user messages - variable size.
@@ -26,20 +26,18 @@ public class MsoPacket extends Packet implements InfoPacket {
     private final String msg;
 
     /**
-     * Creates msg out packet.
-     * @param ucid connection's unique id (0 = host)
-     * @param plid player's unique id (if zero, use ucid)
-     * @param userType message type
-     * @param textStart first character of the actual text (after player name)
-     * @param msg message
+     * Creates msg out packet. Constructor used only internally.
+     * @param size packet size
+     * @param packetDataBytes packet data bytes
      */
-    public MsoPacket(short ucid, short plid, MessageType userType, short textStart, String msg) {
-        super(PacketUtils.getPacketSize(8, msg, 128), PacketType.MSO, 0);
-        this.ucid = ucid;
-        this.plid = plid;
-        this.userType = userType;
-        this.textStart = textStart;
-        this.msg = msg;
+    public MsoPacket(short size, PacketDataBytes packetDataBytes) {
+        super(size, PacketType.MSO, 0);
+        packetDataBytes.skipZeroByte();
+        ucid = packetDataBytes.readByte();
+        plid = packetDataBytes.readByte();
+        userType = MessageType.fromOrdinal(packetDataBytes.readByte());
+        textStart = packetDataBytes.readByte();
+        msg = packetDataBytes.readCharArray(size - 8);
     }
 
     /**

@@ -9,13 +9,10 @@ import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
 import pl.adrian.internal.packets.exceptions.PacketValidationException;
-import pl.adrian.internal.packets.util.Constants;
-import pl.adrian.internal.packets.util.PacketBuilder;
-import pl.adrian.internal.packets.util.PacketUtils;
-import pl.adrian.internal.packets.util.PacketValidator;
+import pl.adrian.internal.packets.util.*;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Mods ALlowed - variable size.
@@ -25,22 +22,20 @@ public class MalPacket extends Packet implements InstructionPacket, RequestableP
     private final short ucid;
     @Unsigned
     @Array(length = Constants.MAX_MODS, dynamicLength = true)
-    private final ModSkinId[] skinId;
+    private final List<ModSkinId> skinId;
 
     /**
-     * Creates mods allowed packet. Constructor used only internally!
+     * Creates mods allowed packet. Constructor used only internally.
+     * @param size packet size
      * @param reqI 0 unless this is a reply to a {@link pl.adrian.api.packets.enums.TinySubtype#MAL Tiny MAL} request
-     * @param numM number of mods in this packet
-     * @param ucid unique id of the connection that updated the list
-     * @param skinId SkinID of each mod in compressed format, 0 to {@link Constants#MAX_MODS} (numM)
+     * @param packetDataBytes packet data bytes
      */
-    public MalPacket(short reqI, short numM, short ucid, long[] skinId) {
-        super(8 + numM * 4, PacketType.MAL, reqI);
-        this.ucid = ucid;
-        this.skinId = new ModSkinId[numM];
-        for (var i = 0; i < numM; i++) {
-            this.skinId[i] = new ModSkinId(skinId[i]);
-        }
+    public MalPacket(short size, short reqI, PacketDataBytes packetDataBytes) {
+        super(size, PacketType.MAL, reqI);
+        final var numM = packetDataBytes.readByte();
+        ucid = packetDataBytes.readByte();
+        packetDataBytes.skipZeroBytes(3);
+        skinId = Arrays.stream(packetDataBytes.readUnsignedArray(numM)).mapToObj(ModSkinId::new).toList();
     }
 
     /**
@@ -55,7 +50,7 @@ public class MalPacket extends Packet implements InstructionPacket, RequestableP
                 0
         );
         this.ucid = 0;
-        this.skinId = skinId.stream().map(ModSkinId::new).toArray(ModSkinId[]::new);
+        this.skinId = skinId.stream().map(ModSkinId::new).toList();
 
         PacketValidator.validate(this);
     }
@@ -63,7 +58,7 @@ public class MalPacket extends Packet implements InstructionPacket, RequestableP
     @Override
     public byte[] getBytes() {
         return new PacketBuilder(size, type, reqI)
-                .writeByte(skinId.length)
+                .writeByte(skinId.size())
                 .writeByte(ucid)
                 .writeZeroBytes(3)
                 .writeUnsignedArray(skinId)
@@ -74,7 +69,7 @@ public class MalPacket extends Packet implements InstructionPacket, RequestableP
      * @return number of mods in this packet
      */
     public short getNumM() {
-        return (short) skinId.length;
+        return (short) skinId.size();
     }
 
     /**
@@ -88,6 +83,6 @@ public class MalPacket extends Packet implements InstructionPacket, RequestableP
      * @return list of skinIds of allowed mods
      */
     public List<String> getSkinId() {
-        return Stream.of(skinId).map(ModSkinId::getStringValue).toList();
+        return skinId.stream().map(ModSkinId::getStringValue).toList();
     }
 }

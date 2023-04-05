@@ -6,6 +6,7 @@ import pl.adrian.api.packets.enums.PenaltyValue;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * PENalty. The packet is sent by LFS when any player is given or has cleared penalty.
@@ -21,18 +22,16 @@ public class PenPacket extends Packet implements InfoPacket {
     private final PenaltyReason reason;
 
     /**
-     * Creates penalty packet.
-     * @param plid player's unique id
-     * @param oldPen old penalty value
-     * @param newPen new penalty value
-     * @param reason penalty reason
+     * Creates penalty packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public PenPacket(short plid, PenaltyValue oldPen, PenaltyValue newPen, PenaltyReason reason) {
+    public PenPacket(PacketDataBytes packetDataBytes) {
         super(8, PacketType.PEN, 0);
-        this.plid = plid;
-        this.oldPen = oldPen;
-        this.newPen = newPen;
-        this.reason = reason;
+        plid = packetDataBytes.readByte();
+        oldPen = PenaltyValue.fromOrdinal(packetDataBytes.readByte());
+        newPen = PenaltyValue.fromOrdinal(packetDataBytes.readByte());
+        reason = PenaltyReason.fromOrdinal(packetDataBytes.readByte());
+        packetDataBytes.skipZeroByte();
     }
 
     /**

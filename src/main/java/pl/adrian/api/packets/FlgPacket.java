@@ -5,6 +5,7 @@ import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * FLaG. The packet is sent by LFS when yellow or blue flag changes.
@@ -20,18 +21,16 @@ public class FlgPacket extends Packet implements InfoPacket {
     private final short carBehind;
 
     /**
-     * Creates flag packet.
-     * @param plid player's unique id
-     * @param isOn whether flag is on
-     * @param flag flag type
-     * @param carBehind unique id of obstructed player
+     * Creates flag packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public FlgPacket(short plid, boolean isOn, FlagType flag, short carBehind) {
+    public FlgPacket(PacketDataBytes packetDataBytes) {
         super(8, PacketType.FLG, 0);
-        this.plid = plid;
-        this.isOn = isOn;
-        this.flag = flag;
-        this.carBehind = carBehind;
+        plid = packetDataBytes.readByte();
+        isOn = packetDataBytes.readByte() != 0;
+        flag = FlagType.fromOrdinal(packetDataBytes.readByte());
+        carBehind = packetDataBytes.readByte();
+        packetDataBytes.skipZeroByte();
     }
 
     /**

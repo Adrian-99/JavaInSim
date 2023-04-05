@@ -7,7 +7,7 @@ import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.InfoPacket;
-import pl.adrian.internal.packets.util.PacketUtils;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * Admin Command Report - a user typed an admin command - variable size.
@@ -24,18 +24,18 @@ public class AcrPacket extends Packet implements InfoPacket {
     private final String text;
 
     /**
-     * Creates admin command report packet.
-     * @param ucid connection's unique id (0 = host)
-     * @param isAdmin true if user is an admin
-     * @param result command result
-     * @param text command text
+     * Creates admin command report packet. Constructor used only internally.
+     * @param size packet size
+     * @param packetDataBytes packet data bytes
      */
-    public AcrPacket(short ucid, boolean isAdmin, AcrResult result, String text) {
-        super(PacketUtils.getPacketSize(8, text, 64), PacketType.ACR, 0);
-        this.ucid = ucid;
-        this.isAdmin = isAdmin;
-        this.result = result;
-        this.text = text;
+    public AcrPacket(short size, PacketDataBytes packetDataBytes) {
+        super(size, PacketType.ACR, 0);
+        packetDataBytes.skipZeroByte();
+        ucid = packetDataBytes.readByte();
+        isAdmin = packetDataBytes.readByte() != 0;
+        result = AcrResult.fromOrdinal(packetDataBytes.readByte());
+        packetDataBytes.skipZeroByte();
+        text = packetDataBytes.readCharArray(size - 8);
     }
 
     /**

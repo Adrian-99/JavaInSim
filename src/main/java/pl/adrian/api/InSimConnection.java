@@ -82,7 +82,7 @@ public class InSimConnection implements Closeable {
     public void close() throws IOException {
         logger.debug("Closing InSim connection");
         if (isConnected && !socket.isClosed()) {
-            var closePacket = new TinyPacket(TinySubtype.CLOSE);
+            var closePacket = new TinyPacket(0, TinySubtype.CLOSE);
             send(closePacket);
         }
 
@@ -201,7 +201,7 @@ public class InSimConnection implements Closeable {
 
         packetRequests.add(new PacketRequest<>(packetType, tinySubtype.isMultiPacketResponse(), reqI, callback));
 
-        var tinyPacket = new TinyPacket(tinySubtype, reqI);
+        var tinyPacket = new TinyPacket(reqI, tinySubtype);
         send(tinyPacket);
 
         if (clearPacketRequestsThread == null || clearPacketRequestsThread.isCancelled()) {

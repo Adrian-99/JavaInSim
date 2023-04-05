@@ -6,6 +6,7 @@ import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Unsigned;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * SPlit X time. The packet is sent by LFS when any player reaches split time.
@@ -27,30 +28,18 @@ public class SpxPacket extends Packet implements InfoPacket {
     private final short fuel200;
 
     /**
-     * Creates split x time packet.
-     * @param plid player's unique id
-     * @param sTime split time (ms)
-     * @param eTime total time (ms)
-     * @param split split number 1, 2, 3
-     * @param penalty current penalty value
-     * @param numStops number of pit stops
-     * @param fuel200 double fuel percent (if /showfuel yes, 255 otherwise)
+     * Creates split x time packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public SpxPacket(short plid,
-                     long sTime,
-                     long eTime,
-                     short split,
-                     PenaltyValue penalty,
-                     short numStops,
-                     short fuel200) {
+    public SpxPacket(PacketDataBytes packetDataBytes) {
         super(16, PacketType.SPX, 0);
-        this.plid = plid;
-        this.sTime = sTime;
-        this.eTime = eTime;
-        this.split = split;
-        this.penalty = penalty;
-        this.numStops = numStops;
-        this.fuel200 = fuel200;
+        plid = packetDataBytes.readByte();
+        sTime = packetDataBytes.readUnsigned();
+        eTime = packetDataBytes.readUnsigned();
+        split = packetDataBytes.readByte();
+        penalty = PenaltyValue.fromOrdinal(packetDataBytes.readByte());
+        numStops = packetDataBytes.readByte();
+        fuel200 = packetDataBytes.readByte();
     }
 
     /**

@@ -8,6 +8,7 @@ import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * New ConN. The packet is sent by LFS when there is a new connection.
@@ -29,29 +30,19 @@ public class NcnPacket extends Packet implements RequestablePacket {
     private final Flags<NcnFlag> flags;
 
     /**
-     * Creates new connection packet.
+     * Creates new connection packet. Constructor used only internally.
      * @param reqI 0 unless this is a reply to an {@link pl.adrian.api.packets.enums.TinySubtype#NCN Tiny NCN} request
-     * @param ucid new connection's unique id (0 = host)
-     * @param uName username
-     * @param pName nickname
-     * @param isAdmin whether is an admin
-     * @param total number of connections including host
-     * @param flags flags
+     * @param packetDataBytes packet data bytes
      */
-    public NcnPacket(short reqI,
-                     short ucid,
-                     String uName,
-                     String pName,
-                     boolean isAdmin,
-                     short total,
-                     Flags<NcnFlag> flags) {
+    public NcnPacket(short reqI, PacketDataBytes packetDataBytes) {
         super(56, PacketType.NCN, reqI);
-        this.ucid = ucid;
-        this.uName = uName;
-        this.pName = pName;
-        this.isAdmin = isAdmin;
-        this.total = total;
-        this.flags = flags;
+        ucid = packetDataBytes.readByte();
+        uName = packetDataBytes.readCharArray(24);
+        pName = packetDataBytes.readCharArray(24);
+        isAdmin = packetDataBytes.readByte() == 1;
+        total = packetDataBytes.readByte();
+        flags = new Flags<>(NcnFlag.class, packetDataBytes.readByte());
+        packetDataBytes.skipZeroByte();
     }
 
     /**

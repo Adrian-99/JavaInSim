@@ -4,6 +4,7 @@ import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * PLayer Pits. The packet is sent by LFS when player goes to settings (stays in player list).
@@ -13,12 +14,12 @@ public class PlpPacket extends Packet implements InfoPacket {
     private final short plid;
 
     /**
-     * Creates player pits packet.
-     * @param plid player's unique id
+     * Creates player pits packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public PlpPacket(short plid) {
+    public PlpPacket(PacketDataBytes packetDataBytes) {
         super(4, PacketType.PLP, 0);
-        this.plid = plid;
+        plid = packetDataBytes.readByte();
     }
 
     /**

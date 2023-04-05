@@ -10,6 +10,7 @@ import pl.adrian.internal.packets.annotations.Char;
 import pl.adrian.internal.packets.annotations.Word;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * New PLayer joining race. The packet is sent by LFS when player joins race
@@ -61,69 +62,32 @@ public class NplPacket extends Packet implements RequestablePacket {
     private final short fuel;
 
     /**
-     * Creates new player joining race packet.
+     * Creates new player joining race packet. Constructor used only internally.
      * @param reqI 0 unless this is a reply to an {@link pl.adrian.api.packets.enums.TinySubtype#NPL Tiny NPL} request
-     * @param plid player's newly assigned unique id
-     * @param ucid connection's unique id
-     * @param pType player type flags
-     * @param flags player flags
-     * @param pName nickname
-     * @param plate number plate
-     * @param car car
-     * @param sName skin name
-     * @param tyres compounds
-     * @param hMass added mass (kg)
-     * @param hTRes intake restriction
-     * @param model driver model
-     * @param pass passenger flags
-     * @param rWAdj low 4 bits: tyre width reduction (rear)
-     * @param fWAdj low 4 bits: tyre width reduction (front)
-     * @param setF setup flags
-     * @param numP number in race - ZERO if this is a join request
-     * @param config car configuration
-     * @param fuel fuel percent (if /showfuel yes, 255 otherwise)
+     * @param packetDataBytes packet data bytes
      */
-    @SuppressWarnings("java:S107")
-    public NplPacket(short reqI,
-                     short plid,
-                     short ucid,
-                     Flags<PlayerTypeFlag> pType,
-                     Flags<PlayerFlag> flags,
-                     String pName,
-                     String plate,
-                     Car car,
-                     String sName,
-                     Tyres tyres,
-                     short hMass,
-                     short hTRes,
-                     short model,
-                     Flags<PassengerFlag> pass,
-                     short rWAdj,
-                     short fWAdj,
-                     Flags<SetupFlag> setF,
-                     short numP,
-                     short config,
-                     short fuel) {
+    public NplPacket(short reqI, PacketDataBytes packetDataBytes) {
         super(76, PacketType.NPL, reqI);
-        this.plid = plid;
-        this.ucid = ucid;
-        this.pType = pType;
-        this.flags = flags;
-        this.pName = pName;
-        this.plate = plate;
-        this.car = car;
-        this.sName = sName;
-        this.tyres = tyres;
-        this.hMass = hMass;
-        this.hTRes = hTRes;
-        this.model = model;
-        this.pass = pass;
-        this.rWAdj = rWAdj;
-        this.fWAdj = fWAdj;
-        this.setF = setF;
-        this.numP = numP;
-        this.config = config;
-        this.fuel = fuel;
+        plid = packetDataBytes.readByte();
+        ucid = packetDataBytes.readByte();
+        pType = new Flags<>(PlayerTypeFlag.class, packetDataBytes.readByte());
+        flags = new Flags<>(PlayerFlag.class, packetDataBytes.readWord());
+        pName = packetDataBytes.readCharArray(24);
+        plate = packetDataBytes.readCharArray(8);
+        car = new Car(packetDataBytes.readByteArray(4));
+        sName = packetDataBytes.readCharArray(16);
+        tyres = new Tyres(packetDataBytes.readUnsigned());
+        hMass = packetDataBytes.readByte();
+        hTRes = packetDataBytes.readByte();
+        model = packetDataBytes.readByte();
+        pass = new Flags<>(PassengerFlag.class, packetDataBytes.readByte());
+        rWAdj = packetDataBytes.readByte();
+        fWAdj = packetDataBytes.readByte();
+        packetDataBytes.skipZeroBytes(2);
+        setF = new Flags<>(SetupFlag.class, packetDataBytes.readByte());
+        numP = packetDataBytes.readByte();
+        config = packetDataBytes.readByte();
+        fuel = packetDataBytes.readByte();
     }
 
     /**

@@ -7,6 +7,7 @@ import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
 import pl.adrian.internal.packets.util.PacketBuilder;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 import pl.adrian.internal.packets.util.PacketUtils;
 import pl.adrian.internal.packets.util.PacketValidator;
 
@@ -30,13 +31,15 @@ public class ReoPacket extends Packet implements InstructionPacket, RequestableP
     private final List<Short> plid;
 
     /**
-     * Creates reorder packet. Constructor used only internally!
+     * Creates reorder packet. Constructor used only internally.
      * @param reqI 0 unless this is a reply to an {@link pl.adrian.api.packets.enums.TinySubtype#REO Tiny REO} request
-     * @param plid all PLIDs in new order
+     * @param packetDataBytes packet data bytes
      */
-    public ReoPacket(short reqI, short[] plid) {
+    public ReoPacket(short reqI, PacketDataBytes packetDataBytes) {
         super(44, PacketType.REO, reqI);
-        this.plid = PacketUtils.toList(plid);
+        final var numP = packetDataBytes.readByte();
+        plid = PacketUtils.toList(packetDataBytes.readByteArray(numP));
+        packetDataBytes.skipZeroBytes(40 - numP);
     }
 
     /**

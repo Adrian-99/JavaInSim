@@ -4,6 +4,7 @@ import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * PLayer Leave race. The packet is sent by LFS when player spectates (removed from player list).
@@ -13,12 +14,12 @@ public class PllPacket extends Packet implements InfoPacket {
     private final short plid;
 
     /**
-     * Creates player leave race packet.
-     * @param plid player's unique id
+     * Creates player leave race packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public PllPacket(short plid) {
+    public PllPacket(PacketDataBytes packetDataBytes) {
         super(4, PacketType.PLL, 0);
-        this.plid = plid;
+        plid = packetDataBytes.readByte();
     }
 
     /**

@@ -7,6 +7,8 @@ import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.structures.base.ComplexInstructionStructure;
 import pl.adrian.internal.packets.structures.base.UnsignedInstructionStructure;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PacketBuilderTest {
@@ -338,12 +340,12 @@ class PacketBuilderTest {
 
     @Test
     void writeUnsignedArray_withNullValues() {
+        final var structuresList = new ArrayList<TestUnsignedStructure>();
+        structuresList.add(new TestUnsignedStructure(896523));
+        structuresList.add(null);
+        structuresList.add(new TestUnsignedStructure(1235675645));
         var packetBuilder = new PacketBuilder((short) 16, PacketType.fromOrdinal(1), (short) 154);
-        packetBuilder.writeUnsignedArray(new TestUnsignedStructure[] {
-                new TestUnsignedStructure(896523),
-                null,
-                new TestUnsignedStructure(1235675645)
-        });
+        packetBuilder.writeUnsignedArray(structuresList);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
 

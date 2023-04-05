@@ -4,6 +4,7 @@ import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * Car ReSet. The packet is sent by LFS when player resets their car.
@@ -13,12 +14,12 @@ public class CrsPacket extends Packet implements InfoPacket {
     private final short plid;
 
     /**
-     * Creates car reset packet.
-     * @param plid player's unique id
+     * Creates car reset packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public CrsPacket(short plid) {
+    public CrsPacket(PacketDataBytes packetDataBytes) {
         super(4, PacketType.CRS, 0);
-        this.plid = plid;
+        plid = packetDataBytes.readByte();
     }
 
     /**

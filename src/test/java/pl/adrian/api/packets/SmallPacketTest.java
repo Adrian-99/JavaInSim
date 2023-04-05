@@ -1,27 +1,23 @@
 package pl.adrian.api.packets;
 
 import org.junit.jupiter.api.Test;
+import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.SmallSubtype;
 import pl.adrian.api.packets.enums.DefaultCar;
+import pl.adrian.api.packets.enums.VoteAction;
 import pl.adrian.api.packets.flags.LcsFlag;
+import pl.adrian.internal.packets.util.PacketReader;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static pl.adrian.testutil.AssertionUtils.assertFlagsEqual;
+import static pl.adrian.testutil.AssertionUtils.assertPacketHeaderEquals;
 
 class SmallPacketTest {
-
     @Test
-    void createSmallPacket_withReqI() {
-        var packet = new SmallPacket(SmallSubtype.NONE, 3885174239L, 150);
-        var bytes = packet.getBytes();
-        var expectedBytes = new byte[] {
-                2, 4, -106, 0, -33, 13, -109, -25
-        };
-
-        assertArrayEquals(expectedBytes, bytes);
-    }
-
-    @Test
-    void createSmallPacket_withoutReqI() {
+    void createSmallPacket() {
         var packet = new SmallPacket(SmallSubtype.NONE, 3885174239L);
         var bytes = packet.getBytes();
         var expectedBytes = new byte[] {
@@ -51,5 +47,70 @@ class SmallPacketTest {
         };
 
         assertArrayEquals(expectedBytes, bytes);
+    }
+
+    @Test
+    void readSmallPacket() {
+        var headerBytes = new byte[] { 2, 4, -112 };
+        var dataBytes = new byte[] { 0, -26, -107, 96, -39 };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertPacketHeaderEquals(5, PacketType.SMALL, 144, packetReader);
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof SmallPacket);
+
+        var castedReadPacket = (SmallPacket) readPacket;
+
+        assertPacketHeaderEquals(8, PacketType.SMALL, 144, castedReadPacket);
+        assertEquals(SmallSubtype.NONE, castedReadPacket.getSubT());
+        assertEquals(3646985702L, castedReadPacket.getUVal());
+        assertTrue(castedReadPacket.getVoteAction().isEmpty());
+        assertTrue(castedReadPacket.getCars().isEmpty());
+    }
+
+    @Test
+    void readSmallPacket_withVtaSubtype() {
+        var headerBytes = new byte[] { 2, 4, -112 };
+        var dataBytes = new byte[] { 3, 3, 0, 0, 0 };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertPacketHeaderEquals(5, PacketType.SMALL, 144, packetReader);
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof SmallPacket);
+
+        var castedReadPacket = (SmallPacket) readPacket;
+
+        assertPacketHeaderEquals(8, PacketType.SMALL, 144, castedReadPacket);
+        assertEquals(SmallSubtype.VTA, castedReadPacket.getSubT());
+        assertEquals(3, castedReadPacket.getUVal());
+        assertTrue(castedReadPacket.getVoteAction().isPresent());
+        assertEquals(VoteAction.QUALIFY, castedReadPacket.getVoteAction().get());
+        assertTrue(castedReadPacket.getCars().isEmpty());
+    }
+
+    @Test
+    void readSmallPacket_withAlcSubtype() {
+        var headerBytes = new byte[] { 2, 4, -112 };
+        var dataBytes = new byte[] { 8, 0, 72, 12, 0 };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertPacketHeaderEquals(5, PacketType.SMALL, 144, packetReader);
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof SmallPacket);
+
+        var castedReadPacket = (SmallPacket) readPacket;
+
+        assertPacketHeaderEquals(8, PacketType.SMALL, 144, castedReadPacket);
+        assertEquals(SmallSubtype.ALC, castedReadPacket.getSubT());
+        assertEquals(804864, castedReadPacket.getUVal());
+        assertTrue(castedReadPacket.getVoteAction().isEmpty());
+        assertTrue(castedReadPacket.getCars().isPresent());
+        assertFlagsEqual(DefaultCar.class, Set.of(DefaultCar.FOX, DefaultCar.FO8, DefaultCar.BF1, DefaultCar.FBM), castedReadPacket.getCars().get());
     }
 }

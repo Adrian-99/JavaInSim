@@ -166,7 +166,7 @@ public class PacketBuilder {
      * @param value unsigned array value
      * @return packet builder
      */
-    public PacketBuilder writeUnsignedArray(UnsignedInstructionStructure[] value) {
+    public PacketBuilder writeUnsignedArray(List<? extends UnsignedInstructionStructure> value) {
         for (var unsigned : value) {
             if (unsigned != null) {
                 writeUnsigned(unsigned.getUnsignedValue());

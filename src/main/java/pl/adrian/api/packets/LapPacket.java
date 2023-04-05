@@ -9,6 +9,7 @@ import pl.adrian.internal.packets.annotations.Unsigned;
 import pl.adrian.internal.packets.annotations.Word;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.Packet;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * LAP time. The packet is sent by LFS when any player finishes a lap.
@@ -32,34 +33,20 @@ public class LapPacket extends Packet implements InfoPacket {
     private final short fuel200;
 
     /**
-     * Creates lap time packet.
-     * @param plid player's unique id
-     * @param lTime lap time (ms)
-     * @param eTime total time (ms)
-     * @param lapsDone laps completed
-     * @param flags player flags
-     * @param penalty current penalty value
-     * @param numStops number of pit stops
-     * @param fuel200 double fuel percent (if /showfuel yes, 255 otherwise)
+     * Creates lap time packet. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    @SuppressWarnings("java:S107")
-    public LapPacket(short plid,
-                     long lTime,
-                     long eTime,
-                     int lapsDone,
-                     Flags<PlayerFlag> flags,
-                     PenaltyValue penalty,
-                     short numStops,
-                     short fuel200) {
+    public LapPacket(PacketDataBytes packetDataBytes) {
         super(20, PacketType.LAP, 0);
-        this.plid = plid;
-        this.lTime = lTime;
-        this.eTime = eTime;
-        this.lapsDone = lapsDone;
-        this.flags = flags;
-        this.penalty = penalty;
-        this.numStops = numStops;
-        this.fuel200 = fuel200;
+        plid = packetDataBytes.readByte();
+        lTime = packetDataBytes.readUnsigned();
+        eTime = packetDataBytes.readUnsigned();
+        lapsDone = packetDataBytes.readWord();
+        flags = new Flags<>(PlayerFlag.class, packetDataBytes.readWord());
+        packetDataBytes.skipZeroByte();
+        penalty = PenaltyValue.fromOrdinal(packetDataBytes.readByte());
+        numStops = packetDataBytes.readByte();
+        fuel200 = packetDataBytes.readByte();
     }
 
     /**
