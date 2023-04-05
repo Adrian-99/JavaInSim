@@ -1,9 +1,11 @@
 package pl.adrian.api.packets.flags;
 
+import pl.adrian.internal.packets.flags.FlagWithCustomBehavior;
+
 /**
  * Enumeration for confirmation flags.
  */
-public enum ConfirmationFlag {
+public enum ConfirmationFlag implements FlagWithCustomBehavior {
     /**
      * bit 0, value 1: mentioned
      */
@@ -31,5 +33,37 @@ public enum ConfirmationFlag {
     /**
      * bit 6, value 64: did not pit
      */
-    DID_NOT_PIT
+    DID_NOT_PIT,
+    /**
+     * bit 2 | 3 | 6, value 4 | 8 | 64: disqualified
+     */
+    DISQ,
+    /**
+     * bit 4 | 5, value 16 | 32: time penalty
+     */
+    TIME;
+
+    @Override
+    public boolean isPresent(long flagsValue) {
+        switch (this) {
+            case DISQ -> {
+                return (flagsValue & 76) > 0;
+            }
+            case TIME -> {
+                return (flagsValue & 48) > 0;
+            }
+            default -> {
+                var flagValue = 1 << ordinal();
+                return (flagsValue & flagValue) == flagValue;
+            }
+        }
+    }
+
+    @Override
+    public int getValue() {
+        return switch (this) {
+            case DISQ, TIME -> 0;
+            default -> 1 << ordinal();
+        };
+    }
 }

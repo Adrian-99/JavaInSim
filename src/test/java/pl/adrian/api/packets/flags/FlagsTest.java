@@ -54,6 +54,24 @@ class FlagsTest {
     }
 
     @Test
+    void createFlags_fromFlagWithCustomBehavior() {
+        var flags = new Flags<>(ConfirmationFlag.class, 10);
+
+        assertEquals(10, flags.getByteValue());
+        assertEquals(10, flags.getWordValue());
+        assertEquals(10, flags.getUnsignedValue());
+        assertTrue(flags.hasNoFlag(ConfirmationFlag.MENTIONED));
+        assertTrue(flags.hasFlag(ConfirmationFlag.CONFIRMED));
+        assertTrue(flags.hasNoFlag(ConfirmationFlag.PENALTY_DT));
+        assertTrue(flags.hasFlag(ConfirmationFlag.PENALTY_SG));
+        assertTrue(flags.hasNoFlag(ConfirmationFlag.PENALTY_30));
+        assertTrue(flags.hasNoFlag(ConfirmationFlag.PENALTY_45));
+        assertTrue(flags.hasNoFlag(ConfirmationFlag.DID_NOT_PIT));
+        assertTrue(flags.hasFlag(ConfirmationFlag.DISQ));
+        assertTrue(flags.hasNoFlag(ConfirmationFlag.TIME));
+    }
+
+    @Test
     void createFlags_fromBinary() {
         var flags = new Flags<>(IsiFlag.class, 1220);
 

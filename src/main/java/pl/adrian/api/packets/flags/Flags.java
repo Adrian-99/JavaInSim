@@ -1,6 +1,8 @@
 package pl.adrian.api.packets.flags;
 
 import pl.adrian.internal.packets.enums.EnumHelpers;
+import pl.adrian.internal.packets.enums.EnumWithCustomValue;
+import pl.adrian.internal.packets.flags.FlagWithCustomBehavior;
 import pl.adrian.internal.packets.flags.FlagWithCustomValue;
 import pl.adrian.internal.packets.structures.base.ByteInstructionStructure;
 import pl.adrian.internal.packets.structures.base.UnsignedInstructionStructure;
@@ -40,6 +42,10 @@ public class Flags<T extends Enum<?>> implements ByteInstructionStructure,
                 if ((value & flagValue) == flagValue && (value & requiredZeros) == 0) {
                     flagsSet.add(enumValue);
                 }
+            } else if (enumValue instanceof FlagWithCustomBehavior enumCustomBehavior) {
+                if (enumCustomBehavior.isPresent(value)) {
+                    flagsSet.add(enumValue);
+                }
             } else {
                 var flagValue = 1 << enumValue.ordinal();
                 if ((value & flagValue) == flagValue) {
@@ -62,7 +68,7 @@ public class Flags<T extends Enum<?>> implements ByteInstructionStructure,
     @Override
     public long getUnsignedValue() {
         return flagsSet.stream().mapToLong(enumValue -> {
-            if (enumValue instanceof FlagWithCustomValue enumCustomValue) {
+            if (enumValue instanceof EnumWithCustomValue enumCustomValue) {
                 return enumCustomValue.getValue();
             } else {
                 return (long) 1 << enumValue.ordinal();

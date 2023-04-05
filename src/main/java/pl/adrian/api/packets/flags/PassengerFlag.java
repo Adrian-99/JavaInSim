@@ -7,37 +7,37 @@ import pl.adrian.internal.packets.flags.FlagWithCustomValue;
  */
 public enum PassengerFlag implements FlagWithCustomValue {
     /**
-     * bit 0, value 1: front, man
+     * bit 0, value 1: front, male
      */
-    FRONT_MAN(3),
+    FRONT_MALE(3),
     /**
-     * bit 1, value 2: front, woman
+     * bit 1, value 2: front, female
      */
-    FRONT_WOMAN(3),
+    FRONT_FEMALE(3),
     /**
-     * bit 2, value 4: rear left, man
+     * bit 2, value 4: rear left, male
      */
-    REAR_LEFT_MAN(12),
+    REAR_LEFT_MALE(12),
     /**
-     * bit 3, value 8: rear left, woman
+     * bit 3, value 8: rear left, female
      */
-    REAR_LEFT_WOMAN(12),
+    REAR_LEFT_FEMALE(12),
     /**
-     * bit 4, value 16: rear middle, man
+     * bit 4, value 16: rear middle, male
      */
-    REAR_MIDDLE_MAN(48),
+    REAR_MIDDLE_MALE(48),
     /**
-     * bit 5, value 32: rear middle, woman
+     * bit 5, value 32: rear middle, female
      */
-    REAR_MIDDLE_WOMAN(48),
+    REAR_MIDDLE_FEMALE(48),
     /**
-     * bit 6, value 64: rear right, man
+     * bit 6, value 64: rear right, male
      */
-    REAR_RIGHT_MAN(192),
+    REAR_RIGHT_MALE(192),
     /**
-     * bit 7, value 128: rear right, woman
+     * bit 7, value 128: rear right, female
      */
-    REAR_RIGHT_WOMAN(192);
+    REAR_RIGHT_FEMALE(192);
 
     private final short mask;
 

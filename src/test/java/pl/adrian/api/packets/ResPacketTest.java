@@ -23,7 +23,7 @@ class ResPacketTest {
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 94, 50, 85, 115, 101, 114, 94,
                 51, 78, 97, 109, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 85, 115, 114, 80, 108, 97, 116, 101, 76, 88, 52, 0, -72, 14, 32,
-                0, 30, -36, 0, 0, 0, 5, 33, 0, 34, 0, -111, 1, 3, 15, 45,
+                0, 30, -36, 0, 0, 0, 5, 65, 0, 34, 0, -111, 1, 3, 15, 45,
                 0
         };
         var packetReader = new PacketReader(headerBytes);
@@ -47,7 +47,7 @@ class ResPacketTest {
         assertEquals(5, castedReadPacket.getNumStops());
         assertFlagsEqual(
                 ConfirmationFlag.class,
-                Set.of(ConfirmationFlag.MENTIONED, ConfirmationFlag.PENALTY_45),
+                Set.of(ConfirmationFlag.MENTIONED, ConfirmationFlag.DID_NOT_PIT, ConfirmationFlag.DISQ),
                 castedReadPacket.getConfirm()
         );
         assertEquals(34, castedReadPacket.getLapsDone());

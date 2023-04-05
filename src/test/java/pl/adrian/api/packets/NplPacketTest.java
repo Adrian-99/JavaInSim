@@ -66,7 +66,7 @@ class NplPacketTest {
         assertEquals(0, castedReadPacket.getModel());
         assertFlagsEqual(
                 PassengerFlag.class,
-                Set.of(PassengerFlag.REAR_LEFT_MAN, PassengerFlag.REAR_MIDDLE_WOMAN, PassengerFlag.REAR_RIGHT_MAN),
+                Set.of(PassengerFlag.REAR_LEFT_MALE, PassengerFlag.REAR_MIDDLE_FEMALE, PassengerFlag.REAR_RIGHT_MALE),
                 castedReadPacket.getPass()
         );
         assertEquals(0, castedReadPacket.getRWAdj());

@@ -45,8 +45,8 @@ class PitPacketTest {
         assertEquals(PenaltyValue.DT_VALID, castedReadPacket.getPenalty());
         assertEquals(3, castedReadPacket.getNumStops());
         assertEquals(TyreCompound.KNOBBLY, castedReadPacket.getTyres().getFrontRight());
-        assertEquals(TyreCompound.NO_CHANGE, castedReadPacket.getTyres().getFrontLeft());
-        assertEquals(TyreCompound.NO_CHANGE, castedReadPacket.getTyres().getRearRight());
+        assertEquals(TyreCompound.NOT_CHANGED, castedReadPacket.getTyres().getFrontLeft());
+        assertEquals(TyreCompound.NOT_CHANGED, castedReadPacket.getTyres().getRearRight());
         assertEquals(TyreCompound.KNOBBLY, castedReadPacket.getTyres().getRearLeft());
         assertFlagsEqual(
                 PitWorkFlag.class,

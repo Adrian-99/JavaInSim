@@ -1,37 +1,45 @@
 package pl.adrian.api.packets.enums;
 
 import pl.adrian.internal.packets.enums.EnumHelpers;
+import pl.adrian.internal.packets.enums.EnumWithCustomValue;
 
 /**
  * Enumeration for view identifiers.
  */
-public enum ViewIdentifier {
+public enum ViewIdentifier implements EnumWithCustomValue {
     /**
-     * 0 - arcade
+     * value 0 - arcade
      */
     FOLLOW,
     /**
-     * 1 - helicopter
+     * value 1 - helicopter
      */
     HELI,
     /**
-     * 2 - tv camera
+     * value 2 - tv camera
      */
     CAM,
     /**
-     * 3 - cockpit
+     * value 3 - cockpit
      */
     DRIVER,
     /**
-     * 4 - custom
+     * value 4 - custom
      */
     CUSTOM,
     /**
-     * 5 - ???
+     * value 5 - ???
      */
-    MAX;
+    MAX,
+    /**
+     * value 255 - viewing another car
+     */
+    ANOTHER;
 
-    // const int VIEW_ANOTHER = 255; // viewing another car
+    @Override
+    public int getValue() {
+        return !this.equals(ANOTHER) ? ordinal() : 255;
+    }
 
     /**
      * Converts ordinal number to enum value.
@@ -39,6 +47,6 @@ public enum ViewIdentifier {
      * @return enum value
      */
     public static ViewIdentifier fromOrdinal(int ordinal) {
-        return EnumHelpers.get(ViewIdentifier.class).fromOrdinal(ordinal);
+        return ordinal != 255 ? EnumHelpers.get(ViewIdentifier.class).fromOrdinal(ordinal) : ANOTHER;
     }
 }

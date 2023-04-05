@@ -38,7 +38,7 @@ class FinPacketTest {
         assertEquals(4, castedReadPacket.getNumStops());
         assertFlagsEqual(
                 ConfirmationFlag.class,
-                Set.of(ConfirmationFlag.CONFIRMED, ConfirmationFlag.PENALTY_30),
+                Set.of(ConfirmationFlag.CONFIRMED, ConfirmationFlag.PENALTY_30, ConfirmationFlag.TIME),
                 castedReadPacket.getConfirm()
         );
         assertEquals(55, castedReadPacket.getLapsDone());

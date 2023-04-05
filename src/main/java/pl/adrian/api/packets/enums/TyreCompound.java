@@ -1,27 +1,28 @@
 package pl.adrian.api.packets.enums;
 
 import pl.adrian.internal.packets.enums.EnumHelpers;
+import pl.adrian.internal.packets.enums.EnumWithCustomValue;
 
 /**
  * Enumeration for tyre compounds.
  */
-public enum TyreCompound {
+public enum TyreCompound implements EnumWithCustomValue {
     /**
-     * value 0: tyre not changed
+     * value 0: slick R1
      */
-    NO_CHANGE,
+    R1,
     /**
      * value 1: slick R2
      */
-    SLICK_R2,
+    R2,
     /**
      * value 2: slick R3
      */
-    SLICK_R3,
+    R3,
     /**
      * value 3: slick R4
      */
-    SLICK_R4,
+    R4,
     /**
      * value 4: road super
      */
@@ -37,7 +38,15 @@ public enum TyreCompound {
     /**
      * value 7: knobbly
      */
-    KNOBBLY;
+    KNOBBLY,
+    /**
+     * value 8: ?
+     */
+    NUM,
+    /**
+     * value 255: tyre not changed
+     */
+    NOT_CHANGED;
 
     /**
      * Converts ordinal number to enum value.
@@ -45,10 +54,11 @@ public enum TyreCompound {
      * @return enum value
      */
     public static TyreCompound fromOrdinal(int ordinal) {
-        if (ordinal == 255) {
-            return NO_CHANGE;
-        } else {
-            return EnumHelpers.get(TyreCompound.class).fromOrdinal(ordinal);
-        }
+        return ordinal != 255 ? EnumHelpers.get(TyreCompound.class).fromOrdinal(ordinal) : NOT_CHANGED;
+    }
+
+    @Override
+    public int getValue() {
+        return !this.equals(NOT_CHANGED) ? ordinal() : 255;
     }
 }
