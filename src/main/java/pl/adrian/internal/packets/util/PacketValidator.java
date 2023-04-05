@@ -11,6 +11,7 @@ import pl.adrian.internal.packets.structures.base.ComplexInstructionStructure;
 import pl.adrian.internal.packets.structures.base.UnsignedInstructionStructure;
 import pl.adrian.internal.packets.structures.base.WordInstructionStructure;
 
+import java.lang.Short;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;

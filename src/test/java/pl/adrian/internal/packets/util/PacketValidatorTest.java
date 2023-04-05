@@ -14,6 +14,7 @@ import pl.adrian.internal.packets.structures.base.ComplexInstructionStructure;
 import pl.adrian.internal.packets.structures.base.UnsignedInstructionStructure;
 import pl.adrian.internal.packets.structures.base.WordInstructionStructure;
 
+import java.lang.Short;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
