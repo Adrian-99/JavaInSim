@@ -2,6 +2,7 @@ package pl.adrian.internal.packets.util;
 
 import pl.adrian.internal.packets.annotations.*;
 import pl.adrian.internal.packets.annotations.Byte;
+import pl.adrian.internal.packets.annotations.Short;
 import pl.adrian.internal.packets.base.InstructionPacket;
 import pl.adrian.internal.packets.enums.EnumWithCustomValue;
 import pl.adrian.internal.packets.enums.ValidationFailureCategory;
@@ -11,7 +12,6 @@ import pl.adrian.internal.packets.structures.base.ComplexInstructionStructure;
 import pl.adrian.internal.packets.structures.base.UnsignedInstructionStructure;
 import pl.adrian.internal.packets.structures.base.WordInstructionStructure;
 
-import java.lang.Short;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +54,7 @@ public class PacketValidator {
                 field.setAccessible(true);
                 var anyAnnotationFound = tryToValidateByte(field, packetOrStructure) ||
                         tryToValidateWord(field, packetOrStructure) ||
+                        tryToValidateShort(field, packetOrStructure) ||
                         tryToValidateChar(field, packetOrStructure) ||
                         tryToValidateUnsigned(field, packetOrStructure) ||
                         tryToValidateInt(field, packetOrStructure) ||
@@ -94,7 +95,7 @@ public class PacketValidator {
     private static void validateByte(Byte annotation, Field field, Object value) throws PacketValidationException {
         if (value != null) {
             int intValue;
-            if (value instanceof Short shortValue) {
+            if (value instanceof java.lang.Short shortValue) {
                 intValue = shortValue;
             } else if (value instanceof Character charValue) {
                 intValue = charValue;
@@ -138,6 +139,27 @@ public class PacketValidator {
 
             if (intValue < annotation.minValue() || intValue > annotation.maxValue()) {
                 throw getValueOutOfRangeException(field, annotation.minValue(), annotation.maxValue(), intValue);
+            }
+        }
+    }
+
+    private static boolean tryToValidateShort(Field field, Object packetOrStructure) throws IllegalAccessException {
+        var annotation = field.getAnnotation(Short.class);
+        if (annotation != null) {
+            validateShort(annotation, field, field.get(packetOrStructure));
+            return true;
+        }
+        return false;
+    }
+
+    private static void validateShort(Short annotation, Field field, Object value) {
+        if (value != null) {
+            if (value instanceof java.lang.Short shortValue) {
+                if (shortValue < annotation.minValue() || shortValue > annotation.maxValue()) {
+                    throw getValueOutOfRangeException(field, annotation.minValue(), annotation.maxValue(), shortValue);
+                }
+            } else {
+                throw getUnsupportedTypeException(field, Short.class.getSimpleName());
             }
         }
     }
@@ -230,10 +252,10 @@ public class PacketValidator {
                         field.get(packetOrStructure),
                         element -> validateStructure(field, element)
                 );
-                return true;
             } else {
-                throw getMissingArrayAnnotationException(field);
+                validateStructure(field, field.get(packetOrStructure));
             }
+            return true;
         }
         return false;
     }

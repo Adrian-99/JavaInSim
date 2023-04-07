@@ -123,6 +123,15 @@ public class PacketBuilder {
     }
 
     /**
+     * Appends to packet bytes short (2 bytes), that is converted from short value.
+     * @param value short value
+     * @return packet builder
+     */
+    public PacketBuilder writeShort(short value) {
+        return writeWord(value);
+    }
+
+    /**
      * Appends to packet bytes char array, that is converted from String value.
      * @param value char array value
      * @param length length of the char array that should be appended

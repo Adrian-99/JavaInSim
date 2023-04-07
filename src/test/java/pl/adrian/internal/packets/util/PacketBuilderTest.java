@@ -179,6 +179,42 @@ class PacketBuilderTest {
     }
 
     @Test
+    void writeShort_fromPositiveNumber() {
+        var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
+        packetBuilder.writeShort((short) 954)
+                .writeZeroBytes(3);
+        var bytes = packetBuilder.getBytes();
+
+        assertEquals(8, bytes.length);
+        assertEquals(2, bytes[0]);
+        assertEquals(1, bytes[1]);
+        assertEquals(-102, bytes[2]);
+        assertEquals(-70, bytes[3]);
+        assertEquals(3, bytes[4]);
+        assertEquals(0, bytes[5]);
+        assertEquals(0, bytes[6]);
+        assertEquals(0, bytes[7]);
+    }
+
+    @Test
+    void writeShort_fromNegativeNumber() {
+        var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
+        packetBuilder.writeShort((short) -15832)
+                .writeZeroBytes(3);
+        var bytes = packetBuilder.getBytes();
+
+        assertEquals(8, bytes.length);
+        assertEquals(2, bytes[0]);
+        assertEquals(1, bytes[1]);
+        assertEquals(-102, bytes[2]);
+        assertEquals(40, bytes[3]);
+        assertEquals(-62, bytes[4]);
+        assertEquals(0, bytes[5]);
+        assertEquals(0, bytes[6]);
+        assertEquals(0, bytes[7]);
+    }
+
+    @Test
     void writeCharArray_fromShortString() {
         var packetBuilder = new PacketBuilder((short) 12, PacketType.fromOrdinal(1), (short) 154);
         packetBuilder.writeCharArray("Test", 8, false);

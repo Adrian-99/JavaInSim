@@ -1,45 +1,113 @@
 package pl.adrian.api.packets.structures;
 
-import pl.adrian.api.packets.enums.ObjectType;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Short;
-import pl.adrian.internal.packets.exceptions.PacketReadingException;
+import pl.adrian.internal.packets.annotations.Structure;
+import pl.adrian.internal.packets.structures.base.ComplexInstructionStructure;
+import pl.adrian.internal.packets.util.PacketBuilder;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 /**
  * This class holds information about layout object.
  */
-public class ObjectInfo {
+public class ObjectInfo implements ComplexInstructionStructure {
     @Short
     private final short x;
     @Short
     private final short y;
     @Byte
     private final short zByte;
-    @Byte
-    private final short flags;
-    @Byte
-    private final short index;
-    @Byte
-    private final short heading;
+    @Structure
+    private final ObjectSubtypeInfo objectSubtypeInfo;
 
     /**
-     * Creates object information.
-     * @param bytes data bytes - should be 6 bytes long
+     * Creates object information. Constructor used only internally.
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
+     * @param flags object flags
+     * @param index object index
+     * @param heading heading
      */
-    public ObjectInfo(short[] bytes) {
-        if (bytes.length == 6) {
-            x = bytes[0];
-            y = bytes[1];
-            zByte = bytes[2];
-            flags = bytes[3];
-            index = bytes[4];
-            heading = bytes[5];
+    public ObjectInfo(short x, short y, short zByte, short flags, short index, short heading) {
+        this.x = x;
+        this.y = y;
+        this.zByte = zByte;
+
+        if (index >= 192) {
+            if (index == 255) {
+                if ((flags & 0x80) == 0x80) {
+                    objectSubtypeInfo = new RestrictedAreaInfo(flags, heading);
+                } else {
+                    objectSubtypeInfo = new RouteCheckerInfo(flags, heading);
+                }
+            } else {
+                objectSubtypeInfo = null;
+            }
         } else {
-            throw new PacketReadingException("Incorrect input for creating object info structure: " + Arrays.toString(bytes));
+            if ((flags & 0x80) == 0x80) {
+                objectSubtypeInfo = new ControlObjectInfo(flags, index, heading);
+            } else {
+                objectSubtypeInfo = new AutocrossObjectInfo(flags, index, heading);
+            }
         }
+    }
+
+    /**
+     * Creates object information for restricted area.
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
+     * @param restrictedAreaInfo restricted area info
+     */
+    public ObjectInfo(int x, int y, int zByte, RestrictedAreaInfo restrictedAreaInfo) {
+        this.x = (short) x;
+        this.y = (short) y;
+        this.zByte = (short) zByte;
+        objectSubtypeInfo= restrictedAreaInfo;
+    }
+
+    /**
+     * Creates object information for route checker.
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
+     * @param routeCheckerInfo route checker info
+     */
+    public ObjectInfo(int x, int y, int zByte, RouteCheckerInfo routeCheckerInfo) {
+        this.x = (short) x;
+        this.y = (short) y;
+        this.zByte = (short) zByte;
+        objectSubtypeInfo = routeCheckerInfo;
+    }
+
+    /**
+     * Creates object information for control object.
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
+     * @param controlObjectInfo control object info
+     */
+    public ObjectInfo(int x, int y, int zByte, ControlObjectInfo controlObjectInfo) {
+        this.x = (short) x;
+        this.y = (short) y;
+        this.zByte = (short) zByte;
+        objectSubtypeInfo = controlObjectInfo;
+    }
+
+    /**
+     * Creates object information for autocross object.
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
+     * @param autocrossObjectInfo autocross object info
+     */
+    public ObjectInfo(int x, int y, int zByte, AutocrossObjectInfo autocrossObjectInfo) {
+        this.x = (short) x;
+        this.y = (short) y;
+        this.zByte = (short) zByte;
+        objectSubtypeInfo = autocrossObjectInfo;
     }
 
     /**
@@ -64,18 +132,22 @@ public class ObjectInfo {
     }
 
     /**
-     * @return object index
+     * @return restricted area info, or empty if it's not restricted area
      */
-    public ObjectType getIndex() {
-        return ObjectType.fromOrdinal(index);
+    public Optional<RestrictedAreaInfo> getRestrictedAreaInfo() {
+        if (objectSubtypeInfo instanceof RestrictedAreaInfo restrictedAreaInfo) {
+            return Optional.of(restrictedAreaInfo);
+        } else {
+            return Optional.empty();
+        }
     }
 
     /**
-     * @return marshall circle info, or empty if it's not marshall circle
+     * @return route checker info, or empty if it's not route checker
      */
-    public Optional<MarshallCircleInfo> getMarshallCircleInfo() {
-        if (index == 255) {
-            return Optional.of(new MarshallCircleInfo(flags, heading));
+    public Optional<RouteCheckerInfo> getRouteCheckerInfo() {
+        if (objectSubtypeInfo instanceof RouteCheckerInfo routeCheckerInfo) {
+            return Optional.of(routeCheckerInfo);
         } else {
             return Optional.empty();
         }
@@ -85,15 +157,15 @@ public class ObjectInfo {
      * @return whether is an unknown object
      */
     public boolean isUnknownObject() {
-        return index >= 192 && index != 255;
+        return objectSubtypeInfo == null;
     }
 
     /**
      * @return control object info, or empty is it's not control object
      */
     public Optional<ControlObjectInfo> getControlObjectInfo() {
-        if (index < 192 && (flags & 0x80) == 0x80) {
-            return Optional.of(new ControlObjectInfo(flags, heading));
+        if (objectSubtypeInfo instanceof ControlObjectInfo controlObjectInfo) {
+            return Optional.of(controlObjectInfo);
         } else {
             return Optional.empty();
         }
@@ -103,213 +175,24 @@ public class ObjectInfo {
      * @return autocross object info, or empty if it's not autocross object
      */
     public Optional<AutocrossObjectInfo> getAutocrossObjectInfo() {
-        if (index < 192 && (flags & 0x80) == 0) {
-            return Optional.of(new AutocrossObjectInfo(flags, heading));
+        if (objectSubtypeInfo instanceof  AutocrossObjectInfo autocrossObjectInfo) {
+            return Optional.of(autocrossObjectInfo);
         } else {
             return Optional.empty();
         }
     }
 
-    /**
-     * This class hold information about marshall circle.
-     */
-    public static class MarshallCircleInfo {
-        private final Optional<RestrictedAreaInfo> restrictedAreaInfo;
-        private final Optional<RouteCheckerInfo> routeCheckerInfo;
-
-        private MarshallCircleInfo(short flags, short heading) {
-            if ((flags & 0x80) == 0x80) {
-                restrictedAreaInfo = Optional.of(new RestrictedAreaInfo(flags, heading));
-                routeCheckerInfo = Optional.empty();
-            } else {
-                restrictedAreaInfo = Optional.empty();
-                routeCheckerInfo = Optional.of(new RouteCheckerInfo(flags, heading));
-            }
-        }
-
-        /**
-         * @return restricted area info, or empty if it's not restricted area
-         */
-        public Optional<RestrictedAreaInfo> getRestrictedAreaInfo() {
-            return restrictedAreaInfo;
-        }
-
-        /**
-         * @return route checker info, or empty if it's not route checker
-         */
-        public Optional<RouteCheckerInfo> getRouteCheckerInfo() {
-            return routeCheckerInfo;
-        }
-
-        /**
-         * This class hold information about restricted area.
-         */
-        public static class RestrictedAreaInfo {
-            private final short flags;
-            private final short heading;
-
-            private RestrictedAreaInfo(short flags, short heading) {
-                this.flags = flags;
-                this.heading = heading;
-            }
-
-            /**
-             * @return heading
-             */
-            public short getHeading() {
-                return heading;
-            }
-
-            /**
-             * @return whether is no marshall
-             */
-            public boolean isNoMarshall() {
-                return (flags & 3) == 0;
-            }
-
-            /**
-             * @return whether is standing marshall
-             */
-            public boolean isMarshallStanding() {
-                return (flags & 3) == 1;
-            }
-
-            /**
-             * @return whether is marshall pointing left
-             */
-            public boolean isMarshallPointingLeft() {
-                return (flags & 3) == 2;
-            }
-
-            /**
-             * @return whether is marshall pointing right
-             */
-            public boolean isMarshallPointingRight() {
-                return (flags & 3) == 3;
-            }
-
-            /**
-             * @return radius in meters
-             */
-            public byte getRadius() {
-                return (byte) ((flags >> 2) & 31);
-            }
-        }
-
-        /**
-         * This class holds information about route checker.
-         */
-        public static class RouteCheckerInfo {
-            private final short flags;
-            private final short heading;
-
-            private RouteCheckerInfo(short flags, short heading) {
-                this.flags = flags;
-                this.heading = heading;
-            }
-
-            /**
-             * @return route index
-             */
-            public short getRouteIndex() {
-                return heading;
-            }
-
-            /**
-             * @return radius in meters
-             */
-            public byte getRadius() {
-                return (byte) ((flags >> 2) & 31);
-            }
-        }
-    }
-
-    /**
-     * This class hold information about control object.
-     */
-    public static class ControlObjectInfo {
-        private final short flags;
-        private final short heading;
-
-        private ControlObjectInfo(short flags, short heading) {
-            this.flags = flags;
-            this.heading = heading;
-        }
-
-        /**
-         * @return heading
-         */
-        public short getHeading() {
-            return heading;
-        }
-
-        /**
-         * @return whether is start position
-         */
-        public boolean isStartPosition() {
-            return (flags & 3) == 0 && getWidth() == 0;
-        }
-
-        /**
-         * @return whether is finish line
-         */
-        public boolean isFinishLine() {
-            return (flags & 3) == 0 && getWidth() > 0;
-        }
-
-        /**
-         * @return whether is checkpoint 1
-         */
-        public boolean isCheckpoint1() {
-            return (flags & 3) == 1;
-        }
-
-        /**
-         * @return whether is checkpoint 2
-         */
-        public boolean isCheckpoint2() {
-            return (flags & 3) == 2;
-        }
-
-        /**
-         * @return whether is checkpoint 3
-         */
-        public boolean isCheckpoint3() {
-            return (flags & 3) == 3;
-        }
-
-        /**
-         * @return half width in metres
-         */
-        public byte getWidth() {
-            return (byte) ((flags >> 2) & 31);
-        }
-    }
-
-    /**
-     * This class hold information about autocross object.
-     */
-    public static class AutocrossObjectInfo {
-        private final short flags;
-        private final short heading;
-
-        private AutocrossObjectInfo(short flags, short heading) {
-            this.flags = flags;
-            this.heading = heading;
-        }
-
-        /**
-         * @return heading
-         */
-        public short getHeading() {
-            return heading;
-        }
-
-        /**
-         * @return colour - only used for chalk (0-3) and tyres (0-5)
-         */
-        public byte getColour() {
-            return (byte) (flags & 7);
+    @Override
+    public void appendBytes(PacketBuilder packetBuilder) {
+        packetBuilder.writeShort(x)
+                .writeShort(y)
+                .writeByte(zByte);
+        if (objectSubtypeInfo != null) {
+            objectSubtypeInfo.appendBytes(packetBuilder);
+        } else {
+            packetBuilder.writeZeroByte()
+                    .writeByte(192)
+                    .writeZeroByte();
         }
     }
 }
