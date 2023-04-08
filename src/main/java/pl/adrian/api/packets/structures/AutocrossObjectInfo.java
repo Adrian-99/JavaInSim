@@ -1,36 +1,43 @@
 package pl.adrian.api.packets.structures;
 
 import pl.adrian.api.packets.enums.ObjectType;
-import pl.adrian.internal.packets.annotations.Byte;
-import pl.adrian.internal.packets.util.PacketBuilder;
+import pl.adrian.internal.packets.structures.ObjectInfo;
 
 /**
  * This class hold information about autocross object.
  */
-public class AutocrossObjectInfo implements ObjectSubtypeInfo {
-    @Byte
-    private final short flags;
-    @Byte
-    private final ObjectType index;
-    @Byte
-    private final short heading;
-
-    AutocrossObjectInfo(short flags, short index, short heading) {
-        this.flags = flags;
-        this.index = ObjectType.fromOrdinal(index);
-        this.heading = heading;
+public class AutocrossObjectInfo extends ObjectInfo {
+    /**
+     * Creates autocross object information. Constructor used only internally.
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
+     * @param flags object flags
+     * @param index object index
+     * @param heading heading
+     */
+    public AutocrossObjectInfo(short x, short y, short zByte, short flags, short index, short heading) {
+        super(x, y, zByte, (short) (0x7F & flags), (short) (0x3F & index), heading);
     }
 
     /**
      * Creates autocross object information.
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
      * @param colour colour - only used for chalk (0-3) and tyres (0-5)
      * @param index object index
      * @param heading heading
      */
-    public AutocrossObjectInfo(int colour, ObjectType index, int heading) {
-        flags = (short) (colour & 7);
-        this.index = index;
-        this.heading = (short) heading;
+    public AutocrossObjectInfo(int x, int y, int zByte, int colour, ObjectType index, int heading) {
+        super(
+                (short) x,
+                (short) y,
+                (short) zByte,
+                (short) (colour & 7),
+                (short) index.getValue(),
+                (short) heading
+        );
     }
 
     /**
@@ -44,7 +51,7 @@ public class AutocrossObjectInfo implements ObjectSubtypeInfo {
      * @return object index
      */
     public ObjectType getIndex() {
-        return index;
+        return ObjectType.fromOrdinal(index);
     }
 
     /**
@@ -52,12 +59,5 @@ public class AutocrossObjectInfo implements ObjectSubtypeInfo {
      */
     public short getHeading() {
         return heading;
-    }
-
-    @Override
-    public void appendBytes(PacketBuilder packetBuilder) {
-        packetBuilder.writeByte(flags)
-                .writeByte(index.getValue())
-                .writeByte(heading);
     }
 }

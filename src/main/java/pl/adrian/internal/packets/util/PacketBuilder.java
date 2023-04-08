@@ -196,6 +196,21 @@ public class PacketBuilder {
     }
 
     /**
+     * Appends to packet bytes complex structure.
+     * @param value structure value
+     * @param structureSize size (in bytes) of structure
+     * @return packet builder
+     */
+    public PacketBuilder writeStructure(ComplexInstructionStructure value, int structureSize) {
+        if (value != null) {
+            value.appendBytes(this);
+        } else {
+            writeZeroBytes(structureSize);
+        }
+        return this;
+    }
+
+    /**
      * Appends to packet bytes complex structures array.
      * @param value structures array value
      * @param singleStructureSize size (in bytes) of single structure
@@ -203,11 +218,7 @@ public class PacketBuilder {
      */
     public PacketBuilder writeStructureArray(ComplexInstructionStructure[] value, int singleStructureSize) {
         for (var structure : value) {
-            if (structure != null) {
-                structure.appendBytes(this);
-            } else {
-                writeZeroBytes(singleStructureSize);
-            }
+            writeStructure(structure, singleStructureSize);
         }
         return this;
     }

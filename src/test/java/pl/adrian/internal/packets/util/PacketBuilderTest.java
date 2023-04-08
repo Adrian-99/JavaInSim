@@ -9,6 +9,7 @@ import pl.adrian.internal.packets.structures.base.UnsignedInstructionStructure;
 
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PacketBuilderTest {
@@ -22,12 +23,9 @@ class PacketBuilderTest {
     void buildEmptyPacket() {
         var packetBuilder = new PacketBuilder((short) 4, PacketType.fromOrdinal(1), (short) 154);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 1, 1, -102, 0 };
 
-        assertEquals(4, bytes.length);
-        assertEquals(1, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(0, bytes[3]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -35,12 +33,9 @@ class PacketBuilderTest {
         var packetBuilder = new PacketBuilder((short) 4, PacketType.fromOrdinal(1), (short) 154);
         packetBuilder.writeByte((short) 200);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 1, 1, -102, -56 };
 
-        assertEquals(4, bytes.length);
-        assertEquals(1, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(-56, bytes[3]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -48,12 +43,9 @@ class PacketBuilderTest {
         var packetBuilder = new PacketBuilder((short) 4, PacketType.fromOrdinal(1), (short) 154);
         packetBuilder.writeByte(12);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 1, 1, -102, 12 };
 
-        assertEquals(4, bytes.length);
-        assertEquals(1, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(12, bytes[3]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -61,12 +53,9 @@ class PacketBuilderTest {
         var packetBuilder = new PacketBuilder((short) 4, PacketType.fromOrdinal(1), (short) 154);
         packetBuilder.writeByte(Character.valueOf('a'));
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 1, 1, -102, 97 };
 
-        assertEquals(4, bytes.length);
-        assertEquals(1, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(97, bytes[3]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -74,12 +63,9 @@ class PacketBuilderTest {
         var packetBuilder = new PacketBuilder((short) 4, PacketType.fromOrdinal(1), (short) 154);
         packetBuilder.writeByte(null);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 1, 1, -102, 0 };
 
-        assertEquals(4, bytes.length);
-        assertEquals(1, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(0, bytes[3]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -87,12 +73,9 @@ class PacketBuilderTest {
         var packetBuilder = new PacketBuilder((short) 4, PacketType.fromOrdinal(1), (short) 154);
         packetBuilder.writeByte(true);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 1, 1, -102, 1 };
 
-        assertEquals(4, bytes.length);
-        assertEquals(1, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(1, bytes[3]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -100,12 +83,9 @@ class PacketBuilderTest {
         var packetBuilder = new PacketBuilder((short) 4, PacketType.fromOrdinal(1), (short) 154);
         packetBuilder.writeByte(false);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 1, 1, -102, 0 };
 
-        assertEquals(4, bytes.length);
-        assertEquals(1, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(0, bytes[3]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -114,16 +94,9 @@ class PacketBuilderTest {
         packetBuilder.writeZeroByte();
         packetBuilder.writeByte(15);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, 0, 15, 0, 0, 0 };
 
-        assertEquals(8, bytes.length);
-        assertEquals(2, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(0, bytes[3]);
-        assertEquals(15, bytes[4]);
-        assertEquals(0, bytes[5]);
-        assertEquals(0, bytes[6]);
-        assertEquals(0, bytes[7]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -132,16 +105,9 @@ class PacketBuilderTest {
         packetBuilder.writeZeroBytes(3);
         packetBuilder.writeByte(15);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, 0, 0, 0, 15, 0 };
 
-        assertEquals(8, bytes.length);
-        assertEquals(2, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(0, bytes[3]);
-        assertEquals(0, bytes[4]);
-        assertEquals(0, bytes[5]);
-        assertEquals(15, bytes[6]);
-        assertEquals(0, bytes[7]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -149,16 +115,9 @@ class PacketBuilderTest {
         var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
         packetBuilder.writeWord(75);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, 75, 0, 0, 0, 0 };
 
-        assertEquals(8, bytes.length);
-        assertEquals(2, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(75, bytes[3]);
-        assertEquals(0, bytes[4]);
-        assertEquals(0, bytes[5]);
-        assertEquals(0, bytes[6]);
-        assertEquals(0, bytes[7]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -166,16 +125,9 @@ class PacketBuilderTest {
         var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
         packetBuilder.writeWord(10688);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, -64, 41, 0, 0, 0 };
 
-        assertEquals(8, bytes.length);
-        assertEquals(2, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(-64, bytes[3]);
-        assertEquals(41, bytes[4]);
-        assertEquals(0, bytes[5]);
-        assertEquals(0, bytes[6]);
-        assertEquals(0, bytes[7]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -184,16 +136,9 @@ class PacketBuilderTest {
         packetBuilder.writeShort((short) 954)
                 .writeZeroBytes(3);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, -70, 3, 0, 0, 0 };
 
-        assertEquals(8, bytes.length);
-        assertEquals(2, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(-70, bytes[3]);
-        assertEquals(3, bytes[4]);
-        assertEquals(0, bytes[5]);
-        assertEquals(0, bytes[6]);
-        assertEquals(0, bytes[7]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -202,16 +147,9 @@ class PacketBuilderTest {
         packetBuilder.writeShort((short) -15832)
                 .writeZeroBytes(3);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, 40, -62, 0, 0, 0 };
 
-        assertEquals(8, bytes.length);
-        assertEquals(2, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(40, bytes[3]);
-        assertEquals(-62, bytes[4]);
-        assertEquals(0, bytes[5]);
-        assertEquals(0, bytes[6]);
-        assertEquals(0, bytes[7]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -220,20 +158,9 @@ class PacketBuilderTest {
         packetBuilder.writeCharArray("Test", 8, false);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 3, 1, -102, 84, 101, 115, 116, 0, 0, 0, 0, 55 };
 
-        assertEquals(12, bytes.length);
-        assertEquals(3, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(84, bytes[3]);
-        assertEquals(101, bytes[4]);
-        assertEquals(115, bytes[5]);
-        assertEquals(116, bytes[6]);
-        assertEquals(0, bytes[7]);
-        assertEquals(0, bytes[8]);
-        assertEquals(0, bytes[9]);
-        assertEquals(0, bytes[10]);
-        assertEquals(55, bytes[11]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -242,20 +169,9 @@ class PacketBuilderTest {
         packetBuilder.writeCharArray("Test long text", 8, false);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 3, 1, -102, 84, 101, 115, 116, 32, 108, 111, 0, 55 };
 
-        assertEquals(12, bytes.length);
-        assertEquals(3, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(84, bytes[3]);
-        assertEquals(101, bytes[4]);
-        assertEquals(115, bytes[5]);
-        assertEquals(116, bytes[6]);
-        assertEquals(32, bytes[7]);
-        assertEquals(108, bytes[8]);
-        assertEquals(111, bytes[9]);
-        assertEquals(0, bytes[10]);
-        assertEquals(55, bytes[11]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -264,20 +180,9 @@ class PacketBuilderTest {
         packetBuilder.writeCharArray(null, 8, false);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 3, 1, -102, 0, 0, 0, 0, 0, 0, 0, 0, 55 };
 
-        assertEquals(12, bytes.length);
-        assertEquals(3, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(0, bytes[3]);
-        assertEquals(0, bytes[4]);
-        assertEquals(0, bytes[5]);
-        assertEquals(0, bytes[6]);
-        assertEquals(0, bytes[7]);
-        assertEquals(0, bytes[8]);
-        assertEquals(0, bytes[9]);
-        assertEquals(0, bytes[10]);
-        assertEquals(55, bytes[11]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -286,16 +191,9 @@ class PacketBuilderTest {
         packetBuilder.writeCharArray("Tes", 8, true);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, 84, 101, 115, 0, 55 };
 
-        assertEquals(8, bytes.length);
-        assertEquals(2, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(84, bytes[3]);
-        assertEquals(101, bytes[4]);
-        assertEquals(115, bytes[5]);
-        assertEquals(0, bytes[6]);
-        assertEquals(55, bytes[7]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -304,20 +202,9 @@ class PacketBuilderTest {
         packetBuilder.writeCharArray("Test long text", 8, true);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 3, 1, -102, 84, 101, 115, 116, 32, 108, 111, 0, 55 };
 
-        assertEquals(12, bytes.length);
-        assertEquals(3, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(84, bytes[3]);
-        assertEquals(101, bytes[4]);
-        assertEquals(115, bytes[5]);
-        assertEquals(116, bytes[6]);
-        assertEquals(32, bytes[7]);
-        assertEquals(108, bytes[8]);
-        assertEquals(111, bytes[9]);
-        assertEquals(0, bytes[10]);
-        assertEquals(55, bytes[11]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -326,16 +213,9 @@ class PacketBuilderTest {
         packetBuilder.writeCharArray(null, 8, true);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, 0, 0, 0, 0, 55 };
 
-        assertEquals(8, bytes.length);
-        assertEquals(2, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(0, bytes[3]);
-        assertEquals(0, bytes[4]);
-        assertEquals(0, bytes[5]);
-        assertEquals(0, bytes[6]);
-        assertEquals(55, bytes[7]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -344,16 +224,9 @@ class PacketBuilderTest {
         packetBuilder.writeUnsigned(15L);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, 15, 0, 0, 0, 55 };
 
-        assertEquals(8, bytes.length);
-        assertEquals(2, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(15, bytes[3]);
-        assertEquals(0, bytes[4]);
-        assertEquals(0, bytes[5]);
-        assertEquals(0, bytes[6]);
-        assertEquals(55, bytes[7]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -362,16 +235,9 @@ class PacketBuilderTest {
         packetBuilder.writeUnsigned(3845264765L);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, 125, 21, 50, -27, 55 };
 
-        assertEquals(8, bytes.length);
-        assertEquals(2, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(125, bytes[3]);
-        assertEquals(21, bytes[4]);
-        assertEquals(50, bytes[5]);
-        assertEquals(-27, bytes[6]);
-        assertEquals(55, bytes[7]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -384,24 +250,9 @@ class PacketBuilderTest {
         packetBuilder.writeUnsignedArray(structuresList);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 4, 1, -102, 11, -82, 13, 0, 0, 0, 0, 0, -3, -23, -90, 73, 55 };
 
-        assertEquals(16, bytes.length);
-        assertEquals(4, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(11, bytes[3]);
-        assertEquals(-82, bytes[4]);
-        assertEquals(13, bytes[5]);
-        assertEquals(0, bytes[6]);
-        assertEquals(0, bytes[7]);
-        assertEquals(0, bytes[8]);
-        assertEquals(0, bytes[9]);
-        assertEquals(0, bytes[10]);
-        assertEquals(-3, bytes[11]);
-        assertEquals(-23, bytes[12]);
-        assertEquals(-90, bytes[13]);
-        assertEquals(73, bytes[14]);
-        assertEquals(55, bytes[15]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -410,16 +261,9 @@ class PacketBuilderTest {
         packetBuilder.writeInt(172);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, -84, 0, 0, 0, 55 };
 
-        assertEquals(8, bytes.length);
-        assertEquals(2, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(-84, bytes[3]);
-        assertEquals(0, bytes[4]);
-        assertEquals(0, bytes[5]);
-        assertEquals(0, bytes[6]);
-        assertEquals(55, bytes[7]);
+        assertArrayEquals(expectedBytes, bytes);
     }
 
     @Test
@@ -428,16 +272,31 @@ class PacketBuilderTest {
         packetBuilder.writeInt(-1954945182);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, 98, -25, 121, -117, 55 };
 
-        assertEquals(8, bytes.length);
-        assertEquals(2, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(98, bytes[3]);
-        assertEquals(-25, bytes[4]);
-        assertEquals(121, bytes[5]);
-        assertEquals(-117, bytes[6]);
-        assertEquals(55, bytes[7]);
+        assertArrayEquals(expectedBytes, bytes);
+    }
+
+    @Test
+    void writeStructure() {
+        var packetBuilder = new PacketBuilder((short) 4, PacketType.fromOrdinal(1), (short) 154);
+        packetBuilder.writeStructure(new TestComplexStructure(89), 1);
+        var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 1, 1, -102, 89 };
+
+        assertArrayEquals(expectedBytes, bytes);
+        assertEquals(1, TestComplexStructure.getAppendBytesMethodCallsCount());
+    }
+
+    @Test
+    void writeStructure_fromNull() {
+        var packetBuilder = new PacketBuilder((short) 4, PacketType.fromOrdinal(1), (short) 154);
+        packetBuilder.writeStructure(null, 1);
+        var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 1, 1, -102, 0 };
+
+        assertArrayEquals(expectedBytes, bytes);
+        assertEquals(0, TestComplexStructure.getAppendBytesMethodCallsCount());
     }
 
     @Test
@@ -454,16 +313,9 @@ class PacketBuilderTest {
         );
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, 5, 6, 7, 8, 55 };
 
-        assertEquals(8, bytes.length);
-        assertEquals(2, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(5, bytes[3]);
-        assertEquals(6, bytes[4]);
-        assertEquals(7, bytes[5]);
-        assertEquals(8, bytes[6]);
-        assertEquals(55, bytes[7]);
+        assertArrayEquals(expectedBytes, bytes);
         assertEquals(4, TestComplexStructure.getAppendBytesMethodCallsCount());
     }
 
@@ -481,16 +333,9 @@ class PacketBuilderTest {
         );
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, 5, 0, 0, 8, 55 };
 
-        assertEquals(8, bytes.length);
-        assertEquals(2, bytes[0]);
-        assertEquals(1, bytes[1]);
-        assertEquals(-102, bytes[2]);
-        assertEquals(5, bytes[3]);
-        assertEquals(0, bytes[4]);
-        assertEquals(0, bytes[5]);
-        assertEquals(8, bytes[6]);
-        assertEquals(55, bytes[7]);
+        assertArrayEquals(expectedBytes, bytes);
         assertEquals(2, TestComplexStructure.getAppendBytesMethodCallsCount());
     }
 

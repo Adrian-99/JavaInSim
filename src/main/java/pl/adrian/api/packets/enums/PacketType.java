@@ -243,7 +243,7 @@ public enum PacketType {
     /**
      * 58 - instruction: reply to a join request (allow / disallow)
      */
-    JRR,
+    JRR(JrrPacket.class),
     /**
      * 59 - info: report InSim checkpoint / InSim circle
      */

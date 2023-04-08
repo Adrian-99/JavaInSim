@@ -2,41 +2,44 @@ package pl.adrian.api.packets.structures;
 
 import pl.adrian.api.packets.enums.ControlObjectType;
 import pl.adrian.api.packets.enums.ObjectType;
-import pl.adrian.internal.packets.annotations.Byte;
-import pl.adrian.internal.packets.util.PacketBuilder;
+import pl.adrian.internal.packets.structures.ObjectInfo;
 
 /**
  * This class hold information about control object.
  */
-public class ControlObjectInfo implements ObjectSubtypeInfo {
-    @Byte
-    private final short flags;
-    @Byte
-    private final ObjectType index;
-    @Byte
-    private final short heading;
-
-    ControlObjectInfo(short flags, short index, short heading) {
-        this.flags = flags;
-        this.index = ObjectType.fromOrdinal(index);
-        this.heading = heading;
+public class ControlObjectInfo extends ObjectInfo {
+    /**
+     * Creates control object information. Constructor used only internally.
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
+     * @param flags object flags
+     * @param index object index
+     * @param heading heading
+     */
+    public ControlObjectInfo(short x, short y, short zByte, short flags, short index, short heading) {
+        super(x, y, zByte, (short) (0x80 | flags), (short) (0x3F & index), heading);
     }
 
     /**
      * Creates control object information.
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
      * @param type type of control object
      * @param width half width in metres (value ignored for {@link ControlObjectType#START_POSITION})
      * @param index object index
      * @param heading heading
      */
-    public ControlObjectInfo(ControlObjectType type, int width, ObjectType index, int heading) {
-        if (!type.equals(ControlObjectType.START_POSITION)) {
-            flags = (short) (0x80 | type.ordinal() | (width & 31) << 2);
-        } else {
-            flags = 0x80;
-        }
-        this.index = index;
-        this.heading = (short) heading;
+    public ControlObjectInfo(int x, int y, int zByte, ControlObjectType type, int width, ObjectType index, int heading) {
+        super(
+                (short) x,
+                (short) y,
+                (short) zByte,
+                !type.equals(ControlObjectType.START_POSITION) ? (short) (0x80 | type.ordinal() | (width & 31) << 2) : 0x80,
+                (short) index.getValue(),
+                (short) heading
+        );
     }
 
     /**
@@ -62,7 +65,7 @@ public class ControlObjectInfo implements ObjectSubtypeInfo {
      * @return object index
      */
     public ObjectType getIndex() {
-        return index;
+        return ObjectType.fromOrdinal(index);
     }
 
     /**
@@ -70,12 +73,5 @@ public class ControlObjectInfo implements ObjectSubtypeInfo {
      */
     public short getHeading() {
         return heading;
-    }
-
-    @Override
-    public void appendBytes(PacketBuilder packetBuilder) {
-        packetBuilder.writeByte(flags)
-                .writeByte(index.getValue())
-                .writeByte(heading);
     }
 }

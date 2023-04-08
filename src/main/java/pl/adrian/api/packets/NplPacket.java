@@ -14,7 +14,10 @@ import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * New PLayer joining race. The packet is sent by LFS when player joins race
- * (if plid already exists, then leaving pits).
+ * (if plid already exists, then leaving pits).<br>
+ * If flag {@link IsiFlag#REQ_JOIN} was set in {@link IsiPacket}, then join
+ * requests are sent by LFS in form of {@link NplPacket} with zero in the {@link NplPacket#numP}.
+ * field. An immediate response (e.g. within 1 second) is required using a {@link JrrPacket}.
  */
 public class NplPacket extends Packet implements RequestablePacket {
     @Byte

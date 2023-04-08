@@ -59,6 +59,14 @@ public class PacketDataBytes {
     }
 
     /**
+     * Reads next short value (2 bytes) from packet bytes.
+     * @return read short value
+     */
+    public short readShort() {
+        return (short) readWord();
+    }
+
+    /**
      * Reads next char array value from packet bytes.
      * @param length length of the char array to read
      * @return read char array value
