@@ -183,7 +183,7 @@ public enum PacketType {
     /**
      * 43 - info: autocross layout information
      */
-    AXI,
+    AXI(AxiPacket.class),
     /**
      * 44 - info: hit an autocross object
      */

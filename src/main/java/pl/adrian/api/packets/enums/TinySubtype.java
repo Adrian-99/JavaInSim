@@ -90,9 +90,9 @@ public enum TinySubtype {
      */
     RST(RstPacket.class, false),
     /**
-     * 20 - info request: send an IS_AXI - AutoX Info
+     * 20 - info request: send an {@link AxiPacket} - AutoX Info
      */
-    AXI,
+    AXI(AxiPacket.class, false),
     /**
      * 21 - info: autocross cleared
      */
