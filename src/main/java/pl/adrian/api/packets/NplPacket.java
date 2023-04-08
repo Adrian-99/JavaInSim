@@ -77,9 +77,9 @@ public class NplPacket extends Packet implements RequestablePacket {
         flags = new Flags<>(PlayerFlag.class, packetDataBytes.readWord());
         pName = packetDataBytes.readCharArray(24);
         plate = packetDataBytes.readCharArray(8);
-        car = new Car(packetDataBytes.readByteArray(4));
+        car = new Car(packetDataBytes);
         sName = packetDataBytes.readCharArray(16);
-        tyres = new Tyres(packetDataBytes.readUnsigned());
+        tyres = new Tyres(packetDataBytes);
         hMass = packetDataBytes.readByte();
         hTRes = packetDataBytes.readByte();
         model = packetDataBytes.readByte();

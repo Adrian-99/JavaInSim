@@ -6,12 +6,12 @@ import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.api.packets.flags.RaceFlag;
 import pl.adrian.internal.packets.annotations.Array;
 import pl.adrian.internal.packets.annotations.Char;
-import pl.adrian.internal.packets.structures.LapTiming;
+import pl.adrian.api.packets.structures.LapTiming;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Word;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
-import pl.adrian.internal.packets.structures.RaceLaps;
+import pl.adrian.api.packets.structures.RaceLaps;
 import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
@@ -54,10 +54,10 @@ public class RstPacket extends Packet implements RequestablePacket {
     public RstPacket(short reqI, PacketDataBytes packetDataBytes) {
         super(28, PacketType.RST, reqI);
         packetDataBytes.skipZeroByte();
-        raceLaps = new RaceLaps(packetDataBytes.readByte());
+        raceLaps = new RaceLaps(packetDataBytes);
         qualMins = packetDataBytes.readByte();
         numP = packetDataBytes.readByte();
-        timing = new LapTiming(packetDataBytes.readByte());
+        timing = new LapTiming(packetDataBytes);
         track = packetDataBytes.readCharArray(6);
         weather = packetDataBytes.readByte();
         wind = Wind.fromOrdinal(packetDataBytes.readByte());

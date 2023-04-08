@@ -59,7 +59,7 @@ public class ResPacket extends Packet implements RequestablePacket {
         uName = packetDataBytes.readCharArray(24);
         pName = packetDataBytes.readCharArray(24);
         plate = packetDataBytes.readCharArray(8);
-        car = new Car(packetDataBytes.readByteArray(4));
+        car = new Car(packetDataBytes);
         tTime = packetDataBytes.readUnsigned();
         bTime = packetDataBytes.readUnsigned();
         packetDataBytes.skipZeroByte();

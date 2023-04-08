@@ -1,6 +1,7 @@
 package pl.adrian.api.packets.structures;
 
 import pl.adrian.api.packets.enums.TyreCompound;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * This class holds information about car tyres. In {@link pl.adrian.api.packets.NplPacket NplPacket} those are
@@ -14,10 +15,11 @@ public class Tyres {
     private final TyreCompound frontRight;
 
     /**
-     * Creates tyres information.
-     * @param unsignedValue binary representation of tyre data
+     * Creates tyres information. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public Tyres(long unsignedValue) {
+    public Tyres(PacketDataBytes packetDataBytes) {
+        var unsignedValue = packetDataBytes.readUnsigned();
         rearLeft = TyreCompound.fromOrdinal((int) (unsignedValue & 0xFF));
         rearRight = TyreCompound.fromOrdinal((int) ((unsignedValue >> 8) & 0xFF));
         frontLeft = TyreCompound.fromOrdinal((int) ((unsignedValue >> 16) & 0xFF));

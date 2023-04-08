@@ -6,7 +6,7 @@ import pl.adrian.api.packets.flags.StaFlag;
 import pl.adrian.internal.packets.annotations.*;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Float;
-import pl.adrian.internal.packets.structures.RaceLaps;
+import pl.adrian.api.packets.structures.RaceLaps;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.RequestablePacket;
 import pl.adrian.internal.packets.util.PacketDataBytes;
@@ -62,7 +62,7 @@ public class StaPacket extends Packet implements RequestablePacket {
         numFinished = packetDataBytes.readByte();
         raceInProg = RaceProgress.fromOrdinal(packetDataBytes.readByte());
         qualMins = packetDataBytes.readByte();
-        raceLaps = new RaceLaps(packetDataBytes.readByte());
+        raceLaps = new RaceLaps(packetDataBytes);
         packetDataBytes.skipZeroByte();
         serverStatus = ServerStatus.fromOrdinal(packetDataBytes.readByte());
         track = packetDataBytes.readCharArray(6);

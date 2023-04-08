@@ -1,4 +1,7 @@
-package pl.adrian.internal.packets.structures;
+package pl.adrian.api.packets.structures;
+
+import pl.adrian.api.packets.enums.RaceLapsUnit;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
 /**
  * This class helps to interpret race laps value returned from LFS.
@@ -8,10 +11,11 @@ public class RaceLaps {
     private final RaceLapsUnit unit;
 
     /**
-     * Creates new race laps instance.
-     * @param byteValue byte value returned from LFS
+     * Creates new race laps instance. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public RaceLaps(short byteValue) {
+    public RaceLaps(PacketDataBytes packetDataBytes) {
+        var byteValue = packetDataBytes.readByte();
         if (byteValue == 0) {
             value = 0;
             unit = RaceLapsUnit.PRACTICE;
@@ -30,37 +34,17 @@ public class RaceLaps {
     }
 
     /**
-     * @return whether value represents practice
+     * @return race laps unit
      */
-    public boolean isPractice() {
-        return unit.equals(RaceLapsUnit.PRACTICE);
-    }
-
-    /**
-     * @return whether unit of value is lap
-     */
-    public boolean areLaps() {
-        return unit.equals(RaceLapsUnit.LAPS);
-    }
-
-    /**
-     * @return whether unit of value is hour
-     */
-    public boolean areHours() {
-        return unit.equals(RaceLapsUnit.HOURS);
+    public RaceLapsUnit getUnit() {
+        return unit;
     }
 
     /**
      * @return value of race laps - 0 means it's practice, to check unit for values >0 use
-     * {@link #areLaps} and {@link #areHours} methods
+     * {@link #getUnit} method
      */
     public short getValue() {
         return value;
-    }
-
-    private enum RaceLapsUnit {
-        PRACTICE,
-        LAPS,
-        HOURS
     }
 }

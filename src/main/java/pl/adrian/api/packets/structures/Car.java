@@ -1,10 +1,9 @@
 package pl.adrian.api.packets.structures;
 
 import pl.adrian.api.packets.enums.DefaultCar;
-import pl.adrian.internal.packets.exceptions.PacketReadingException;
 import pl.adrian.internal.packets.structures.ModSkinId;
+import pl.adrian.internal.packets.util.PacketDataBytes;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -15,30 +14,27 @@ public class Car {
     private final String skinId;
 
     /**
-     * Creates car information.
-     * @param cNameBytes car name bytes - should be 4 bytes long and last element should equal to 0
+     * Creates car information. Constructor used only internally.
+     * @param packetDataBytes packet data bytes
      */
-    public Car(short[] cNameBytes) {
-        if (cNameBytes.length == 4 && cNameBytes[3] == 0) {
-            var bytes = new byte[3];
-            for (var i = 0; i < 3; i++) {
-                bytes[i] = cNameBytes[i] > 127 ?
-                        (byte) (cNameBytes[i] - 256) :
-                        (byte) cNameBytes[i];
-            }
-            defaultCar = DefaultCar.fromString(new String(bytes));
-            if (defaultCar.isPresent()) {
-                skinId = defaultCar.get().name();
-            } else {
-                var cNameLong = 0L;
-                for (var i = 2; i >= 0; i--) {
-                    cNameLong <<= 8;
-                    cNameLong |= cNameBytes[i];
-                }
-                skinId = new ModSkinId(cNameLong).getStringValue();
-            }
+    public Car(PacketDataBytes packetDataBytes) {
+        var cNameBytes = packetDataBytes.readByteArray(4);
+        var bytes = new byte[3];
+        for (var i = 0; i < 3; i++) {
+            bytes[i] = cNameBytes[i] > 127 ?
+                    (byte) (cNameBytes[i] - 256) :
+                    (byte) cNameBytes[i];
+        }
+        defaultCar = DefaultCar.fromString(new String(bytes));
+        if (defaultCar.isPresent()) {
+            skinId = defaultCar.get().name();
         } else {
-            throw new PacketReadingException("Incorrect input for creating car structure: " + Arrays.toString(cNameBytes));
+            var cNameLong = 0L;
+            for (var i = 2; i >= 0; i--) {
+                cNameLong <<= 8;
+                cNameLong |= cNameBytes[i];
+            }
+            skinId = new ModSkinId(cNameLong).getStringValue();
         }
     }
 

@@ -49,7 +49,7 @@ public class PitPacket extends Packet implements InfoPacket {
         penalty = PenaltyValue.fromOrdinal(packetDataBytes.readByte());
         numStops = packetDataBytes.readByte();
         packetDataBytes.skipZeroByte();
-        tyres = new Tyres(packetDataBytes.readUnsigned());
+        tyres = new Tyres(packetDataBytes);
         work = new Flags<>(PitWorkFlag.class, packetDataBytes.readUnsigned());
         packetDataBytes.skipZeroBytes(4);
     }

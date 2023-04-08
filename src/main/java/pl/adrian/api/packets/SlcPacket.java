@@ -29,7 +29,7 @@ public class SlcPacket extends Packet implements RequestablePacket {
     public SlcPacket(short reqI, PacketDataBytes packetDataBytes) {
         super(8, PacketType.SLC, reqI);
         ucid = packetDataBytes.readByte();
-        car = new Car(packetDataBytes.readByteArray(4));
+        car = new Car(packetDataBytes);
     }
 
     /**
