@@ -97,6 +97,7 @@ public class PacketReader {
             case RES -> new ResPacket(packetReqI, packetDataBytes);
             case REO -> new ReoPacket(packetReqI, packetDataBytes);
             case AXI -> new AxiPacket(packetReqI, packetDataBytes);
+            case AXO -> new AxoPacket(packetDataBytes);
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }

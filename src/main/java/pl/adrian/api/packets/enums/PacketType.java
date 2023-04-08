@@ -187,7 +187,7 @@ public enum PacketType {
     /**
      * 44 - info: hit an autocross object
      */
-    AXO,
+    AXO(AxoPacket.class),
     /**
      * 45 - instruction: show a button on local or remote screen
      */
