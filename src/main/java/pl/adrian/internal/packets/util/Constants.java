@@ -13,9 +13,13 @@ public class Constants {
      */
     public static final short PACKET_HEADER_SIZE = 3;
     /**
-     * Maximum number of mods can be allowed to be used on host
+     * Maximum number of mods that can be allowed to be used on host
      */
     public static final short MAX_MODS = 120;
+    /**
+     * Maximum number of cars that can be allowed on track
+     */
+    public static final short MAX_CARS = 40;
 
     private Constants() {}
 }

@@ -98,6 +98,7 @@ public class PacketReader {
             case REO -> new ReoPacket(packetReqI, packetDataBytes);
             case AXI -> new AxiPacket(packetReqI, packetDataBytes);
             case AXO -> new AxoPacket(packetDataBytes);
+            case NLP -> new NlpPacket(packetSize, packetReqI, packetDataBytes);
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }

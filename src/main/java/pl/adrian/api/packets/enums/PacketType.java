@@ -159,7 +159,7 @@ public enum PacketType {
     /**
      * 37 - info: node and lap packet
      */
-    NLP,
+    NLP(NlpPacket.class),
     /**
      * 38 - info: multi car info
      */
