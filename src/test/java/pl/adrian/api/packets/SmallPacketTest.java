@@ -50,6 +50,17 @@ class SmallPacketTest {
     }
 
     @Test
+    void createSmallPacket_withInterval() {
+        var packet = new SmallPacket(2000);
+        var bytes = packet.getBytes();
+        var expectedBytes = new byte[] {
+                2, 4, 0, 7, -48, 7, 0, 0
+        };
+
+        assertArrayEquals(expectedBytes, bytes);
+    }
+
+    @Test
     void readSmallPacket() {
         var headerBytes = new byte[] { 2, 4, -112 };
         var dataBytes = new byte[] { 0, -26, -107, 96, -39 };

@@ -44,8 +44,9 @@ public class SmallPacket extends Packet implements InstructionPacket, InfoPacket
      * Creates small packet. Constructor used only internally.
      * @param reqI 0 unless it is an info request or a reply to an info request
      * @param packetDataBytes packet data bytes
+     * @throws PacketValidationException if validation of any field in packet fails
      */
-    public SmallPacket(short reqI, PacketDataBytes packetDataBytes) {
+    public SmallPacket(short reqI, PacketDataBytes packetDataBytes) throws PacketValidationException {
         super(8, PacketType.SMALL, reqI);
         subT = SmallSubtype.fromOrdinal(packetDataBytes.readByte());
         uVal = packetDataBytes.readUnsigned();
@@ -54,6 +55,7 @@ public class SmallPacket extends Packet implements InstructionPacket, InfoPacket
     /**
      * Creates small packet for local car switches.
      * @param lcsFlags local car switches
+     * @throws PacketValidationException if validation of any field in packet fails
      */
     public SmallPacket(LcsFlag... lcsFlags) throws PacketValidationException {
         this(SmallSubtype.LCS, new Flags<>(lcsFlags).getUnsignedValue());
@@ -62,9 +64,19 @@ public class SmallPacket extends Packet implements InstructionPacket, InfoPacket
     /**
      * Creates small packet for setting allowed cars on host.
      * @param cars allowed cars
+     * @throws PacketValidationException if validation of any field in packet fails
      */
     public SmallPacket(DefaultCar... cars) throws PacketValidationException {
         this(SmallSubtype.ALC, new Flags<>(cars).getUnsignedValue());
+    }
+
+    /**
+     * Creates small packet to change rate of {@link NlpPacket} or {@link MciPacket} after initialisation.
+     * @param interval 0 means stop, otherwise time interval: 40, 50, 60... 8000 ms
+     * @throws PacketValidationException if validation of any field in packet fails
+     */
+    public SmallPacket(long interval) throws PacketValidationException {
+        this(SmallSubtype.NLI, interval);
     }
 
     @Override
