@@ -78,9 +78,9 @@ public enum TinySubtype {
      */
     NLP(NlpPacket.class, false),
     /**
-     * 17 - info request: send an IS_MCI
+     * 17 - info request: send an {@link MciPacket}
      */
-    MCI,
+    MCI(MciPacket.class, true),
     /**
      * 18 - info request: send an {@link ReoPacket}
      */

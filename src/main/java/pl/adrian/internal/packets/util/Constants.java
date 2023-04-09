@@ -15,11 +15,15 @@ public class Constants {
     /**
      * Maximum number of mods that can be allowed to be used on host
      */
-    public static final short MAX_MODS = 120;
+    public static final short MAL_MAX_MODS = 120;
     /**
-     * Maximum number of cars that can be allowed on track
+     * Maximum number of cars that can be sent in single {@link pl.adrian.api.packets.NlpPacket NlpPacket}
      */
-    public static final short MAX_CARS = 40;
+    public static final short NLP_MAX_CARS = 40;
+    /**
+     * Maximum number of cars that can be sent in single {@link pl.adrian.api.packets.MciPacket MciPacket}
+     */
+    public static final short MCI_MAX_CARS = 16;
 
     private Constants() {}
 }

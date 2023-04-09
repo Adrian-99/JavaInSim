@@ -107,6 +107,14 @@ public class PacketDataBytes {
     }
 
     /**
+     * Reads next int value (4 bytes) from packet bytes.
+     * @return read int value
+     */
+    public int readInt() {
+        return (int) readUnsigned();
+    }
+
+    /**
      * Reads next float value (4 bytes) from packet bytes.
      * @return read float value
      */

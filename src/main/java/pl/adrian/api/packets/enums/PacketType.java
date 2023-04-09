@@ -163,7 +163,7 @@ public enum PacketType {
     /**
      * 38 - info: multi car info
      */
-    MCI,
+    MCI(MciPacket.class),
     /**
      * 39 - instruction: type message
      */

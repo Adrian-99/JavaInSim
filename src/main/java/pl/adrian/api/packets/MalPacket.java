@@ -21,7 +21,7 @@ public class MalPacket extends Packet implements InstructionPacket, RequestableP
     @Byte
     private final short ucid;
     @Unsigned
-    @Array(length = Constants.MAX_MODS, dynamicLength = true)
+    @Array(length = Constants.MAL_MAX_MODS, dynamicLength = true)
     private final List<ModSkinId> skinId;
 
     /**
@@ -45,7 +45,7 @@ public class MalPacket extends Packet implements InstructionPacket, RequestableP
      */
     public MalPacket(List<String> skinId) throws PacketValidationException {
         super(
-                PacketUtils.getPacketSize(8, skinId.size(), 4, Constants.MAX_MODS),
+                PacketUtils.getPacketSize(8, skinId.size(), 4, Constants.MAL_MAX_MODS),
                 PacketType.MAL,
                 0
         );

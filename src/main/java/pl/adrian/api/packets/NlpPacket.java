@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class NlpPacket extends Packet implements RequestablePacket {
     @Structure
-    @Array(length = Constants.MAX_CARS, dynamicLength = true)
+    @Array(length = Constants.NLP_MAX_CARS, dynamicLength = true)
     private final List<NodeLap> info;
 
     /**
