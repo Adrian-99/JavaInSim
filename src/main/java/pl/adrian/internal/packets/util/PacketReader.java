@@ -100,6 +100,7 @@ public class PacketReader {
             case AXO -> new AxoPacket(packetDataBytes);
             case NLP -> new NlpPacket(packetSize, packetReqI, packetDataBytes);
             case MCI -> new MciPacket(packetSize, packetReqI, packetDataBytes);
+            case CON -> new ConPacket(packetDataBytes);
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }

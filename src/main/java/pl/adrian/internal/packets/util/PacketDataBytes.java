@@ -67,6 +67,14 @@ public class PacketDataBytes {
     }
 
     /**
+     * Reads next char value (1 byte) from packet bytes.
+     * @return read char value
+     */
+    public byte readChar() {
+        return dataBytes[dataBytesReaderIndex++];
+    }
+
+    /**
      * Reads next char array value from packet bytes.
      * @param length length of the char array to read
      * @return read char array value

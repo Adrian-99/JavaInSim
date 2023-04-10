@@ -211,7 +211,7 @@ public enum PacketType {
     /**
      * 50 - info: contact between cars (collision report)
      */
-    CON,
+    CON(ConPacket.class),
     /**
      * 51 - info: contact car + object (collision report)
      */
