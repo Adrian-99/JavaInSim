@@ -219,7 +219,7 @@ public enum PacketType {
     /**
      * 52 - info: report incidents that would violate HLVC
      */
-    HLV,
+    HLV(HlvPacket.class),
     /**
      * 53 - instruction: player cars
      */
