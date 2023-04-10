@@ -101,6 +101,7 @@ public class PacketReader {
             case NLP -> new NlpPacket(packetSize, packetReqI, packetDataBytes);
             case MCI -> new MciPacket(packetSize, packetReqI, packetDataBytes);
             case CON -> new ConPacket(packetDataBytes);
+            case OBH -> new ObhPacket(packetDataBytes);
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }

@@ -215,7 +215,7 @@ public enum PacketType {
     /**
      * 51 - info: contact car + object (collision report)
      */
-    OBH,
+    OBH(ObhPacket.class),
     /**
      * 52 - info: report incidents that would violate HLVC
      */

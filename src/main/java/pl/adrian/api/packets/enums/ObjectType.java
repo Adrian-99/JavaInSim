@@ -4,7 +4,8 @@ import pl.adrian.internal.packets.enums.EnumHelpers;
 import pl.adrian.internal.packets.enums.EnumWithCustomValue;
 
 /**
- * Enumeration for object types used in {@link pl.adrian.internal.packets.structures.ObjectInfo ObjectInfo}.
+ * Enumeration for object types used in {@link pl.adrian.internal.packets.structures.ObjectInfo ObjectInfo}
+ * and {@link pl.adrian.api.packets.ObhPacket ObhPacket}.
  */
 public enum ObjectType implements EnumWithCustomValue {
     /**
