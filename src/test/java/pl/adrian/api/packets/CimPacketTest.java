@@ -30,7 +30,7 @@ class CimPacketTest {
         assertEquals(NormalInterfaceSubmode.WHEEL_DAMAGE, castedReadPacket.getNormalSubmode().get());
         assertTrue(castedReadPacket.getGarageSubmode().isEmpty());
         assertTrue(castedReadPacket.getShiftUSubmode().isEmpty());
-        assertEquals(SelectedObjectType.NULL, castedReadPacket.getSelType());
+        assertEquals(ObjectType.NULL, castedReadPacket.getSelType());
     }
 
     @Test
@@ -54,7 +54,7 @@ class CimPacketTest {
         assertTrue(castedReadPacket.getGarageSubmode().isPresent());
         assertEquals(GarageInterfaceSubmode.DRIVE, castedReadPacket.getGarageSubmode().get());
         assertTrue(castedReadPacket.getShiftUSubmode().isEmpty());
-        assertEquals(SelectedObjectType.NULL, castedReadPacket.getSelType());
+        assertEquals(ObjectType.NULL, castedReadPacket.getSelType());
     }
 
     @Test
@@ -78,7 +78,7 @@ class CimPacketTest {
         assertTrue(castedReadPacket.getGarageSubmode().isEmpty());
         assertTrue(castedReadPacket.getShiftUSubmode().isPresent());
         assertEquals(ShiftUInterfaceSubmode.EDIT, castedReadPacket.getShiftUSubmode().get());
-        assertEquals(SelectedObjectType.POST_RED, castedReadPacket.getSelType());
+        assertEquals(ObjectType.POST_RED, castedReadPacket.getSelType());
     }
 
     @Test
@@ -101,6 +101,6 @@ class CimPacketTest {
         assertTrue(castedReadPacket.getNormalSubmode().isEmpty());
         assertTrue(castedReadPacket.getGarageSubmode().isEmpty());
         assertTrue(castedReadPacket.getShiftUSubmode().isEmpty());
-        assertEquals(SelectedObjectType.NULL, castedReadPacket.getSelType());
+        assertEquals(ObjectType.NULL, castedReadPacket.getSelType());
     }
 }

@@ -1,7 +1,7 @@
-package pl.adrian.api.packets.structures;
+package pl.adrian.api.packets.structures.objectinfo;
 
 import pl.adrian.api.packets.enums.MarshallType;
-import pl.adrian.internal.packets.structures.ObjectInfo;
+import pl.adrian.api.packets.enums.ObjectType;
 
 /**
  * This class hold information about restricted area.
@@ -15,8 +15,8 @@ public class RestrictedAreaInfo extends ObjectInfo {
      * @param flags object flags
      * @param heading heading
      */
-    public RestrictedAreaInfo(short x, short y, short zByte, short flags, short heading) {
-        super(x, y, zByte, (short) (0x80 | flags), (short) 255, heading);
+    RestrictedAreaInfo(short x, short y, short zByte, short flags, short heading) {
+        super(x, y, zByte, flags, ObjectType.MARSH_MARSHAL, heading);
     }
 
     /**
@@ -33,8 +33,8 @@ public class RestrictedAreaInfo extends ObjectInfo {
                 (short) x,
                 (short) y,
                 (short) zByte,
-                (short) (0x80 | marshallType.ordinal() | (radius & 31) << 2),
-                (short) 255,
+                (short) ((zByte > 0 ? 0x80 : 0) | marshallType.ordinal() | (radius & 31) << 2),
+                ObjectType.MARSH_MARSHAL,
                 (short) heading
         );
     }
@@ -54,7 +54,11 @@ public class RestrictedAreaInfo extends ObjectInfo {
     }
 
     /**
-     * @return heading
+     * @return heading - 360 degrees in 256 values:<br>
+     *  - 128 : heading of zero<br>
+     *  - 192 : heading of 90 degrees<br>
+     *  - 0   : heading of 180 degrees<br>
+     *  - 64  : heading of -90 degrees
      */
     public short getHeading() {
         return heading;

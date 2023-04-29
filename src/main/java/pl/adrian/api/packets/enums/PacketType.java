@@ -247,7 +247,7 @@ public enum PacketType {
     /**
      * 59 - info: report InSim checkpoint / InSim circle
      */
-    UCO,
+    UCO(UcoPacket.class),
     /**
      * 60 - instruction: object control (currently used for lights)
      */

@@ -103,6 +103,7 @@ public class PacketReader {
             case CON -> new ConPacket(packetDataBytes);
             case OBH -> new ObhPacket(packetDataBytes);
             case HLV -> new HlvPacket(packetDataBytes);
+            case UCO -> new UcoPacket(packetDataBytes);
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }

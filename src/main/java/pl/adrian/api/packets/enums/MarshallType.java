@@ -1,9 +1,10 @@
 package pl.adrian.api.packets.enums;
 
+import pl.adrian.api.packets.structures.objectinfo.RestrictedAreaInfo;
 import pl.adrian.internal.packets.enums.EnumHelpers;
 
 /**
- * Enumeration for marshall type used in {@link pl.adrian.api.packets.structures.RestrictedAreaInfo RestrictedAreaInfo}.
+ * Enumeration for marshall type used in {@link RestrictedAreaInfo}.
  */
 public enum MarshallType {
     /**

@@ -1,6 +1,6 @@
-package pl.adrian.api.packets.structures;
+package pl.adrian.api.packets.structures.objectinfo;
 
-import pl.adrian.internal.packets.structures.ObjectInfo;
+import pl.adrian.api.packets.enums.ObjectType;
 
 /**
  * This class holds information about route checker.
@@ -14,8 +14,8 @@ public class RouteCheckerInfo extends ObjectInfo {
      * @param flags object flags
      * @param routeIndex route index
      */
-    public RouteCheckerInfo(short x, short y, short zByte, short flags, short routeIndex) {
-        super(x, y, zByte, (short) (0x7F & flags), (short) 255, routeIndex);
+    RouteCheckerInfo(short x, short y, short zByte, short flags, short routeIndex) {
+        super(x, y, zByte, flags, ObjectType.MARSH_ROUTE, routeIndex);
     }
 
     /**
@@ -31,8 +31,8 @@ public class RouteCheckerInfo extends ObjectInfo {
                 (short) x,
                 (short) y,
                 (short) zByte,
-                (short) ((radius & 31) << 2),
-                (short) 255,
+                (short) ((zByte > 0 ? 0x80 : 0) | (radius & 31) << 2),
+                ObjectType.MARSH_ROUTE,
                 (short) routeIndex
         );
     }

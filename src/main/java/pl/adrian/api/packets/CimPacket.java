@@ -19,7 +19,7 @@ public class CimPacket extends Packet implements InfoPacket {
     @Byte
     private final short subMode;
     @Byte
-    private final SelectedObjectType selType;
+    private final ObjectType selType;
 
     /**
      * Creates connection's interface mode packet. Constructor used only internally.
@@ -30,7 +30,7 @@ public class CimPacket extends Packet implements InfoPacket {
         ucid = packetDataBytes.readByte();
         mode = InterfaceMode.fromOrdinal(packetDataBytes.readByte());
         subMode = packetDataBytes.readByte();
-        selType = SelectedObjectType.fromOrdinal(packetDataBytes.readByte());
+        selType = ObjectType.fromOrdinal(packetDataBytes.readByte());
         packetDataBytes.skipZeroByte();
     }
 
@@ -84,7 +84,7 @@ public class CimPacket extends Packet implements InfoPacket {
     /**
      * @return selected object type
      */
-    public SelectedObjectType getSelType() {
+    public ObjectType getSelType() {
         return selType;
     }
 }

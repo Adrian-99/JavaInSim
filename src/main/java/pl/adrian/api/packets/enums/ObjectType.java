@@ -1,17 +1,20 @@
 package pl.adrian.api.packets.enums;
 
+import pl.adrian.api.packets.CimPacket;
+import pl.adrian.api.packets.ObhPacket;
+import pl.adrian.api.packets.structures.objectinfo.ObjectInfo;
 import pl.adrian.internal.packets.enums.EnumHelpers;
 import pl.adrian.internal.packets.enums.EnumWithCustomValue;
 
 /**
- * Enumeration for object types used in {@link pl.adrian.internal.packets.structures.ObjectInfo ObjectInfo}
- * and {@link pl.adrian.api.packets.ObhPacket ObhPacket}.
+ * Enumeration for object types used in {@link ObjectInfo},
+ * {@link CimPacket} and {@link ObhPacket}.
  */
 public enum ObjectType implements EnumWithCustomValue {
     /**
-     * value 0: unknown object
+     * value 0: no object selected or unknown object
      */
-    UNKNOWN(0),
+    NULL(0),
     /**
      * value 4: chalk line
      */
@@ -325,37 +328,37 @@ public enum ObjectType implements EnumWithCustomValue {
      */
     SIGN_SPEED_50(169),
     /**
-     * value 172: slab
+     * value 172: concrete slab
      */
-    SLAB(172),
+    CONCRETE_SLAB(172),
     /**
-     * value 173: ramp
+     * value 173: concrete ramp
      */
-    RAMP(173),
+    CONCRETE_RAMP(173),
     /**
-     * value 174: wall
+     * value 174: concrete wall
      */
-    WALL(174),
+    CONCRETE_WALL(174),
     /**
-     * value 175: pillar
+     * value 175: concrete pillar
      */
-    PILLAR(175),
+    CONCRETE_PILLAR(175),
     /**
-     * value 176: slab wall
+     * value 176: concrete slab wall
      */
-    SLAB_WALL(176),
+    CONCRETE_SLAB_WALL(176),
     /**
-     * value 177: ramp wall
+     * value 177: concrete ramp wall
      */
-    RAMP_WALL(177),
+    CONCRETE_RAMP_WALL(177),
     /**
-     * value 178: short slab wall
+     * value 178: concrete short slab wall
      */
-    SHORT_SLAB_WALL(178),
+    CONCRETE_SHORT_SLAB_WALL(178),
     /**
-     * value 179: wedge
+     * value 179: concrete wedge
      */
-    WEDGE(179),
+    CONCRETE_WEDGE(179),
     /**
      * value 184: start position
      */
@@ -367,7 +370,23 @@ public enum ObjectType implements EnumWithCustomValue {
     /**
      * value 186: pit stop box
      */
-    PIT_STOP_BOX(186);
+    PIT_STOP_BOX(186),
+    /**
+     * value 252: insim checkpoint
+     */
+    MARSH_IS_CP(252),
+    /**
+     * value 253: insim circle
+     */
+    MARSH_IS_AREA(253),
+    /**
+     * value 254: restricted area
+     */
+    MARSH_MARSHAL(254),
+    /**
+     * value 255: route checker
+     */
+    MARSH_ROUTE(255);
 
     private final short value;
 

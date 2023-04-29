@@ -2,7 +2,7 @@ package pl.adrian.api.packets;
 
 import pl.adrian.api.packets.enums.JrrAction;
 import pl.adrian.api.packets.enums.PacketType;
-import pl.adrian.api.packets.structures.PositionObjectInfo;
+import pl.adrian.api.packets.structures.objectinfo.PositionObjectInfo;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Structure;
 import pl.adrian.internal.packets.base.InstructionPacket;

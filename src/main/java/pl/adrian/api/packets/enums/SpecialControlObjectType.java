@@ -1,11 +1,12 @@
 package pl.adrian.api.packets.enums;
 
+import pl.adrian.api.packets.structures.objectinfo.SpecialControlObjectInfo;
 import pl.adrian.internal.packets.enums.EnumHelpers;
 
 /**
- * Enumeration for control object type used in {@link pl.adrian.api.packets.structures.ControlObjectInfo ControlObjectInfo}.
+ * Enumeration for special control object type used in {@link SpecialControlObjectInfo}.
  */
-public enum ControlObjectType {
+public enum SpecialControlObjectType {
     /**
      * value 0, width > 0: finish line
      */
@@ -32,7 +33,7 @@ public enum ControlObjectType {
      * @param ordinal ordinal number
      * @return enum value
      */
-    public static ControlObjectType fromOrdinal(int ordinal) {
-        return EnumHelpers.get(ControlObjectType.class).fromOrdinal(ordinal);
+    public static SpecialControlObjectType fromOrdinal(int ordinal) {
+        return EnumHelpers.get(SpecialControlObjectType.class).fromOrdinal(ordinal);
     }
 }

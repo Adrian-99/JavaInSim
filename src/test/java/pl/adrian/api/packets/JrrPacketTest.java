@@ -2,7 +2,7 @@ package pl.adrian.api.packets;
 
 import org.junit.jupiter.api.Test;
 import pl.adrian.api.packets.enums.JrrAction;
-import pl.adrian.api.packets.structures.PositionObjectInfo;
+import pl.adrian.api.packets.structures.objectinfo.PositionObjectInfo;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
