@@ -263,7 +263,7 @@ public enum PacketType {
     /**
      * 63 - info: car state changed
      */
-    CSC,
+    CSC(CscPacket.class),
     /**
      * 64 - info: connection's interface mode
      */
