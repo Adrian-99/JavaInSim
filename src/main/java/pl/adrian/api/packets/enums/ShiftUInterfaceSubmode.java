@@ -17,11 +17,7 @@ public enum ShiftUInterfaceSubmode {
     /**
      * value 2: edit mode
      */
-    EDIT,
-    /**
-     * value 3: ?
-     */
-    NUM;
+    EDIT;
 
     /**
      * Converts ordinal number to enum value.

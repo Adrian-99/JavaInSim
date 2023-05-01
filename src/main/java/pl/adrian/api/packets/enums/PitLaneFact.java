@@ -25,11 +25,7 @@ public enum PitLaneFact {
     /**
      * value 4: entered for stop-go
      */
-    SG,
-    /**
-     * value 5: ?
-     */
-    NUM;
+    SG;
 
     /**
      * Converts ordinal number to enum value.

@@ -251,7 +251,7 @@ public enum PacketType {
     /**
      * 60 - instruction: object control (currently used for lights)
      */
-    OCO,
+    OCO(OcoPacket.class),
     /**
      * 61 - instruction: multi-purpose - target to connection
      */

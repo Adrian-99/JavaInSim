@@ -33,11 +33,7 @@ public enum PenaltyValue {
     /**
      * value 6: 45 second time
      */
-    PLUS_45_S,
-    /**
-     * value 7: ?
-     */
-    NUM;
+    PLUS_45_S;
 
     /**
      * Converts ordinal number to enum value.

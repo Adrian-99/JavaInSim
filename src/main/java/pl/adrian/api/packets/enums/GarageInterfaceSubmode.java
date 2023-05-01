@@ -41,11 +41,7 @@ public enum GarageInterfaceSubmode {
     /**
      * value 8: passengers tab
      */
-    PASS,
-    /**
-     * value 9: ?
-     */
-    NUM;
+    PASS;
 
     /**
      * Converts ordinal number to enum value.

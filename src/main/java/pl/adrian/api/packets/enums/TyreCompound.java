@@ -40,10 +40,6 @@ public enum TyreCompound implements EnumWithCustomValue {
      */
     KNOBBLY,
     /**
-     * value 8: ?
-     */
-    NUM,
-    /**
      * value 255: tyre not changed
      */
     NOT_CHANGED;

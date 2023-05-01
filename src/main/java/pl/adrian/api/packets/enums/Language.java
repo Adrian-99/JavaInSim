@@ -153,11 +153,7 @@ public enum Language {
     /**
      * value 36: Romanian
      */
-    ROMANIAN,
-    /**
-     * value 37: ???
-     */
-    NUM_LANG;
+    ROMANIAN;
 
     /**
      * Converts ordinal number to enum value

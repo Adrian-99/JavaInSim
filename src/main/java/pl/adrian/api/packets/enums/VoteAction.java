@@ -21,11 +21,7 @@ public enum VoteAction {
     /**
      * 3 - qualify
      */
-    QUALIFY,
-    /**
-     * 4 - ???
-     */
-    NUM;
+    QUALIFY;
 
     /**
      * Converts ordinal number to enum value.

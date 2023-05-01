@@ -21,11 +21,7 @@ public enum MessageType {
     /**
      * 3 - hidden message typed on local pc with /o command
      */
-    O,
-    /**
-     * 4 - ???
-     */
-    NUM;
+    O;
 
     /**
      * Converts ordinal number to enum value.

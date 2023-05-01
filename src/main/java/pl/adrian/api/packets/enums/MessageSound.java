@@ -23,9 +23,5 @@ public enum MessageSound {
     /**
      * 4 - error sound
      */
-    ERROR,
-    /**
-     * 5 - num sound
-     */
-    NUM
+    ERROR
 }

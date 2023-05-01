@@ -33,11 +33,7 @@ public enum PenaltyReason {
     /**
      * value 6: compulsory stop is too late
      */
-    STOP_LATE,
-    /**
-     * value 7: ?
-     */
-    NUM;
+    STOP_LATE;
 
     /**
      * Converts ordinal number to enum value.

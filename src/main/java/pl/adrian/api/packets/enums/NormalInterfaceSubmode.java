@@ -25,11 +25,7 @@ public enum NormalInterfaceSubmode {
     /**
      * value 4: instructions (F12)
      */
-    PIT_INSTRUCTIONS,
-    /**
-     * value 5: ?
-     */
-    NUM;
+    PIT_INSTRUCTIONS;
 
     /**
      * Converts ordinal number to enum value.

@@ -45,11 +45,7 @@ public enum LeaveReason {
     /**
      * value 9: invalid packet
      */
-    HACK,
-    /**
-     * value 10: ?
-     */
-    NUM;
+    HACK;
 
     /**
      * Converts ordinal number to enum value.

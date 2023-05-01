@@ -33,11 +33,7 @@ public enum InterfaceMode {
     /**
      * value 6: free view mode
      */
-    SHIFTU,
-    /**
-     * value 7: ?
-     */
-    NUM;
+    SHIFTU;
 
     /**
      * Converts ordinal number to enum value.

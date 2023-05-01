@@ -75,9 +75,5 @@ public enum PitWorkFlag {
     /**
      * bit 17, value 131072: refuel
      */
-    REFUEL,
-    /**
-     * bit 18, value 262144: ?
-     */
-    NUM
+    REFUEL
 }
