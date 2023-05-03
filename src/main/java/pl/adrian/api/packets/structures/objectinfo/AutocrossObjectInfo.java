@@ -8,15 +8,28 @@ import pl.adrian.api.packets.enums.ObjectType;
 public class AutocrossObjectInfo extends ObjectInfo {
     /**
      * Creates autocross object information. Constructor used only internally.
-     * @param x       X position (1 metre = 16)
-     * @param y       Y position (1 metre = 16)
-     * @param zByte   height (1m = 4)
-     * @param flags   object flags
-     * @param index   object index
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
+     * @param flags object flags
+     * @param index object index
      * @param heading heading
      */
     AutocrossObjectInfo(short x, short y, short zByte, short flags, ObjectType index, short heading) {
         super(x, y, zByte, flags, index, heading);
+    }
+
+    /**
+     * Creates autocross object information.
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
+     * @param isFloating whether object is floating
+     * @param index object index
+     * @param heading heading
+     */
+    public AutocrossObjectInfo(int x, int y, int zByte, boolean isFloating, ObjectType index, int heading) {
+        super((short) x, (short) y, (short) zByte, floatingBitForFlags(isFloating), index, (short) heading);
     }
 
     /**

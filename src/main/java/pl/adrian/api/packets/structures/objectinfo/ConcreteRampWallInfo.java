@@ -9,15 +9,41 @@ import pl.adrian.api.packets.enums.ObjectType;
 public class ConcreteRampWallInfo extends ConcreteObjectInfo {
     /**
      * Creates concrete ramp wall object information. Constructor used only internally.
-     * @param x       X position (1 metre = 16)
-     * @param y       Y position (1 metre = 16)
-     * @param zByte   height (1m = 4)
-     * @param flags   object flags
-     * @param index   object index
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
+     * @param flags object flags
      * @param heading heading
      */
-    ConcreteRampWallInfo(short x, short y, short zByte, short flags, ObjectType index, short heading) {
-        super(x, y, zByte, flags, index, heading);
+    ConcreteRampWallInfo(short x, short y, short zByte, short flags, short heading) {
+        super(x, y, zByte, flags, ObjectType.CONCRETE_RAMP_WALL, heading);
+    }
+
+    /**
+     * Creates concrete ramp wall object information.
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
+     * @param colour colour
+     * @param length length (2, 4, 8, 16)
+     * @param height height (0.25 to 4 in steps of 0.25)
+     * @param heading heading
+     */
+    public ConcreteRampWallInfo(int x,
+                                int y,
+                                int zByte,
+                                ConcreteObjectColour colour,
+                                int length,
+                                float height,
+                                int heading) {
+        super(
+                (short) x,
+                (short) y,
+                (short) zByte,
+                (short) (convertColourToFlagsValue(colour) | convertLengthToFlagsValue(length) | convertHeightToFlagsValue(height)),
+                ObjectType.CONCRETE_RAMP_WALL,
+                (short) heading
+        );
     }
 
     /**

@@ -24,16 +24,23 @@ public class SpecialControlObjectInfo extends ObjectInfo {
      * @param x X position (1 metre = 16)
      * @param y Y position (1 metre = 16)
      * @param zByte height (1m = 4)
+     * @param isFloating whether object is floating
      * @param type type of control object
-     * @param halfWidth half width in metres (value ignored for {@link SpecialControlObjectType#START_POSITION})
+     * @param width width in metres (2, 4, 6, 8, ..., 62) (value ignored for {@link SpecialControlObjectType#START_POSITION})
      * @param heading heading
      */
-    public SpecialControlObjectInfo(int x, int y, int zByte, SpecialControlObjectType type, int halfWidth, int heading) {
+    public SpecialControlObjectInfo(int x,
+                                    int y,
+                                    int zByte,
+                                    boolean isFloating,
+                                    SpecialControlObjectType type,
+                                    int width,
+                                    int heading) {
         super(
                 (short) x,
                 (short) y,
                 (short) zByte,
-                calculateFlagsValue((short) zByte, type, (byte) halfWidth),
+                calculateFlagsValue(isFloating, type, width),
                 ObjectType.NULL,
                 (short) heading
         );
@@ -44,15 +51,13 @@ public class SpecialControlObjectInfo extends ObjectInfo {
      */
     public SpecialControlObjectType getType() {
         var typeOrdinal = flags & 3;
-        if (getWidth() > 0 || typeOrdinal > 0) {
-            return SpecialControlObjectType.fromOrdinal(typeOrdinal);
-        } else {
-            return SpecialControlObjectType.START_POSITION;
-        }
+        return getWidth() > 0 || typeOrdinal > 0 ?
+                SpecialControlObjectType.fromOrdinal(typeOrdinal) :
+                SpecialControlObjectType.START_POSITION;
     }
 
     /**
-     * @return width in metres
+     * @return width in metres (2, 4, 6, 8, ..., 62)
      */
     public byte getWidth() {
         return (byte) ((flags >> 1) & 62);
@@ -69,15 +74,15 @@ public class SpecialControlObjectInfo extends ObjectInfo {
         return heading;
     }
 
-    private static short calculateFlagsValue(short zByte, SpecialControlObjectType type, byte halfWidth) {
-        byte floatingBit = 0;
-        if (zByte > 0) {
-            floatingBit |= 0x80;
-        }
+    private static short calculateFlagsValue(boolean isFloating, SpecialControlObjectType type, int width) {
         if (!type.equals(SpecialControlObjectType.START_POSITION)) {
-            return (short) (floatingBit | type.ordinal() | (halfWidth & 31) << 2);
+            return (short) (
+                    floatingBitForFlags(isFloating) |
+                            type.ordinal() |
+                            normalizeIntValueForFlags(width, 2, 62, 1)
+            );
         } else {
-            return floatingBit;
+            return floatingBitForFlags(isFloating);
         }
     }
 }

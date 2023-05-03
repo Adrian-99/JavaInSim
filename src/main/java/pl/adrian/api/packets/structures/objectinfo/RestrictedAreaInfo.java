@@ -24,16 +24,23 @@ public class RestrictedAreaInfo extends ObjectInfo {
      * @param x X position (1 metre = 16)
      * @param y Y position (1 metre = 16)
      * @param zByte height (1m = 4)
+     * @param isFloating whether object is floating
      * @param marshallType marshall type
-     * @param radius radius in meters
+     * @param diameter diameter (2, 4, 6, 8, ..., 62)
      * @param heading heading
      */
-    public RestrictedAreaInfo(int x, int y, int zByte, MarshallType marshallType, int radius, int heading) {
+    public RestrictedAreaInfo(int x,
+                              int y,
+                              int zByte,
+                              boolean isFloating,
+                              MarshallType marshallType,
+                              int diameter,
+                              int heading) {
         super(
                 (short) x,
                 (short) y,
                 (short) zByte,
-                (short) ((zByte > 0 ? 0x80 : 0) | marshallType.ordinal() | (radius & 31) << 2),
+                calculateFlagsValue(isFloating, marshallType, diameter),
                 ObjectType.MARSH_MARSHAL,
                 (short) heading
         );
@@ -47,10 +54,10 @@ public class RestrictedAreaInfo extends ObjectInfo {
     }
 
     /**
-     * @return radius in meters
+     * @return diameter (2, 4, 6, 8, ..., 62)
      */
-    public byte getRadius() {
-        return (byte) ((flags >> 2) & 31);
+    public byte getDiameter() {
+        return (byte) ((flags >> 1) & 62);
     }
 
     /**
@@ -62,5 +69,13 @@ public class RestrictedAreaInfo extends ObjectInfo {
      */
     public short getHeading() {
         return heading;
+    }
+
+    private static short calculateFlagsValue(boolean isFloating, MarshallType marshallType, int diameter) {
+        return (short) (
+                floatingBitForFlags(isFloating) |
+                        marshallType.ordinal() |
+                        normalizeIntValueForFlags(diameter, 2, 62, 1)
+        );
     }
 }

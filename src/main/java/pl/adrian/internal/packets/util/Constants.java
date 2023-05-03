@@ -1,5 +1,9 @@
 package pl.adrian.internal.packets.util;
 
+import pl.adrian.api.packets.AxmPacket;
+import pl.adrian.api.packets.MciPacket;
+import pl.adrian.api.packets.NlpPacket;
+
 /**
  * This class contains constant values used in library
  */
@@ -17,13 +21,17 @@ public class Constants {
      */
     public static final short MAL_MAX_MODS = 120;
     /**
-     * Maximum number of cars that can be sent in single {@link pl.adrian.api.packets.NlpPacket NlpPacket}
+     * Maximum number of cars that can be sent in single {@link NlpPacket}
      */
     public static final short NLP_MAX_CARS = 40;
     /**
-     * Maximum number of cars that can be sent in single {@link pl.adrian.api.packets.MciPacket MciPacket}
+     * Maximum number of cars that can be sent in single {@link MciPacket}
      */
     public static final short MCI_MAX_CARS = 16;
+    /**
+     * Maximum number of objects that can be sent in single {@link AxmPacket}.
+     */
+    public static final short AXM_MAX_OBJECTS = 60;
 
     private Constants() {}
 }

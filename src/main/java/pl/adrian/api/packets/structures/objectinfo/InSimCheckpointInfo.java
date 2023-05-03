@@ -9,14 +9,41 @@ import pl.adrian.api.packets.enums.ObjectType;
 public class InSimCheckpointInfo extends ObjectInfo {
     /**
      * Creates InSim checkpoint information. Constructor used only internally.
-     * @param x       X position (1 metre = 16)
-     * @param y       Y position (1 metre = 16)
-     * @param zByte   height (1m = 4)
-     * @param flags   object flags
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
+     * @param flags object flags
      * @param heading heading
      */
     InSimCheckpointInfo(short x, short y, short zByte, short flags, short heading) {
         super(x, y, zByte, flags, ObjectType.MARSH_IS_CP, heading);
+    }
+
+    /**
+     * Creates InSim checkpoint information.
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
+     * @param isFloating whether object is floating
+     * @param checkpointIndex checkpoint index
+     * @param width width (2, 4, 6, 8, ..., 62)
+     * @param heading heading
+     */
+    public InSimCheckpointInfo(int x,
+                               int y,
+                               int zByte,
+                               boolean isFloating,
+                               InSimCheckpointType checkpointIndex,
+                               int width,
+                               int heading) {
+        super(
+                (short) x,
+                (short) y,
+                (short) zByte,
+                calculateFlagsValue(isFloating, checkpointIndex, width),
+                ObjectType.MARSH_IS_CP,
+                (short) heading
+        );
     }
 
     /**
@@ -44,5 +71,13 @@ public class InSimCheckpointInfo extends ObjectInfo {
      */
     public short getHeading() {
         return heading;
+    }
+
+    private static short calculateFlagsValue(boolean isFloating, InSimCheckpointType checkpointIndex, int width) {
+        return (short) (
+                floatingBitForFlags(isFloating) |
+                        normalizeIntValueForFlags(width, 2, 62, 1) |
+                        checkpointIndex.ordinal()
+        );
     }
 }

@@ -9,15 +9,41 @@ import pl.adrian.api.packets.enums.ObjectType;
 public class ConcreteShortSlabWallInfo extends ConcreteObjectInfo {
     /**
      * Creates concrete short slab wall object information. Constructor used only internally.
-     * @param x       X position (1 metre = 16)
-     * @param y       Y position (1 metre = 16)
-     * @param zByte   height (1m = 4)
-     * @param flags   object flags
-     * @param index   object index
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
+     * @param flags object flags
      * @param heading heading
      */
-    ConcreteShortSlabWallInfo(short x, short y, short zByte, short flags, ObjectType index, short heading) {
-        super(x, y, zByte, flags, index, heading);
+    ConcreteShortSlabWallInfo(short x, short y, short zByte, short flags, short heading) {
+        super(x, y, zByte, flags, ObjectType.CONCRETE_SHORT_SLAB_WALL, heading);
+    }
+
+    /**
+     * Creates concrete short slab wall object information.
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
+     * @param colour colour
+     * @param sizeY size Y (0.25, 0.5, 0.75, 1)
+     * @param pitch pitch (0 to 90 in steps of 6 degrees)
+     * @param heading heading
+     */
+    public ConcreteShortSlabWallInfo(int x,
+                                     int y,
+                                     int zByte,
+                                     ConcreteObjectColour colour,
+                                     float sizeY,
+                                     int pitch,
+                                     int heading) {
+        super(
+                (short) x,
+                (short) y,
+                (short) zByte,
+                (short) (convertColourToFlagsValue(colour) | convertSizeYToFlagsValue(sizeY) | convertPitchToFlagsValue(pitch)),
+                ObjectType.CONCRETE_SHORT_SLAB_WALL,
+                (short) heading
+        );
     }
 
     /**

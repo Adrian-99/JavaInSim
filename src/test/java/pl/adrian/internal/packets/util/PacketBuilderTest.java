@@ -8,6 +8,7 @@ import pl.adrian.internal.packets.structures.base.ComplexInstructionStructure;
 import pl.adrian.internal.packets.structures.base.UnsignedInstructionStructure;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -337,6 +338,26 @@ class PacketBuilderTest {
 
         assertArrayEquals(expectedBytes, bytes);
         assertEquals(2, TestComplexStructure.getAppendBytesMethodCallsCount());
+    }
+
+    @Test
+    void writeStructureArray_fromList() {
+        var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
+        packetBuilder.writeStructureArray(
+                List.of(
+                        new TestComplexStructure(5),
+                        new TestComplexStructure(6),
+                        new TestComplexStructure(7),
+                        new TestComplexStructure(8)
+                ),
+                1
+        );
+        packetBuilder.writeByte(55);
+        var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, 5, 6, 7, 8, 55 };
+
+        assertArrayEquals(expectedBytes, bytes);
+        assertEquals(4, TestComplexStructure.getAppendBytesMethodCallsCount());
     }
 
     private static class TestComplexStructure implements ComplexInstructionStructure {

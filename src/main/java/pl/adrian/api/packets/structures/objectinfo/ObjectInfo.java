@@ -119,6 +119,7 @@ public abstract class ObjectInfo implements ComplexInstructionStructure {
      * @param packetDataBytes packet data bytes
      * @return read object info
      */
+    @SuppressWarnings("java:S3776")
     public static ObjectInfo read(PacketDataBytes packetDataBytes) {
         var x = packetDataBytes.readShort();
         var y = packetDataBytes.readShort();
@@ -135,19 +136,21 @@ public abstract class ObjectInfo implements ComplexInstructionStructure {
                 return new ChalkLineInfo(x, y, zByte, flags, objectType, heading);
             } else if (index >= 48 && index <= 55) {
                 return new TyreObjectInfo(x, y, zByte, flags, objectType, heading);
-            } else if (index >= 184 && index <= 185) {
-                return new StartObjectInfo(x, y, zByte, flags, objectType, heading);
+            } else if (index == 149) {
+                return new StartLightsInfo(x, y, zByte, flags, heading);
             } else if (index >= 172 && index <= 179) {
                 return switch (index) {
-                    case 173 -> new ConcreteRampInfo(x, y, zByte, flags, objectType, heading);
-                    case 174 -> new ConcreteWallInfo(x, y, zByte, flags, objectType, heading);
-                    case 175 -> new ConcretePillarInfo(x, y, zByte, flags, objectType, heading);
-                    case 176 -> new ConcreteSlabWallInfo(x, y, zByte, flags, objectType, heading);
-                    case 177 -> new ConcreteRampWallInfo(x, y, zByte, flags, objectType, heading);
-                    case 178 -> new ConcreteShortSlabWallInfo(x, y, zByte, flags, objectType, heading);
-                    case 179 -> new ConcreteWedgeInfo(x, y, zByte, flags, objectType, heading);
-                    default -> new ConcreteSlabInfo(x, y, zByte, flags, objectType, heading);
+                    case 173 -> new ConcreteRampInfo(x, y, zByte, flags, heading);
+                    case 174 -> new ConcreteWallInfo(x, y, zByte, flags, heading);
+                    case 175 -> new ConcretePillarInfo(x, y, zByte, flags, heading);
+                    case 176 -> new ConcreteSlabWallInfo(x, y, zByte, flags, heading);
+                    case 177 -> new ConcreteRampWallInfo(x, y, zByte, flags, heading);
+                    case 178 -> new ConcreteShortSlabWallInfo(x, y, zByte, flags, heading);
+                    case 179 -> new ConcreteWedgeInfo(x, y, zByte, flags, heading);
+                    default -> new ConcreteSlabInfo(x, y, zByte, flags, heading);
                 };
+            } else if (index >= 184 && index <= 185) {
+                return new StartObjectInfo(x, y, zByte, flags, objectType, heading);
             } else {
                 return new AutocrossObjectInfo(x, y, zByte, flags, objectType, heading);
             }
@@ -162,5 +165,39 @@ public abstract class ObjectInfo implements ComplexInstructionStructure {
         } else {
             return new UnknownObjectInfo(x, y, zByte, flags, heading);
         }
+    }
+
+    /**
+     * Converts floating flag to flags value.
+     * @param isFloating whether object is floating
+     * @return flags value with floating bit
+     */
+    protected static short floatingBitForFlags(boolean isFloating) {
+        return (short) (isFloating ? 0x80 : 0);
+    }
+
+    /**
+     * Converts int value to specified range.
+     * @param value int value
+     * @param min minimum value
+     * @param max maximum value
+     * @param shift number of shifting left bits after conversion
+     * @return result value
+     */
+    protected static int normalizeIntValueForFlags(int value, int min, int max, int shift) {
+        return normalizeIntValueForFlags(value, min, max, max, shift);
+    }
+
+    /**
+     * Converts int value to specified range.
+     * @param value int value
+     * @param min minimum value
+     * @param max maximum value
+     * @param mask value mask
+     * @param shift number of shifting left bits after conversion
+     * @return result value
+     */
+    protected static int normalizeIntValueForFlags(int value, int min, int max, int mask, int shift) {
+        return (Math.min(max, Math.max(min, value)) & mask) << shift;
     }
 }

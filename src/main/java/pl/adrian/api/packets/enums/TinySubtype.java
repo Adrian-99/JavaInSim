@@ -110,9 +110,9 @@ public enum TinySubtype {
      */
     ALC,
     /**
-     * 25 - info request: send IS_AXM packets for the entire layout
+     * 25 - info request: send {@link AxmPacket} packets for the entire layout
      */
-    AXM,
+    AXM(AxmPacket.class, true),
     /**
      * 26 - info request: send {@link SlcPacket} packets for all connections
      */

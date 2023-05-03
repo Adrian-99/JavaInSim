@@ -23,31 +23,39 @@ public class RouteCheckerInfo extends ObjectInfo {
      * @param x X position (1 metre = 16)
      * @param y Y position (1 metre = 16)
      * @param zByte height (1m = 4)
-     * @param radius radius in meters
+     * @param isFloating whether object is floating
+     * @param diameter diameter (2, 4, 6, 8, ..., 62)
      * @param routeIndex route index
      */
-    public RouteCheckerInfo(int x, int y, int zByte, int radius, int routeIndex) {
+    public RouteCheckerInfo(int x, int y, int zByte, boolean isFloating, int diameter, int routeIndex) {
         super(
                 (short) x,
                 (short) y,
                 (short) zByte,
-                (short) ((zByte > 0 ? 0x80 : 0) | (radius & 31) << 2),
+                calculateFlagsValue(isFloating, diameter),
                 ObjectType.MARSH_ROUTE,
-                (short) routeIndex
+                (short) (routeIndex - 1)
         );
     }
 
     /**
-     * @return radius in meters
+     * @return diameter (2, 4, 6, 8, ..., 62)
      */
-    public byte getRadius() {
-        return (byte) ((flags >> 2) & 31);
+    public byte getDiameter() {
+        return (byte) ((flags >> 1) & 62);
     }
 
     /**
      * @return route index
      */
     public short getRouteIndex() {
-        return heading;
+        return (short) (heading + 1);
+    }
+
+    private static short calculateFlagsValue(boolean isFloating, int diameter) {
+        return (short) (
+                floatingBitForFlags(isFloating) |
+                        normalizeIntValueForFlags(diameter, 2, 62, 1)
+        );
     }
 }

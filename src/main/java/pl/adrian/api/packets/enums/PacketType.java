@@ -227,7 +227,7 @@ public enum PacketType {
     /**
      * 54 - both ways: autocross multiple objects
      */
-    AXM,
+    AXM(AxmPacket.class),
     /**
      * 55 - info: admin command report
      */

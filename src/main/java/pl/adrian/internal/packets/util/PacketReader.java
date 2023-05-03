@@ -105,6 +105,7 @@ public class PacketReader {
             case HLV -> new HlvPacket(packetDataBytes);
             case UCO -> new UcoPacket(packetDataBytes);
             case CSC -> new CscPacket(packetDataBytes);
+            case AXM -> new AxmPacket(packetSize, packetReqI, packetDataBytes);
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }

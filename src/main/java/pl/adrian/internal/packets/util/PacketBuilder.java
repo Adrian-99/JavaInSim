@@ -224,6 +224,19 @@ public class PacketBuilder {
     }
 
     /**
+     * Appends to packet bytes complex structures list.
+     * @param value structures list value
+     * @param singleStructureSize size (in bytes) of single structure
+     * @return packet builder
+     */
+    public PacketBuilder writeStructureArray(List<? extends ComplexInstructionStructure> value, int singleStructureSize) {
+        for (var structure : value) {
+            writeStructure(structure, singleStructureSize);
+        }
+        return this;
+    }
+
+    /**
      * Concludes building packet.
      * @return bytes array of built packet
      */
