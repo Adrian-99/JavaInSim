@@ -1,10 +1,14 @@
 package pl.adrian.api.packets;
 
+import pl.adrian.api.InSimConnection;
+import pl.adrian.api.PacketListener;
 import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.api.packets.enums.PmoAction;
 import pl.adrian.api.packets.flags.Flags;
+import pl.adrian.api.packets.flags.IsiFlag;
 import pl.adrian.api.packets.flags.PmoFlag;
 import pl.adrian.api.packets.structures.objectinfo.ObjectInfo;
+import pl.adrian.api.packets.structures.objectinfo.PositionObjectInfo;
 import pl.adrian.internal.packets.annotations.Array;
 import pl.adrian.internal.packets.annotations.Byte;
 import pl.adrian.internal.packets.annotations.Structure;
@@ -18,7 +22,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * AutoX Multiple objects - variable size.
+ * AutoX Multiple objects - variable size.<br>
+ * If the {@link IsiFlag#AXM_LOAD} flag in the {@link IsiPacket} is set, those packets will be sent by LFS
+ * when a layout is loaded.<br>
+ * If the {@link IsiFlag#AXM_EDIT} flag in the {@link IsiPacket} is set, those packets will be sent by LFS
+ * when objects are edited by user or InSim.<br>
+ * It is possible to add or remove objects by sending this packet, however some care must be taken with it.<br>
+ * To request these packets for all layout objects and circles the {@link InSimConnection#request(Class, PacketListener)}
+ * can be used.<br>
+ * LFS will send as many packets as needed to describe the whole layout. If there are no objects or circles,
+ * there will be one packet with zero NumO. The final packet will have the {@link PmoFlag#FILE_END} flag set.<br>
+ * It is also possible to get (using {@link InSimConnection#request(int, PacketListener)}) or
+ * set ({@link PmoAction#POSITION}) the current editor selection.<br>
+ * The packet with {@link PmoAction#POSITION} is sent with a single object in the packet if a user
+ * presses O without any object type selected. Information only - no object is added. The only valid values
+ * in Info are X, Y, Zbyte and Heading.<br>
+ * {@link PmoAction#GET_Z} can be used to request the resulting Zbyte values for given X, Y, Zbyte
+ * positions listed in the packet. A similar reply (information only) will be sent
+ * with adjusted Zbyte values. Index and Heading are ignored and set to zero in the
+ * reply. Flags is set to 0x80 if Zbyte was successfully adjusted, zero if not.
+ * Suggested input values for Zbyte are either 240 to get the highest point at X, Y
+ * or you may use the approximate altitude (see layout file format).
  */
 public class AxmPacket extends Packet implements InstructionPacket, RequestablePacket {
     @Byte
@@ -45,8 +69,9 @@ public class AxmPacket extends Packet implements InstructionPacket, RequestableP
         pmoFlags = new Flags<>(PmoFlag.class, packetDataBytes.readByte());
         packetDataBytes.skipZeroByte();
         info = new ArrayList<>();
+        var asUnknownObjectInfo = pmoAction.equals(PmoAction.GET_Z) || pmoAction.equals(PmoAction.POSITION);
         for (var i = 0; i < numO; i++) {
-            info.add(ObjectInfo.read(packetDataBytes));
+            info.add(ObjectInfo.read(packetDataBytes, asUnknownObjectInfo));
         }
     }
 
@@ -71,6 +96,26 @@ public class AxmPacket extends Packet implements InstructionPacket, RequestableP
         this.pmoAction = pmoAction;
         this.pmoFlags = pmoFlags;
         this.info = info;
+        PacketValidator.validate(this);
+    }
+
+    /**
+     * Creates autoX multiple objects packet with {@link PmoAction#GET_Z} action.
+     * @param info info about each position
+     * @param reqI reqI, must not be zero
+     * @throws PacketValidationException if validation of any field in packet fails
+     */
+    public AxmPacket(List<PositionObjectInfo> info, int reqI) throws PacketValidationException {
+        super(
+                PacketUtils.getPacketSize(8, info.size(), 8, Constants.AXM_MAX_OBJECTS),
+                PacketType.AXM,
+                reqI
+        );
+        this.ucid = 0;
+        pmoAction = PmoAction.GET_Z;
+        pmoFlags = new Flags<>();
+        this.info = new ArrayList<>();
+        this.info.addAll(info);
         PacketValidator.validate(this);
     }
 

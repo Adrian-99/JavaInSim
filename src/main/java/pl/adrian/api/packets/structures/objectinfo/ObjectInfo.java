@@ -119,8 +119,18 @@ public abstract class ObjectInfo implements ComplexInstructionStructure {
      * @param packetDataBytes packet data bytes
      * @return read object info
      */
-    @SuppressWarnings("java:S3776")
     public static ObjectInfo read(PacketDataBytes packetDataBytes) {
+        return read(packetDataBytes, false);
+    }
+
+    /**
+     * Reads appropriate object info implementation from packet data bytes.
+     * @param packetDataBytes packet data bytes
+     * @param asUnknownObjectInfo whether {@link UnknownObjectInfo} should be returned regardless of index value
+     * @return read object info
+     */
+    @SuppressWarnings("java:S3776")
+    public static ObjectInfo read(PacketDataBytes packetDataBytes, boolean asUnknownObjectInfo) {
         var x = packetDataBytes.readShort();
         var y = packetDataBytes.readShort();
         var zByte = packetDataBytes.readByte();
@@ -128,7 +138,9 @@ public abstract class ObjectInfo implements ComplexInstructionStructure {
         var index = packetDataBytes.readByte();
         var heading = packetDataBytes.readByte();
 
-        if (index == 0) {
+        if (asUnknownObjectInfo) {
+            return new UnknownObjectInfo(x, y, zByte, flags, heading);
+        } else if (index == 0) {
             return new SpecialControlObjectInfo(x, y, zByte, flags, heading);
         } else if (index >= 4 && index < 192) {
             var objectType = ObjectType.fromOrdinal(index);

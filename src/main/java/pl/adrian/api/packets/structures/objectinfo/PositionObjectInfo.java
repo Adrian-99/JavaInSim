@@ -16,4 +16,14 @@ public class PositionObjectInfo extends ObjectInfo {
     public PositionObjectInfo(int x, int y, int zByte, int heading) {
         super((short) x, (short) y, (short) zByte, (short) 0x80, ObjectType.NULL, (short) heading);
     }
+
+    /**
+     * Creates position information.
+     * @param x X position (1 metre = 16)
+     * @param y Y position (1 metre = 16)
+     * @param zByte height (1m = 4)
+     */
+    public PositionObjectInfo(int x, int y, int zByte) {
+        this(x, y, zByte, 0);
+    }
 }

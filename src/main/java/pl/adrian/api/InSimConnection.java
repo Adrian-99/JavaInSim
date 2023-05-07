@@ -2,18 +2,14 @@ package pl.adrian.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.adrian.api.packets.SmallPacket;
-import pl.adrian.api.packets.TinyPacket;
-import pl.adrian.api.packets.enums.SmallSubtype;
-import pl.adrian.api.packets.enums.TinySubtype;
+import pl.adrian.api.packets.*;
+import pl.adrian.api.packets.enums.*;
 import pl.adrian.internal.packets.util.Constants;
-import pl.adrian.api.packets.IsiPacket;
 import pl.adrian.internal.packets.util.PacketRequest;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.InfoPacket;
 import pl.adrian.internal.packets.base.RequestablePacket;
 import pl.adrian.internal.packets.base.InstructionPacket;
-import pl.adrian.api.packets.enums.PacketType;
 import pl.adrian.internal.packets.util.PacketReader;
 
 import java.io.*;
@@ -21,10 +17,7 @@ import java.net.Socket;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
 /**
@@ -53,7 +46,6 @@ public class InSimConnection implements Closeable {
 
     private boolean isConnected = false;
     private ScheduledFuture<?> clearPacketRequestsThread;
-
 
     /**
      * Creates InSim connection and sends specified initialization packet.
@@ -160,7 +152,7 @@ public class InSimConnection implements Closeable {
      * contains randomly generated reqI value from range 1-255. When requested packet(s) is/are received,
      * specified callback function will be called (separately for each packet, if multiple).
      * @param packetClass class of the packet that is requested
-     * @param callback function that will be called when requested packet is received
+     * @param callback function that will be called when requested packet(s) is/are received
      * @param <T> type of the packet that is requested
      * @throws IOException if I/O error occurs when sending {@link TinyPacket}
      */
@@ -188,22 +180,52 @@ public class InSimConnection implements Closeable {
         }
     }
 
+    /**
+     * Requests {@link PmoAction#TTC_SEL} {@link AxmPacket} from LFS for specified UCID. Calling this method
+     * causes sending appropriate {@link TtcPacket} to LFS that is a request for {@link AxmPacket}. The
+     * {@link TtcPacket} contains randomly generated reqI value from range 1-255. When requested packet(s) is/are
+     * received, specified callback function will be called (separately for each packet, if multiple).
+     * @param ucid unique connection id
+     * @param callback function that will be called when requested packet(s) is/are received
+     * @throws IOException if I/O error occurs when sending {@link TtcPacket}
+     */
+    public void request(int ucid, PacketListener<AxmPacket> callback) throws IOException {
+        logger.debug("Requested AXM SEL packet");
+
+        var reqI = getFreeReqI(PacketType.AXM);
+
+        packetRequests.add(new PacketRequest<>(PacketType.AXM, true, reqI, callback));
+
+        var ttcPacket = new TtcPacket(TtcSubtype.SEL, ucid, 0, 0, 0, reqI);
+        send(ttcPacket);
+
+        tryToScheduleClearPacketRequestsThread();
+    }
+
     private <T extends Packet & InfoPacket> void handleRequest(PacketType packetType,
                                                                TinySubtype tinySubtype,
                                                                PacketListener<T> callback) throws IOException {
-        var allowedReqIs = IntStream.range(1, 256).filter(
-                reqI -> packetRequests.stream().noneMatch(
-                        request -> request.getReqI() == reqI && request.getPacketType().equals(packetType)
-                )
-        ).toArray();
-        var reqIIndex = random.nextInt(0, allowedReqIs.length);
-        var reqI = (short) allowedReqIs[reqIIndex];
+        var reqI = getFreeReqI(packetType);
 
         packetRequests.add(new PacketRequest<>(packetType, tinySubtype.isMultiPacketResponse(), reqI, callback));
 
         var tinyPacket = new TinyPacket(reqI, tinySubtype);
         send(tinyPacket);
 
+        tryToScheduleClearPacketRequestsThread();
+    }
+
+    private short getFreeReqI(PacketType packetType) {
+        var allowedReqIs = IntStream.range(1, 256).filter(
+                reqI -> packetRequests.stream().noneMatch(
+                        request -> request.getReqI() == reqI && request.getPacketType().equals(packetType)
+                )
+        ).toArray();
+        var reqIIndex = random.nextInt(0, allowedReqIs.length);
+        return (short) allowedReqIs[reqIIndex];
+    }
+
+    private void tryToScheduleClearPacketRequestsThread() {
         if (clearPacketRequestsThread == null || clearPacketRequestsThread.isCancelled()) {
             logger.debug("Scheduling clearing timed out packet requests thread");
             clearPacketRequestsThread = threadsExecutor.scheduleAtFixedRate(
@@ -223,6 +245,7 @@ public class InSimConnection implements Closeable {
                 onPacketReceived(headerBytes);
             }
             isConnected = false;
+            logger.error("Lost connection to LFS");
         } catch (IOException exception) {
             isConnected = false;
             logger.error("Error occurred while reading packet header bytes: {}", exception.getMessage());

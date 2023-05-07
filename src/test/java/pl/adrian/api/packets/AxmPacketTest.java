@@ -62,6 +62,24 @@ class AxmPacketTest {
     }
 
     @Test
+    void createAxmPacket_withGetZAction() {
+        var packet = new AxmPacket(
+                List.of(
+                        new PositionObjectInfo(8675, -3654, 240),
+                        new PositionObjectInfo(-521, 9654, 0)
+                ),
+                25
+        );
+        var bytes = packet.getBytes();
+        var expectedBytes = new byte[] {
+                6, 54, 25, 2, 0, 8, 0, 0, -29, 33, -70, -15, -16, -128, 0, 0,
+                -9, -3, -74, 37, 0, -128, 0, 0
+        };
+
+        assertArrayEquals(expectedBytes, bytes);
+    }
+
+    @Test
     @SuppressWarnings("java:S5961")
     void readAxmPacket() {
         var headerBytes = new byte[] { 42, 54, -112 };
@@ -311,5 +329,38 @@ class AxmPacketTest {
         assertEquals(95, object20.getFlags());
         assertEquals(ObjectType.NULL, object20.getIndex());
         assertEquals(68, object20.getHeading());
+    }
+
+    @Test
+    void readAxmPacket_withAxmPositionAction() {
+        var headerBytes = new byte[] { 4, 54, 0 };
+        var dataBytes = new byte[] {
+                1, 2, 7, 0, 0, 84, -8, 8, -1, 17, 0, 0, -128
+        };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertPacketHeaderEquals(13, PacketType.AXM, 0, packetReader);
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof AxmPacket);
+
+        var castedReadPacket = (AxmPacket) readPacket;
+
+        assertPacketHeaderEquals(16, PacketType.AXM, 0, castedReadPacket);
+        assertEquals(1, castedReadPacket.getNumO());
+        assertEquals(2, castedReadPacket.getUcid());
+        assertEquals(PmoAction.POSITION, castedReadPacket.getPmoAction());
+        assertFlagsEqual(PmoFlag.class, Set.of(), castedReadPacket.getPmoFlags());
+
+        assertTrue(castedReadPacket.getInfo().get(0) instanceof UnknownObjectInfo);
+        var object1 = (UnknownObjectInfo) castedReadPacket.getInfo().get(0);
+        assertEquals(-1964, object1.getX());
+        assertEquals(-248, object1.getY());
+        assertEquals(17, object1.getZByte());
+        assertFalse(object1.isFloating());
+        assertEquals(0, object1.getFlags());
+        assertEquals(ObjectType.NULL, object1.getIndex());
+        assertEquals(128, object1.getHeading());
     }
 }
