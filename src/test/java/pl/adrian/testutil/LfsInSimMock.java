@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
 
-public class LfsMock implements Closeable {
+public class LfsInSimMock implements Closeable {
     private final ExecutorService listenExecutor;
     private final List<byte[]> receivedPacketBytes;
     private final Product product;
@@ -28,7 +28,7 @@ public class LfsMock implements Closeable {
     private InputStream in;
     private OutputStream out;
 
-    public LfsMock(int port, Product product, String version) throws IOException {
+    public LfsInSimMock(int port, Product product, String version) throws IOException {
         this.product = product;
         if (version.length() > 8) {
             version = version.substring(0, 8);

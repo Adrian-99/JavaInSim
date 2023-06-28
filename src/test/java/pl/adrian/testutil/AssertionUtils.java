@@ -1,5 +1,6 @@
 package pl.adrian.testutil;
 
+import org.awaitility.core.ConditionTimeoutException;
 import org.opentest4j.AssertionFailedError;
 import pl.adrian.api.packets.enums.DefaultCar;
 import pl.adrian.api.packets.enums.PacketType;
@@ -10,8 +11,12 @@ import pl.adrian.internal.packets.enums.EnumHelpers;
 import pl.adrian.internal.packets.util.PacketReader;
 
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AssertionUtils {
     public static void assertPacketHeaderEquals(int expectedDataBytesCount,
@@ -65,5 +70,18 @@ public class AssertionUtils {
         if (!actualCar.getSkinId().equals(expectedModSkinId)) {
             throw new AssertionFailedError("Expected: " + expectedModSkinId + ", was: " + actualCar.getSkinId());
         }
+    }
+
+    public static void assertConditionMet(Callable<Boolean> condition, int atMostMs, int pollIntervalMs) {
+        await().atMost(atMostMs, TimeUnit.MILLISECONDS)
+                .with().pollInterval(pollIntervalMs, TimeUnit.MILLISECONDS)
+                .until(condition);
+    }
+
+    public static void assertConditionNotMet(Callable<Boolean> condition, int withinMs) {
+        assertThrows(
+                ConditionTimeoutException.class,
+                () -> assertConditionMet(condition, withinMs, withinMs / 2)
+        );
     }
 }

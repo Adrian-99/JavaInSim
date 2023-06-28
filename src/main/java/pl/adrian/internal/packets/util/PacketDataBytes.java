@@ -1,15 +1,20 @@
 package pl.adrian.internal.packets.util;
 
+import pl.adrian.api.outsim.OutSimPacket2;
 import pl.adrian.internal.packets.base.InfoPacket;
 
 /**
- * This class is a helper that is used while creating {@link InfoPacket} out of its byte representation.
+ * This class is a helper that is used while creating {@link InfoPacket} or {@link OutSimPacket2} out of its byte representation.
  */
 public class PacketDataBytes {
     private final byte[] dataBytes;
     private int dataBytesReaderIndex;
 
-    PacketDataBytes(byte[] packetDataBytes) {
+    /**
+     * Creates packet data bytes. Constructor used only internally.
+     * @param packetDataBytes packet bytes array
+     */
+    public PacketDataBytes(byte[] packetDataBytes) {
         dataBytes = packetDataBytes;
         dataBytesReaderIndex = 0;
     }

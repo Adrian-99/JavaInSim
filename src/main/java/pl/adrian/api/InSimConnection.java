@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import pl.adrian.api.packets.*;
 import pl.adrian.api.packets.enums.*;
 import pl.adrian.internal.packets.util.Constants;
+import pl.adrian.internal.packets.util.LoggerUtils;
 import pl.adrian.internal.packets.util.PacketRequest;
 import pl.adrian.internal.packets.base.Packet;
 import pl.adrian.internal.packets.base.InfoPacket;
@@ -21,7 +22,7 @@ import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
 /**
- * This class is responsible for connecting and communicating with LFS.
+ * This class is responsible for InSim connection to LFS.
  */
 public class InSimConnection implements Closeable {
     private final Logger logger = LoggerFactory.getLogger(InSimConnection.class);
@@ -107,7 +108,7 @@ public class InSimConnection implements Closeable {
      * Registers packet listener - a function that will be called each time the packet of chosen
      * type will be received from LFS. It is possible to register multiple listeners for single
      * packet type, however duplicate listeners will be ignored. It is possible to unregister packet
-     * listeners later on - see {@link #stopListening(Class, PacketListener) stopListening} method.
+     * listeners later on - see {@link #stopListening} method.
      * @param packetClass class of the packet to listen for
      * @param packetListener function that will be called each time the packet of chosen type is
      *                       received from LFS
@@ -125,7 +126,7 @@ public class InSimConnection implements Closeable {
 
     /**
      * Unregisters specified packet listener, if it has been registered before using
-     * {@link #listen(Class, PacketListener) listen} method.
+     * {@link #listen} method.
      * @param packetClass class of the packet that was listened for
      * @param packetListener function that was called each time the packet of chosen type was received from LFS
      * @param <T> type of the packet that was listened for
@@ -249,7 +250,7 @@ public class InSimConnection implements Closeable {
         } catch (IOException exception) {
             isConnected = false;
             logger.error("Error occurred while reading packet header bytes: {}", exception.getMessage());
-            logStackTrace("reading packet header", exception);
+            LoggerUtils.logStacktrace(logger, "reading packet header", exception);
         }
         logger.debug("Stopping packet reading thread");
     }
@@ -268,7 +269,7 @@ public class InSimConnection implements Closeable {
             }
         } catch (Exception exception) {
             logger.error("Error occurred while reading packet: {}", exception.getMessage());
-            logStackTrace("reading packet", exception);
+            LoggerUtils.logStacktrace(logger, "reading packet", exception);
         }
     }
 
@@ -309,7 +310,7 @@ public class InSimConnection implements Closeable {
                         listener.onPacketReceived(this, packet);
                     } catch (Exception exception) {
                         logger.error("Error occurred in packet listener callback: {}", exception.getMessage());
-                        logStackTrace("listener callback", exception);
+                        LoggerUtils.logStacktrace(logger, "listener callback", exception);
                     }
                 }
             });
@@ -326,7 +327,7 @@ public class InSimConnection implements Closeable {
                         packetRequest.getCallback().onPacketReceived(this, packet);
                     } catch (Exception exception) {
                         logger.error("Error occurred in packet request callback: {}", exception.getMessage());
-                        logStackTrace("packet request callback", exception);
+                        LoggerUtils.logStacktrace(logger, "packet request callback", exception);
                     }
                 });
                 if (!packetRequest.isExpectMultiPacketResponse()) {
@@ -355,21 +356,6 @@ public class InSimConnection implements Closeable {
         if (packetRequests.isEmpty() && clearPacketRequestsThread != null) {
             logger.debug("Stopping clearing timed out packet requests thread - no packet requests left");
             clearPacketRequestsThread.cancel(false);
-        }
-    }
-
-    private void logStackTrace(String step, Exception exception) {
-        if (logger.isDebugEnabled()) {
-            var messageBuilder = new StringBuilder(exception.getClass().getSimpleName())
-                    .append(" thrown in ")
-                    .append(step)
-                    .append(": ")
-                    .append(exception.getMessage());
-            for (var stackTraceElement : exception.getStackTrace()) {
-                messageBuilder.append("\nat ")
-                        .append(stackTraceElement.toString());
-            }
-            logger.debug(messageBuilder.toString());
         }
     }
 }
