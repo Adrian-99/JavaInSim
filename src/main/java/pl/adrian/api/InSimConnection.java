@@ -2,8 +2,11 @@ package pl.adrian.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.adrian.api.outsim.OutSimConnection;
+import pl.adrian.api.outsim.flags.OutSimOpts;
 import pl.adrian.api.packets.*;
 import pl.adrian.api.packets.enums.*;
+import pl.adrian.api.packets.flags.Flags;
 import pl.adrian.internal.packets.util.Constants;
 import pl.adrian.internal.packets.util.LoggerUtils;
 import pl.adrian.internal.packets.util.PacketRequest;
@@ -31,6 +34,7 @@ public class InSimConnection implements Closeable {
     private final InputStream in;
     private final Random random;
     private final ScheduledExecutorService threadsExecutor;
+    private final int udpPort;
     @SuppressWarnings("rawtypes")
     private final Map<PacketType, Set<PacketListener>> registeredListeners;
     @SuppressWarnings("rawtypes")
@@ -62,6 +66,7 @@ public class InSimConnection implements Closeable {
         in = socket.getInputStream();
         random = new Random();
         threadsExecutor = Executors.newScheduledThreadPool(2);
+        udpPort = initializationPacket.getUdpPort();
         registeredListeners = new EnumMap<>(PacketType.class);
         packetRequests = new ArrayList<>();
         packetRequestTimeoutMs = 10000;
@@ -148,7 +153,7 @@ public class InSimConnection implements Closeable {
     }
 
     /**
-     * Requests packet(s) of specified type from LFS. Calling this method causes sending appropriate
+     * Requests packet(s) of specified type from LFS. Calling this method sends appropriate
      * {@link TinyPacket} to LFS that is a request for specified packet(s). The {@link TinyPacket}
      * contains randomly generated reqI value from range 1-255. When requested packet(s) is/are received,
      * specified callback function will be called (separately for each packet, if multiple).
@@ -167,7 +172,7 @@ public class InSimConnection implements Closeable {
 
     /**
      * Requests specific {@link SmallPacket} from LFS. It is only possible to request {@link SmallPacket} of
-     * {@link SmallSubtype#ALC ALC} subtype. Calling this method causes sending appropriate {@link TinyPacket}
+     * {@link SmallSubtype#ALC ALC} subtype. Calling this method sends appropriate {@link TinyPacket}
      * to LFS that is a request for specified packet. The {@link TinyPacket} contains randomly generated reqI
      * value from range 1-255. When requested packet is received, specified callback function will be called.
      * @param tinySubtype {@link TinySubtype#ALC}, other values will be ignored
@@ -183,7 +188,7 @@ public class InSimConnection implements Closeable {
 
     /**
      * Requests {@link PmoAction#TTC_SEL} {@link AxmPacket} from LFS for specified UCID. Calling this method
-     * causes sending appropriate {@link TtcPacket} to LFS that is a request for {@link AxmPacket}. The
+     * sends appropriate {@link TtcPacket} to LFS that is a request for {@link AxmPacket}. The
      * {@link TtcPacket} contains randomly generated reqI value from range 1-255. When requested packet(s) is/are
      * received, specified callback function will be called (separately for each packet, if multiple).
      * @param ucid unique connection id
@@ -201,6 +206,46 @@ public class InSimConnection implements Closeable {
         send(ttcPacket);
 
         tryToScheduleClearPacketRequestsThread();
+    }
+
+    /**
+     * Initializes OutSim from InSim. If OutSim has not been set up in cfg.txt, this method makes LFS send UDP packets
+     * if in game, using the OutSim system. The OutSim packets will be sent to the UDP port specified in the
+     * {@link IsiPacket}. This method sends appropriate {@link SmallSubtype#SSP SSP} {@link SmallPacket}
+     * to LFS and creates {@link OutSimConnection}. To cancel sending OutSim packets by LFS, {@link #stopOutSim}
+     * method should be used.
+     * @param interval time between updates - must be greater than 0
+     * @param opts OutSim options - should match value from cfg.txt
+     * @return active OutSim connection
+     * @throws IOException if I/O error occurs while sending {@link SmallPacket} or creating {@link OutSimConnection}
+     */
+    public OutSimConnection initializeOutSim(long interval, int opts) throws IOException {
+        return initializeOutSim(interval, new Flags<>(OutSimOpts.class, opts));
+    }
+
+    /**
+     * Initializes OutSim from InSim. If OutSim has not been set up in cfg.txt, this method makes LFS send UDP packets
+     * if in game, using the OutSim system. The OutSim packets will be sent to the UDP port specified in the
+     * {@link IsiPacket}. This method sends appropriate {@link SmallSubtype#SSP SSP} {@link SmallPacket}
+     * to LFS and creates {@link OutSimConnection}. To cancel sending OutSim packets by LFS, {@link #stopOutSim}
+     * method should be used.
+     * @param interval time between updates - must be greater than 0
+     * @param opts OutSim options - should match value from cfg.txt
+     * @return active OutSim connection
+     * @throws IOException if I/O error occurs while sending {@link SmallPacket} or creating {@link OutSimConnection}
+     */
+    public OutSimConnection initializeOutSim(long interval, Flags<OutSimOpts> opts) throws IOException {
+        send(new SmallPacket(SmallSubtype.SSP, interval));
+        return new OutSimConnection(udpPort, opts);
+    }
+
+    /**
+     * Cancels sending OutSim packets by LFS that have been previously requested using {@link #initializeOutSim}
+     * method. This method sends appropriate {@link SmallSubtype#SSP SSP} {@link SmallPacket} to LFS.
+     * @throws IOException if I/O error occurs while sending {@link SmallPacket}
+     */
+    public void stopOutSim() throws IOException {
+        send(new SmallPacket(SmallSubtype.SSP, 0));
     }
 
     private <T extends Packet & InfoPacket> void handleRequest(PacketType packetType,

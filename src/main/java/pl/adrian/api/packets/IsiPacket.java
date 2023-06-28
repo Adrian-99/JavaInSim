@@ -37,6 +37,7 @@ public class IsiPacket extends Packet implements InstructionPacket {
 
     /**
      * Creates InSim Init packet
+     * @param udpPort port for UDP replies from LFS (0 to 65535)
      * @param flags bit flags for options
      * @param prefix special host message prefix character
      * @param interval time in ms between NLP or MCI (0 = none)
@@ -44,13 +45,14 @@ public class IsiPacket extends Packet implements InstructionPacket {
      * @param iName a short name for your program
      * @throws PacketValidationException if validation of any field in packet fails
      */
-    public IsiPacket(Flags<IsiFlag> flags,
+    public IsiPacket(int udpPort,
+                     Flags<IsiFlag> flags,
                      Character prefix,
                      int interval,
                      String admin,
                      String iName) throws PacketValidationException {
         super(44, PacketType.ISI, 1);
-        this.udpPort = 0;
+        this.udpPort = udpPort;
         this.flags = flags;
         this.inSimVer = Constants.INSIM_VERSION;
         this.prefix = prefix;
@@ -72,5 +74,12 @@ public class IsiPacket extends Packet implements InstructionPacket {
                 .writeCharArray(admin, 16, false)
                 .writeCharArray(iName, 16, false)
                 .getBytes();
+    }
+
+    /**
+     * @return port for UDP replies from LFS (0 to 65535)
+     */
+    public int getUdpPort() {
+        return udpPort;
     }
 }

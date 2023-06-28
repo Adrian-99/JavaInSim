@@ -20,7 +20,9 @@ import static pl.adrian.testutil.AssertionUtils.*;
 
 class InSimConnectionTest {
     private static final int LFS_MOCK_PORT = 49999;
+    private static final int UDP_PORT = 3000;
     private static final IsiPacket INIT_PACKET = new IsiPacket(
+            UDP_PORT,
             new Flags<>(IsiFlag.LOCAL),
             null,
             250,
@@ -28,7 +30,7 @@ class InSimConnectionTest {
             "application"
     );
     private static final byte[] INIT_PACKET_BYTES = new byte[] {
-            11, 1, 1, 0, 0, 0, 4, 0, 9, 0, -6, 0, 112, 97, 115, 115,
+            11, 1, 1, 0, -72, 11, 4, 0, 9, 0, -6, 0, 112, 97, 115, 115,
             119, 111, 114, 100, 0, 0, 0, 0, 0, 0, 0, 0, 97, 112, 112, 108,
             105, 99, 97, 116, 105, 111, 110, 0, 0, 0, 0, 0
     };
@@ -369,5 +371,41 @@ class InSimConnectionTest {
         lfsInSimMock.send(responsePacketBytes);
 
         assertConditionMet(() -> receivedResponsesCount.get() == 1, 1000, 100);
+    }
+
+    @Test
+    void initializeOutSim() throws IOException {
+        try (var outSimConnection = inSimConnection.initializeOutSim(500, 25)) {
+            assertNotNull(outSimConnection);
+        }
+
+        var lfsReceivedPackets = lfsInSimMock.awaitReceivedPackets(2);
+        assertEquals(2, lfsReceivedPackets.size());
+        assertEquals(8, lfsReceivedPackets.get(1).length);
+        assertEquals(2, lfsReceivedPackets.get(1)[0]);
+        assertEquals(4, lfsReceivedPackets.get(1)[1]);
+        assertEquals(0, lfsReceivedPackets.get(1)[2]);
+        assertEquals(1, lfsReceivedPackets.get(1)[3]);
+        assertEquals(-12, lfsReceivedPackets.get(1)[4]);
+        assertEquals(1, lfsReceivedPackets.get(1)[5]);
+        assertEquals(0, lfsReceivedPackets.get(1)[6]);
+        assertEquals(0, lfsReceivedPackets.get(1)[7]);
+    }
+
+    @Test
+    void stopOutSim() throws IOException {
+        inSimConnection.stopOutSim();
+
+        var lfsReceivedPackets = lfsInSimMock.awaitReceivedPackets(2);
+        assertEquals(2, lfsReceivedPackets.size());
+        assertEquals(8, lfsReceivedPackets.get(1).length);
+        assertEquals(2, lfsReceivedPackets.get(1)[0]);
+        assertEquals(4, lfsReceivedPackets.get(1)[1]);
+        assertEquals(0, lfsReceivedPackets.get(1)[2]);
+        assertEquals(1, lfsReceivedPackets.get(1)[3]);
+        assertEquals(0, lfsReceivedPackets.get(1)[4]);
+        assertEquals(0, lfsReceivedPackets.get(1)[5]);
+        assertEquals(0, lfsReceivedPackets.get(1)[6]);
+        assertEquals(0, lfsReceivedPackets.get(1)[7]);
     }
 }
