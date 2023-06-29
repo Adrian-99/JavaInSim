@@ -409,4 +409,40 @@ class InSimConnectionTest {
         assertEquals(0, lfsReceivedPackets.get(1)[6]);
         assertEquals(0, lfsReceivedPackets.get(1)[7]);
     }
+
+    @Test
+    void initializeOutGauge() throws IOException {
+        try (var outGaugeConnection = inSimConnection.initializeOutGauge(500)) {
+            assertNotNull(outGaugeConnection);
+        }
+
+        var lfsReceivedPackets = lfsTcpMock.awaitReceivedPackets(2);
+        assertEquals(2, lfsReceivedPackets.size());
+        assertEquals(8, lfsReceivedPackets.get(1).length);
+        assertEquals(2, lfsReceivedPackets.get(1)[0]);
+        assertEquals(4, lfsReceivedPackets.get(1)[1]);
+        assertEquals(0, lfsReceivedPackets.get(1)[2]);
+        assertEquals(2, lfsReceivedPackets.get(1)[3]);
+        assertEquals(-12, lfsReceivedPackets.get(1)[4]);
+        assertEquals(1, lfsReceivedPackets.get(1)[5]);
+        assertEquals(0, lfsReceivedPackets.get(1)[6]);
+        assertEquals(0, lfsReceivedPackets.get(1)[7]);
+    }
+
+    @Test
+    void stopOutGauge() throws IOException {
+        inSimConnection.stopOutGauge();
+
+        var lfsReceivedPackets = lfsTcpMock.awaitReceivedPackets(2);
+        assertEquals(2, lfsReceivedPackets.size());
+        assertEquals(8, lfsReceivedPackets.get(1).length);
+        assertEquals(2, lfsReceivedPackets.get(1)[0]);
+        assertEquals(4, lfsReceivedPackets.get(1)[1]);
+        assertEquals(0, lfsReceivedPackets.get(1)[2]);
+        assertEquals(2, lfsReceivedPackets.get(1)[3]);
+        assertEquals(0, lfsReceivedPackets.get(1)[4]);
+        assertEquals(0, lfsReceivedPackets.get(1)[5]);
+        assertEquals(0, lfsReceivedPackets.get(1)[6]);
+        assertEquals(0, lfsReceivedPackets.get(1)[7]);
+    }
 }

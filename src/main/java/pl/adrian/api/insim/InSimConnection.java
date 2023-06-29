@@ -2,6 +2,7 @@ package pl.adrian.api.insim;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.adrian.api.outgauge.OutGaugeConnection;
 import pl.adrian.api.outsim.OutSimConnection;
 import pl.adrian.api.outsim.flags.OutSimOpts;
 import pl.adrian.api.insim.packets.*;
@@ -246,6 +247,30 @@ public class InSimConnection implements Closeable {
      */
     public void stopOutSim() throws IOException {
         send(new SmallPacket(SmallSubtype.SSP, 0));
+    }
+
+    /**
+     * Initializes OutGauge from InSim. If OutGauge has not been set up in cfg.txt, this method makes LFS send UDP packets
+     * if in game, using the OutGauge system. The OutGauge packets will be sent to the UDP port specified in the
+     * {@link IsiPacket}. This method sends appropriate {@link SmallSubtype#SSG SSG} {@link SmallPacket}
+     * to LFS and creates {@link OutGaugeConnection}. To cancel sending OutGauge packets by LFS, {@link #stopOutGauge}
+     * method should be used.
+     * @param interval time between updates - must be greater than 0
+     * @return active OutGauge connection
+     * @throws IOException if I/O error occurs while sending {@link SmallPacket} or creating {@link OutGaugeConnection}
+     */
+    public OutGaugeConnection initializeOutGauge(long interval) throws IOException {
+        send(new SmallPacket(SmallSubtype.SSG, interval));
+        return new OutGaugeConnection(udpPort);
+    }
+
+    /**
+     * Cancels sending OutGauge packets by LFS that have been previously requested using {@link #initializeOutGauge}
+     * method. This method sends appropriate {@link SmallSubtype#SSG SSG} {@link SmallPacket} to LFS.
+     * @throws IOException if I/O error occurs while sending {@link SmallPacket}
+     */
+    public void stopOutGauge() throws IOException {
+        send(new SmallPacket(SmallSubtype.SSG, 0));
     }
 
     private <T extends Packet & InfoPacket> void handleRequest(PacketType packetType,
