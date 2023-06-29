@@ -3,7 +3,7 @@ package pl.adrian.api.insim.packets;
 import org.junit.jupiter.api.Test;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.insim.packets.enums.SmallSubtype;
-import pl.adrian.api.insim.packets.enums.DefaultCar;
+import pl.adrian.api.common.enums.DefaultCar;
 import pl.adrian.api.insim.packets.enums.VoteAction;
 import pl.adrian.api.insim.packets.flags.LcsFlag;
 import pl.adrian.internal.insim.packets.util.PacketReader;

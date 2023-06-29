@@ -1,7 +1,7 @@
 package pl.adrian.api.insim.packets;
 
 import pl.adrian.api.insim.packets.enums.PacketType;
-import pl.adrian.api.insim.packets.enums.DefaultCar;
+import pl.adrian.api.common.enums.DefaultCar;
 import pl.adrian.api.insim.packets.structures.CarHandicaps;
 import pl.adrian.internal.insim.packets.annotations.Array;
 import pl.adrian.internal.insim.packets.annotations.Structure;

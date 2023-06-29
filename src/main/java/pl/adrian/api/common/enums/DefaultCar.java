@@ -1,4 +1,4 @@
-package pl.adrian.api.insim.packets.enums;
+package pl.adrian.api.common.enums;
 
 import pl.adrian.internal.common.enums.EnumHelpers;
 

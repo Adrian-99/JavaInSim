@@ -4,11 +4,11 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.net.*;
 
-public class LfsOutSimMock implements Closeable {
+public class LfsUdpMock implements Closeable {
     private final int port;
     private final DatagramSocket socket;
 
-    public LfsOutSimMock(int port) throws SocketException {
+    public LfsUdpMock(int port) throws SocketException {
         this.port = port;
         socket = new DatagramSocket();
     }

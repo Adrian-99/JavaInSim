@@ -12,6 +12,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.SocketException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -34,9 +35,9 @@ public class OutSimConnection implements Closeable {
      * Creates OutSim connection.
      * @param port IP port - should match value from cfg.txt
      * @param opts OutSim options - should match value from cfg.txt
-     * @throws IOException if I/O error occurs when creating a connection
+     * @throws SocketException if error occurs when creating a connection
      */
-    public OutSimConnection(int port, int opts) throws IOException {
+    public OutSimConnection(int port, int opts) throws SocketException {
         this(port, new Flags<>(OutSimOpts.class, opts));
     }
 
@@ -44,9 +45,9 @@ public class OutSimConnection implements Closeable {
      * Creates OutSim connection.
      * @param port IP port - should match value from cfg.txt
      * @param opts OutSim options - should match value from cfg.txt
-     * @throws IOException if I/O error occurs when creating a connection
+     * @throws SocketException if error occurs when creating a connection
      */
-    public OutSimConnection(int port, Flags<OutSimOpts> opts) throws IOException {
+    public OutSimConnection(int port, Flags<OutSimOpts> opts) throws SocketException {
         logger.debug("Creating OutSim connection");
         serverSocket = new DatagramSocket(port);
         this.opts = opts;

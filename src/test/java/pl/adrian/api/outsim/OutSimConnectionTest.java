@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.adrian.api.outsim.flags.OutSimOpts;
 import pl.adrian.api.common.flags.Flags;
-import pl.adrian.testutil.LfsOutSimMock;
+import pl.adrian.testutil.LfsUdpMock;
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -19,16 +19,16 @@ import static pl.adrian.testutil.AssertionUtils.assertConditionMet;
 
 class OutSimConnectionTest {
     private static final int PORT = 30003;
-    private LfsOutSimMock lfsOutSimMock;
+    private LfsUdpMock lfsUdpMock;
 
     @BeforeEach
     void beforeEach() throws SocketException {
-        lfsOutSimMock = new LfsOutSimMock(PORT);
+        lfsUdpMock = new LfsUdpMock(PORT);
     }
 
     @AfterEach
     void afterEach() {
-        lfsOutSimMock.close();
+        lfsUdpMock.close();
     }
 
     @Test
@@ -61,7 +61,7 @@ class OutSimConnectionTest {
 
             outSimConnection.listen(outSimPacket::set);
 
-            lfsOutSimMock.send(outSimPacketBytes);
+            lfsUdpMock.send(outSimPacketBytes);
 
             assertConditionMet(() -> outSimPacket.get() != null, 1000, 100);
         }
@@ -170,7 +170,7 @@ class OutSimConnectionTest {
 
             outSimConnection.listen(outSimPacket::set);
 
-            lfsOutSimMock.send(outSimPacketBytes);
+            lfsUdpMock.send(outSimPacketBytes);
 
             assertConditionMet(() -> outSimPacket.get() != null, 1000, 100);
         }
@@ -206,7 +206,7 @@ class OutSimConnectionTest {
 
             outSimConnection.listen(outSimPacket::set);
 
-            lfsOutSimMock.send(outSimPacketBytes);
+            lfsUdpMock.send(outSimPacketBytes);
 
             assertConditionMet(() -> outSimPacket.get() != null, 1000, 100);
         }
@@ -251,7 +251,7 @@ class OutSimConnectionTest {
             });
             outSimConnection.listen(packet -> secondListenerCalled.set(true));
 
-            lfsOutSimMock.send(new byte[] { 65, 93, -82, 0 });
+            lfsUdpMock.send(new byte[] { 65, 93, -82, 0 });
 
             assertConditionMet(
                     () -> firstListenerCalled.get() && secondListenerCalled.get(),
@@ -274,7 +274,7 @@ class OutSimConnectionTest {
 
             outSimConnection.stopListening(packetListener1);
 
-            lfsOutSimMock.send(new byte[] { 65, 93, -82, 0 });
+            lfsUdpMock.send(new byte[] { 65, 93, -82, 0 });
 
             assertConditionMet(
                     () -> !firstListenerCalled.get() && secondListenerCalled.get(),

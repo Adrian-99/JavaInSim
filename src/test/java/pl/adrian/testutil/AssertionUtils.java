@@ -2,10 +2,10 @@ package pl.adrian.testutil;
 
 import org.awaitility.core.ConditionTimeoutException;
 import org.opentest4j.AssertionFailedError;
-import pl.adrian.api.insim.packets.enums.DefaultCar;
+import pl.adrian.api.common.enums.DefaultCar;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.common.flags.Flags;
-import pl.adrian.api.insim.packets.structures.Car;
+import pl.adrian.api.common.structures.Car;
 import pl.adrian.internal.insim.packets.base.InfoPacket;
 import pl.adrian.internal.common.enums.EnumHelpers;
 import pl.adrian.internal.insim.packets.util.PacketReader;

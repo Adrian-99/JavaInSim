@@ -4,7 +4,7 @@ import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.insim.packets.flags.ConfirmationFlag;
 import pl.adrian.api.common.flags.Flags;
 import pl.adrian.api.insim.packets.flags.PlayerFlag;
-import pl.adrian.api.insim.packets.structures.Car;
+import pl.adrian.api.common.structures.Car;
 import pl.adrian.internal.insim.packets.annotations.*;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.base.Packet;

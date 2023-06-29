@@ -1,6 +1,6 @@
-package pl.adrian.api.insim.packets.structures;
+package pl.adrian.api.common.structures;
 
-import pl.adrian.api.insim.packets.enums.DefaultCar;
+import pl.adrian.api.common.enums.DefaultCar;
 import pl.adrian.internal.insim.packets.structures.ModSkinId;
 import pl.adrian.internal.common.util.PacketDataBytes;
 

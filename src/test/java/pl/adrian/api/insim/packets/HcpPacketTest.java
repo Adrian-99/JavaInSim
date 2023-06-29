@@ -1,7 +1,7 @@
 package pl.adrian.api.insim.packets;
 
 import org.junit.jupiter.api.Test;
-import pl.adrian.api.insim.packets.enums.DefaultCar;
+import pl.adrian.api.common.enums.DefaultCar;
 import pl.adrian.api.insim.packets.structures.CarHandicaps;
 
 import java.util.Map;

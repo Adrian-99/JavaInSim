@@ -3,7 +3,7 @@ package pl.adrian.api.insim.packets;
 import pl.adrian.api.common.flags.Flags;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.insim.packets.flags.*;
-import pl.adrian.api.insim.packets.structures.Car;
+import pl.adrian.api.common.structures.Car;
 import pl.adrian.api.insim.packets.structures.Tyres;
 import pl.adrian.internal.insim.packets.annotations.Array;
 import pl.adrian.internal.insim.packets.annotations.Byte;
