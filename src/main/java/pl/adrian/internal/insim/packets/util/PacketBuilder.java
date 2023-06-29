@@ -196,6 +196,16 @@ public class PacketBuilder {
     }
 
     /**
+     * Appends to packet bytes float (4 bytes), that is converted from float value.
+     * @param value float value
+     * @return packet builder
+     */
+    public PacketBuilder writeFloat(float value) {
+        var intValue = Float.floatToRawIntBits(value);
+        return writeUnsigned(intValue);
+    }
+
+    /**
      * Appends to packet bytes complex structure.
      * @param value structure value
      * @param structureSize size (in bytes) of structure

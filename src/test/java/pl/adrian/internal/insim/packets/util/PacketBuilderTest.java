@@ -279,6 +279,17 @@ class PacketBuilderTest {
     }
 
     @Test
+    void writeFloat() {
+        var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
+        packetBuilder.writeFloat(-2.73828125f);
+        packetBuilder.writeByte(55);
+        var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, 0, 64, 47, -64, 55 };
+
+        assertArrayEquals(expectedBytes, bytes);
+    }
+
+    @Test
     void writeStructure() {
         var packetBuilder = new PacketBuilder((short) 4, PacketType.fromOrdinal(1), (short) 154);
         packetBuilder.writeStructure(new TestComplexStructure(89), 1);

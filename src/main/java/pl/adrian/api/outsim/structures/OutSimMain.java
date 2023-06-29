@@ -1,5 +1,6 @@
 package pl.adrian.api.outsim.structures;
 
+import pl.adrian.api.common.structures.Vec;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
 /**

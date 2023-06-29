@@ -3,7 +3,7 @@ package pl.adrian.api.outgauge.flags;
 import pl.adrian.api.outgauge.OutGaugePacket;
 
 /**
- * Enumeration for dash lights flags used in {@link OutGaugePacket}.
+ * Flags for dash lights used in {@link OutGaugePacket}.
  */
 public enum DashLight {
     /**

@@ -36,7 +36,7 @@ public enum TinySubtype {
     /**
      * 6 - info request: send camera pos
      */
-    SCP,
+    SCP(CppPacket.class, false),
     /**
      * 7 - info request: send state info
      */

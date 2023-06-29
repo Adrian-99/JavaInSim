@@ -4,7 +4,7 @@ import pl.adrian.api.outgauge.OutGaugePacket;
 import pl.adrian.internal.common.flags.FlagWithCustomValue;
 
 /**
- * Enumeration for flags used in {@link OutGaugePacket}.
+ * Flags used in {@link OutGaugePacket}.
  */
 public enum OutGaugeFlag implements FlagWithCustomValue {
     /**

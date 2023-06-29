@@ -47,7 +47,7 @@ public enum PacketType {
     /**
      * 9 - both ways: cam pos pack
      */
-    CPP,
+    CPP(CppPacket.class),
     /**
      * 10 - info: start multiplayer
      */

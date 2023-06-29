@@ -107,6 +107,7 @@ public class PacketReader {
             case UCO -> new UcoPacket(packetDataBytes);
             case CSC -> new CscPacket(packetDataBytes);
             case AXM -> new AxmPacket(packetSize, packetReqI, packetDataBytes);
+            case CPP -> new CppPacket(packetReqI, packetDataBytes);
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
