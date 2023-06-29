@@ -1,12 +1,14 @@
 package pl.adrian.api;
 
 import org.junit.jupiter.api.*;
-import pl.adrian.api.packets.*;
-import pl.adrian.api.packets.enums.*;
-import pl.adrian.api.packets.flags.Flags;
-import pl.adrian.api.packets.flags.IsiFlag;
-import pl.adrian.api.packets.flags.NcnFlag;
-import pl.adrian.api.packets.flags.PmoFlag;
+import pl.adrian.api.insim.InSimConnection;
+import pl.adrian.api.insim.PacketListener;
+import pl.adrian.api.insim.packets.*;
+import pl.adrian.api.insim.packets.enums.*;
+import pl.adrian.api.common.flags.Flags;
+import pl.adrian.api.insim.packets.flags.IsiFlag;
+import pl.adrian.api.insim.packets.flags.NcnFlag;
+import pl.adrian.api.insim.packets.flags.PmoFlag;
 import pl.adrian.testutil.LfsInSimMock;
 import pl.adrian.testutil.TestInSimConnection;
 

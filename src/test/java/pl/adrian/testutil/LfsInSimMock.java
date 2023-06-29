@@ -1,8 +1,8 @@
 package pl.adrian.testutil;
 
-import pl.adrian.api.packets.enums.PacketType;
-import pl.adrian.api.packets.enums.Product;
-import pl.adrian.internal.packets.util.PacketBuilder;
+import pl.adrian.api.insim.packets.enums.PacketType;
+import pl.adrian.api.insim.packets.enums.Product;
+import pl.adrian.internal.insim.packets.util.PacketBuilder;
 
 import java.io.Closeable;
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package pl.adrian.testutil;
 
-import pl.adrian.api.InSimConnection;
-import pl.adrian.api.packets.IsiPacket;
+import pl.adrian.api.insim.InSimConnection;
+import pl.adrian.api.insim.packets.IsiPacket;
 
 import java.io.IOException;
 

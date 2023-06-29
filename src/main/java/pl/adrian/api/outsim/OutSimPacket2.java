@@ -2,8 +2,8 @@ package pl.adrian.api.outsim;
 
 import pl.adrian.api.outsim.flags.OutSimOpts;
 import pl.adrian.api.outsim.structures.*;
-import pl.adrian.api.packets.flags.Flags;
-import pl.adrian.internal.packets.util.PacketDataBytes;
+import pl.adrian.api.common.flags.Flags;
+import pl.adrian.internal.common.util.PacketDataBytes;
 
 import java.util.Optional;
 

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.adrian.api.outsim.flags.OutSimOpts;
-import pl.adrian.api.packets.flags.Flags;
+import pl.adrian.api.common.flags.Flags;
 import pl.adrian.testutil.LfsOutSimMock;
 
 import java.io.IOException;

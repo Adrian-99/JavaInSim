@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.adrian.api.outsim.flags.OutSimOpts;
 import pl.adrian.api.outsim.structures.*;
-import pl.adrian.api.packets.flags.Flags;
-import pl.adrian.internal.packets.util.LoggerUtils;
-import pl.adrian.internal.packets.util.PacketDataBytes;
+import pl.adrian.api.common.flags.Flags;
+import pl.adrian.internal.common.util.LoggerUtils;
+import pl.adrian.internal.common.util.PacketDataBytes;
 
 import java.io.Closeable;
 import java.io.IOException;

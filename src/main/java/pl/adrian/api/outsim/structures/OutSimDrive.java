@@ -1,6 +1,6 @@
 package pl.adrian.api.outsim.structures;
 
-import pl.adrian.internal.packets.util.PacketDataBytes;
+import pl.adrian.internal.common.util.PacketDataBytes;
 
 /**
  * Structure for drive.
