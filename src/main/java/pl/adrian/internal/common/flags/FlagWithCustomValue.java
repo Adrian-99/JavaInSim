@@ -1,6 +1,6 @@
-package pl.adrian.internal.packets.flags;
+package pl.adrian.internal.common.flags;
 
-import pl.adrian.internal.packets.enums.EnumWithCustomValue;
+import pl.adrian.internal.common.enums.EnumWithCustomValue;
 
 /**
  * This interface must be implemented by all enums representing flags,

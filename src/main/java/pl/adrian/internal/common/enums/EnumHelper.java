@@ -1,4 +1,4 @@
-package pl.adrian.internal.packets.enums;
+package pl.adrian.internal.common.enums;
 
 /**
  * This class is a helper that provides useful methods to operating on enums.

@@ -1,10 +1,11 @@
-package pl.adrian.internal.packets.flags;
+package pl.adrian.internal.common.flags;
 
-import pl.adrian.internal.packets.enums.EnumWithCustomValue;
+import pl.adrian.api.common.flags.Flags;
+import pl.adrian.internal.common.enums.EnumWithCustomValue;
 
 /**
  * This interface should be implemented by all enums representing flags,
- * whose presence in {@link pl.adrian.api.packets.flags.Flags Flags} object
+ * whose presence in {@link Flags Flags} object
  * should not be dependent only on their value, but on some other custom conditions.
  */
 public interface FlagWithCustomBehavior extends EnumWithCustomValue {

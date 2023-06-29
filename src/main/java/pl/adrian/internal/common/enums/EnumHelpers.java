@@ -1,4 +1,4 @@
-package pl.adrian.internal.packets.enums;
+package pl.adrian.internal.common.enums;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package pl.adrian.internal.packets.enums;
+package pl.adrian.internal.common.enums;
 
 /**
  * This interface must be implemented by all enums, whose values sent or received from LFS
