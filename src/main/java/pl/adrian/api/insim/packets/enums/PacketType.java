@@ -43,7 +43,7 @@ public enum PacketType {
     /**
      * 8 - instruction: set car camera
      */
-    SCC,
+    SCC(SccPacket.class),
     /**
      * 9 - both ways: cam pos pack
      */
