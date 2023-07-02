@@ -13,7 +13,9 @@ import pl.adrian.internal.insim.packets.annotations.Word;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
 import pl.adrian.internal.insim.packets.base.Packet;
 import pl.adrian.internal.insim.packets.base.RequestablePacket;
+import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.insim.packets.util.PacketBuilder;
+import pl.adrian.internal.insim.packets.util.PacketValidator;
 
 /**
  * Cam Pos Pack - Full camera packet (in car OR SHIFT+U mode).<br>
@@ -85,6 +87,7 @@ public class CppPacket extends Packet implements InstructionPacket, RequestableP
      * @param fov FOV in degrees
      * @param time time in ms to get there (0 means instant)
      * @param flags flags
+     * @throws PacketValidationException if validation of any field in packet fails
      */
     @SuppressWarnings("java:S107")
     public CppPacket(Vec pos,
@@ -95,7 +98,7 @@ public class CppPacket extends Packet implements InstructionPacket, RequestableP
                      ViewIdentifier inGameCam,
                      float fov,
                      int time,
-                     Flags<CppFlag> flags) {
+                     Flags<CppFlag> flags) throws PacketValidationException {
         super(32, PacketType.CPP, 0);
         this.pos = pos;
         this.h = h;
@@ -106,6 +109,7 @@ public class CppPacket extends Packet implements InstructionPacket, RequestableP
         this.fov = fov;
         this.time = time;
         this.flags = flags;
+        PacketValidator.validate(this);
     }
 
     /**

@@ -2,6 +2,7 @@ package pl.adrian.internal.insim.packets.util;
 
 import pl.adrian.internal.insim.packets.annotations.*;
 import pl.adrian.internal.insim.packets.annotations.Byte;
+import pl.adrian.internal.insim.packets.annotations.Float;
 import pl.adrian.internal.insim.packets.annotations.Short;
 import pl.adrian.internal.common.enums.EnumWithCustomValue;
 import pl.adrian.internal.insim.packets.enums.ValidationFailureCategory;
@@ -58,6 +59,7 @@ public class PacketValidator {
                         tryToValidateChar(field, packetOrStructure) ||
                         tryToValidateUnsigned(field, packetOrStructure) ||
                         tryToValidateInt(field, packetOrStructure) ||
+                        tryToValidateFloat(field, packetOrStructure) ||
                         tryToValidateStructure(field, packetOrStructure);
 
                 if (!anyAnnotationFound) {
@@ -242,6 +244,27 @@ public class PacketValidator {
         }
     }
 
+    private static boolean tryToValidateFloat(Field field, Object packetOrStructure) throws IllegalAccessException {
+        var annotation = field.getAnnotation(Float.class);
+        if (annotation != null) {
+            validateFloat(annotation, field, field.get(packetOrStructure));
+            return true;
+        }
+        return false;
+    }
+
+    private static void validateFloat(Float annotation, Field field, Object value) {
+        if (value != null) {
+            if (value instanceof java.lang.Float floatValue) {
+                if (floatValue < annotation.minValue() || floatValue > annotation.maxValue()) {
+                    throw getValueOutOfRangeException(field, annotation.minValue(), annotation.maxValue(), floatValue);
+                }
+            } else {
+                throw getUnsupportedTypeException(field, Float.class.getSimpleName());
+            }
+        }
+    }
+
     private static boolean tryToValidateStructure(Field field, Object packetOrStructure) throws IllegalAccessException {
         if (field.getAnnotation(Structure.class) != null) {
             var arrayAnnotation = field.getAnnotation(Array.class);
@@ -313,6 +336,17 @@ public class PacketValidator {
                 field.getName(),
                 ValidationFailureCategory.VALUE_OUT_OF_RANGE,
                 String.format("expected value between %d and %d - was %d", minValue, maxValue, actualValue)
+        );
+    }
+
+    private static PacketValidationException getValueOutOfRangeException(Field field,
+                                                                         float minValue,
+                                                                         float maxValue,
+                                                                         float actualValue) {
+        throw new PacketValidationException(
+                field.getName(),
+                ValidationFailureCategory.VALUE_OUT_OF_RANGE,
+                String.format("expected value between %f and %f - was %f", minValue, maxValue, actualValue)
         );
     }
 

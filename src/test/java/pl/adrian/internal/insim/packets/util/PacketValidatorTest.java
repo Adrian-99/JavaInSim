@@ -3,6 +3,7 @@ package pl.adrian.internal.insim.packets.util;
 import org.junit.jupiter.api.Test;
 import pl.adrian.internal.insim.packets.annotations.*;
 import pl.adrian.internal.insim.packets.annotations.Byte;
+import pl.adrian.internal.insim.packets.annotations.Float;
 import pl.adrian.internal.insim.packets.annotations.Short;
 import pl.adrian.internal.insim.packets.base.Packet;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
@@ -40,6 +41,7 @@ class PacketValidatorTest {
                 new TestSimpleStructure(150685),
                 new Long[] { 1564357L, 875643L },
                 1834749274,
+                3.14f,
                 new TestComplexStructure(123),
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
@@ -65,6 +67,7 @@ class PacketValidatorTest {
                 new TestSimpleStructure(150685),
                 new Long[] { 1564357L, 875643L },
                 1834749274,
+                3.14f,
                 new TestComplexStructure(123),
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
@@ -92,6 +95,7 @@ class PacketValidatorTest {
                 new TestSimpleStructure(150685),
                 new Long[] { 1564357L, 875643L },
                 1834749274,
+                3.14f,
                 new TestComplexStructure(123),
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
@@ -119,6 +123,7 @@ class PacketValidatorTest {
                 new TestSimpleStructure(150685),
                 new Long[] { 1564357L, 875643L },
                 1834749274,
+                3.14f,
                 new TestComplexStructure(123),
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
@@ -146,6 +151,7 @@ class PacketValidatorTest {
                 new TestSimpleStructure(150685),
                 new Long[] { 1564357L, 875643L },
                 1834749274,
+                3.14f,
                 new TestComplexStructure(123),
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
@@ -173,6 +179,7 @@ class PacketValidatorTest {
                 new TestSimpleStructure(150685),
                 new Long[] { 1564357L, 875643L },
                 1834749274,
+                3.14f,
                 new TestComplexStructure(123),
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
@@ -200,6 +207,7 @@ class PacketValidatorTest {
                 new TestSimpleStructure(150685),
                 new Long[] { 1564357L, 875643L },
                 1834749274,
+                3.14f,
                 new TestComplexStructure(123),
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
@@ -227,6 +235,7 @@ class PacketValidatorTest {
                 new TestSimpleStructure(150685),
                 new Long[] { 1564357L, 875643L },
                 1834749274,
+                3.14f,
                 new TestComplexStructure(123),
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
@@ -254,6 +263,7 @@ class PacketValidatorTest {
                 new TestSimpleStructure(150685),
                 new Long[] { 1564357L, 875643L },
                 1834749274,
+                3.14f,
                 new TestComplexStructure(123),
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
@@ -281,6 +291,7 @@ class PacketValidatorTest {
                 new TestSimpleStructure(150685),
                 new Long[] { 1564357L, 875643L },
                 1834749274,
+                3.14f,
                 new TestComplexStructure(123),
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
@@ -308,6 +319,7 @@ class PacketValidatorTest {
                 new TestSimpleStructure(150685),
                 new Long[] { 1564357L, 875643L },
                 1834749274,
+                3.14f,
                 new TestComplexStructure(123),
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
@@ -335,6 +347,7 @@ class PacketValidatorTest {
                 new TestSimpleStructure(150685),
                 new Long[] { 1564357L, 875643L, 65465L, 5465456L, 1434565L, 5436545L, 5676543L },
                 1834749274,
+                3.14f,
                 new TestComplexStructure(123),
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
@@ -362,6 +375,7 @@ class PacketValidatorTest {
                 new TestSimpleStructure(150685),
                 new Long[] { 1564357L, -65465L },
                 1834749274,
+                3.14f,
                 new TestComplexStructure(123),
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
@@ -389,6 +403,7 @@ class PacketValidatorTest {
                 new TestSimpleStructure(150685),
                 new Long[] { 1564357L, 875643L },
                 -2134749274,
+                3.14f,
                 new TestComplexStructure(123),
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
@@ -416,12 +431,69 @@ class PacketValidatorTest {
                 new TestSimpleStructure(150685),
                 new Long[] { 1564357L, 875643L },
                 2134749274,
+                3.14f,
                 new TestComplexStructure(123),
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
         );
         var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
         assertEquals(ValidationFailureCategory.VALUE_OUT_OF_RANGE, exception.getFailureCategory());
         assertEquals("intInt", exception.getFieldName());
+    }
+
+    @Test
+    void validate_withTooLowFloat() {
+        var packet = new ValidTestPacket(
+                23,
+                PacketType.NONE,
+                54,
+                null,
+                true,
+                new TestSimpleStructure(64),
+                List.of((short) 1, (short) 2, (short) 3),
+                354,
+                new TestSimpleStructure(28715),
+                TestCustomValueEnum.VALUE1,
+                (short) 24567,
+                "abcdefghij",
+                112946L,
+                new TestSimpleStructure(150685),
+                new Long[] { 1564357L, 875643L },
+                1834749274,
+                -25.86f,
+                new TestComplexStructure(123),
+                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
+        );
+        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
+        assertEquals(ValidationFailureCategory.VALUE_OUT_OF_RANGE, exception.getFailureCategory());
+        assertEquals("floatFloat", exception.getFieldName());
+    }
+
+    @Test
+    void validate_withTooHighFloat() {
+        var packet = new ValidTestPacket(
+                23,
+                PacketType.NONE,
+                54,
+                null,
+                true,
+                new TestSimpleStructure(64),
+                List.of((short) 1, (short) 2, (short) 3),
+                354,
+                new TestSimpleStructure(28715),
+                TestCustomValueEnum.VALUE1,
+                (short) 24567,
+                "abcdefghij",
+                112946L,
+                new TestSimpleStructure(150685),
+                new Long[] { 1564357L, 875643L },
+                1834749274,
+                105.2f,
+                new TestComplexStructure(123),
+                new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(15) }
+        );
+        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
+        assertEquals(ValidationFailureCategory.VALUE_OUT_OF_RANGE, exception.getFailureCategory());
+        assertEquals("floatFloat", exception.getFieldName());
     }
 
     @Test
@@ -443,6 +515,7 @@ class PacketValidatorTest {
                 new TestSimpleStructure(150685),
                 new Long[] { 1564357L, 875643L },
                 1834749274,
+                3.14f,
                 new TestComplexStructure(123),
                 new TestComplexStructure[] { new TestComplexStructure(55), null }
         );
@@ -470,6 +543,7 @@ class PacketValidatorTest {
                 new TestSimpleStructure(150685),
                 new Long[] { 1564357L, 875643L },
                 1834749274,
+                3.14f,
                 new TestComplexStructure(123),
                 new TestComplexStructure[] { new TestComplexStructure(55), null, new TestComplexStructure(-15) }
         );
@@ -583,6 +657,19 @@ class PacketValidatorTest {
     }
 
     @Test
+    void validate_packetWithInvalidFloatType() {
+        var packet = new PacketWithInvalidFloatType(
+                8,
+                PacketType.NONE,
+                54,
+                "15"
+        );
+        var exception = assertThrows(PacketValidationException.class, () -> PacketValidator.validate(packet));
+        assertEquals(ValidationFailureCategory.UNSUPPORTED_TYPE, exception.getFailureCategory());
+        assertEquals("stringFloat", exception.getFieldName());
+    }
+
+    @Test
     void validate_packetWithInvalidStructureArrayType() {
         var packet = new PacketWithInvalidStructureArrayType(
                 8,
@@ -639,6 +726,8 @@ class PacketValidatorTest {
         private final Long[] longArrayUnsignedArrayDynamicLength;
         @Int(minValue = -2000000000, maxValue = 2000000000)
         private final int intInt;
+        @Float(minValue = -5.0f, maxValue = 15.0f)
+        private final float floatFloat;
         @Structure
         private final TestComplexStructure structure;
         @Structure
@@ -661,6 +750,7 @@ class PacketValidatorTest {
                                   TestSimpleStructure simpleStructureUnsigned,
                                   Long[] longArrayUnsignedArrayDynamicLength,
                                   int intInt,
+                                  float floatFloat,
                                   TestComplexStructure structure,
                                   TestComplexStructure[] structureArray) {
             super(size, type, reqI);
@@ -677,6 +767,7 @@ class PacketValidatorTest {
             this.simpleStructureUnsigned = simpleStructureUnsigned;
             this.longArrayUnsignedArrayDynamicLength = longArrayUnsignedArrayDynamicLength;
             this.intInt = intInt;
+            this.floatFloat = floatFloat;
             this.structure = structure;
             this.structureArray = structureArray;
         }
@@ -838,6 +929,26 @@ class PacketValidatorTest {
                                                 String stringInt) {
             super(size, type, reqI);
             this.stringInt = stringInt;
+        }
+
+        @Override
+        public byte[] getBytes() {
+            return new byte[0];
+        }
+    }
+
+    @SuppressWarnings("all")
+    private static class PacketWithInvalidFloatType extends Packet implements InstructionPacket {
+
+        @Float
+        private final String stringFloat;
+
+        protected PacketWithInvalidFloatType(int size,
+                                             PacketType type,
+                                             int reqI,
+                                             String stringFloat) {
+            super(size, type, reqI);
+            this.stringFloat = stringFloat;
         }
 
         @Override

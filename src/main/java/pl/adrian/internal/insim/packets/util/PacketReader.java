@@ -108,6 +108,7 @@ public class PacketReader {
             case CSC -> new CscPacket(packetDataBytes);
             case AXM -> new AxmPacket(packetSize, packetReqI, packetDataBytes);
             case CPP -> new CppPacket(packetReqI, packetDataBytes);
+            case RIP -> new RipPacket(packetReqI, packetDataBytes);
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }

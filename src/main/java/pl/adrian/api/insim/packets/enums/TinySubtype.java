@@ -98,9 +98,9 @@ public enum TinySubtype {
      */
     AXC,
     /**
-     * 22 - info request: send an IS_RIP - Replay Information Packet
+     * 22 - info request: send an {@link RipPacket} - Replay Information Packet
      */
-    RIP,
+    RIP(RipPacket.class, false),
     /**
      * 23 - info request: get {@link NciPacket} for all guests (on host only)
      */

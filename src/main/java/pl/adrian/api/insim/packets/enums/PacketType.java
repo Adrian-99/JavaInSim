@@ -203,7 +203,7 @@ public enum PacketType {
     /**
      * 48 - both ways: replay information packet
      */
-    RIP,
+    RIP(RipPacket.class),
     /**
      * 49 - both ways: screenshot
      */

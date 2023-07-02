@@ -12,4 +12,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Float {
+    /**
+     * @return minimum allowed value, {@link java.lang.Float#MIN_VALUE} by default
+     */
+    float minValue() default java.lang.Float.MIN_VALUE;
+
+    /**
+     * @return maximum allowed value, {@link java.lang.Float#MAX_VALUE} by default
+     */
+    float maxValue() default java.lang.Float.MAX_VALUE;
 }
