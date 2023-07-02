@@ -16,7 +16,24 @@ import pl.adrian.internal.insim.packets.base.RequestablePacket;
 import pl.adrian.internal.insim.packets.util.PacketBuilder;
 
 /**
- * Cam Pos Pack - Full camera packet (in car OR SHIFT+U mode).
+ * Cam Pos Pack - Full camera packet (in car OR SHIFT+U mode).<br>
+ * On receiving this packet, LFS will set up the camera
+ * to match the values in the packet, including switching into or out of SHIFT+U mode depending on the
+ * {@link CppFlag#SHIFTU} flag.<br>
+ * If {@link CppFlag#VIEW_OVERRIDE} is set, the in-car view Heading, Pitch, Roll and FOV [not smooth]
+ * can be set using this packet. Otherwise, normal in game control will be used.<br>
+ * Position vector ({@link #pos}) - in SHIFT+U mode, {@link #pos} can be either relative or absolute.
+ * If {@link CppFlag#SHIFTU_FOLLOW} is set, it's a following camera, so the position is relative to
+ * the selected car  Otherwise, the position is absolute, as used in normal SHIFT+U mode.<br>
+ * The {@link #time} value in the packet is used for camera smoothing. A zero {@link #time} means instant
+ * positioning. Any other value (milliseconds) will cause the camera to move smoothly to
+ * the requested position in that time. This is most useful in SHIFT+U camera modes or
+ * for smooth changes of internal view when using the {@link CppFlag#VIEW_OVERRIDE} flag.<br>
+ * NOTE: You can use frequently updated camera positions with a longer {@link #time} value than
+ * the update frequency. For example, sending a camera position every 100 ms, with a
+ * {@link #time} value of 1000 ms. LFS will make a smooth motion from the rough inputs.<br>
+ * If the requested camera mode is different from the one LFS is already in, it cannot
+ * move smoothly to the new position, so in this case the {@link #time} value is ignored.
  */
 public class CppPacket extends Packet implements InstructionPacket, RequestablePacket {
     @Structure

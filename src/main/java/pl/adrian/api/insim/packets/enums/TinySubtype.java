@@ -42,7 +42,7 @@ public enum TinySubtype {
      */
     SST(StaPacket.class, false),
     /**
-     * 8 - info request: get time in hundredths (i.e. SMALL_RTP)
+     * 8 - info request: get time in hundredths (i.e. {@link SmallSubtype#RTP RTP} {@link SmallPacket})
      */
     GTH,
     /**
@@ -106,7 +106,7 @@ public enum TinySubtype {
      */
     NCI(NciPacket.class, true),
     /**
-     * 24 - info request: send a SMALL_ALC (allowed cars)
+     * 24 - info request: send a {@link SmallSubtype#ALC ALC} {@link SmallPacket} (allowed cars)
      */
     ALC,
     /**

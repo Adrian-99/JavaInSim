@@ -173,15 +173,16 @@ public class InSimConnection implements Closeable {
 
     /**
      * Requests specific {@link SmallPacket} from LFS. It is only possible to request {@link SmallPacket} of
-     * {@link SmallSubtype#ALC ALC} subtype. Calling this method sends appropriate {@link TinyPacket}
-     * to LFS that is a request for specified packet. The {@link TinyPacket} contains randomly generated reqI
-     * value from range 1-255. When requested packet is received, specified callback function will be called.
-     * @param tinySubtype {@link TinySubtype#ALC}, other values will be ignored
+     * {@link SmallSubtype#ALC ALC} or {@link SmallSubtype#RTP RTP} subtype. Calling this method sends
+     * appropriate {@link TinyPacket} to LFS that is a request for specified packet. The {@link TinyPacket}
+     * contains randomly generated reqI value from range 1-255. When requested packet is received, specified
+     * callback function will be called.
+     * @param tinySubtype {@link TinySubtype#ALC} or {@link TinySubtype#GTH}, other values will be ignored
      * @param callback function that will be called when requested packet is received
      * @throws IOException if I/O error occurs when sending {@link TinyPacket}
      */
     public void request(TinySubtype tinySubtype, PacketListener<SmallPacket> callback) throws IOException {
-        if (tinySubtype.equals(TinySubtype.ALC)) {
+        if (tinySubtype.equals(TinySubtype.ALC) || tinySubtype.equals(TinySubtype.GTH)) {
             logger.debug("Requested SMALL {} packet", tinySubtype);
             handleRequest(PacketType.SMALL, tinySubtype, callback);
         }
