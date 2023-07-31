@@ -4,13 +4,13 @@ import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Unsigned;
 import pl.adrian.internal.insim.packets.base.InfoPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
 /**
  * Pit Stop Finished. The packet is sent by LFS when any player finishes their pit stop.
  */
-public class PsfPacket extends Packet implements InfoPacket {
+public class PsfPacket extends AbstractPacket implements InfoPacket {
     @Byte
     private final short plid;
     @Unsigned

@@ -4,10 +4,14 @@ import org.junit.jupiter.api.Test;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.insim.packets.enums.Product;
 import pl.adrian.internal.insim.packets.util.PacketReader;
+import pl.adrian.testutil.MockedInSimConnection;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static pl.adrian.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static pl.adrian.testutil.AssertionUtils.assertRequestPacketBytesEqual;
 
 class VerPacketTest {
     @Test
@@ -28,5 +32,15 @@ class VerPacketTest {
         assertEquals("0.7D", castedReadPacket.getVersion());
         assertEquals(Product.S3, castedReadPacket.getProduct());
         assertEquals(9, castedReadPacket.getInSimVer());
+    }
+
+    @Test
+    void requestVerPacket() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        VerPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 1 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
     }
 }

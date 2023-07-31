@@ -1,17 +1,20 @@
 package pl.adrian.api.insim.packets;
 
+import pl.adrian.api.insim.InSimConnection;
 import pl.adrian.api.insim.packets.enums.PacketType;
+import pl.adrian.api.insim.packets.enums.TinySubtype;
 import pl.adrian.internal.insim.packets.annotations.Array;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Char;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.RequestablePacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
+import pl.adrian.internal.insim.packets.requests.builders.SingleTinyPacketRequestBuilder;
 
 /**
  * InSim Multi. The packet is sent by LFS when a host is started or joined.
  */
-public class IsmPacket extends Packet implements RequestablePacket {
+public class IsmPacket extends AbstractPacket implements RequestablePacket {
     @Byte
     private final boolean isHost;
     @Char
@@ -43,5 +46,14 @@ public class IsmPacket extends Packet implements RequestablePacket {
      */
     public String getHName() {
         return hName;
+    }
+
+    /**
+     * Creates builder for packet request for {@link IsmPacket}.
+     * @param inSimConnection InSim connection to request packet from
+     * @return packet request builder
+     */
+    public static SingleTinyPacketRequestBuilder<IsmPacket> request(InSimConnection inSimConnection) {
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.ISM);
     }
 }

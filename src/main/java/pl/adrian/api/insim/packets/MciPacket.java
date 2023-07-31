@@ -1,11 +1,14 @@
 package pl.adrian.api.insim.packets;
 
+import pl.adrian.api.insim.InSimConnection;
 import pl.adrian.api.insim.packets.enums.PacketType;
+import pl.adrian.api.insim.packets.enums.TinySubtype;
 import pl.adrian.api.insim.packets.structures.CompCar;
 import pl.adrian.internal.insim.packets.annotations.Array;
 import pl.adrian.internal.insim.packets.annotations.Structure;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.RequestablePacket;
+import pl.adrian.internal.insim.packets.requests.builders.BasicTinyPacketRequestBuilder;
 import pl.adrian.internal.insim.packets.util.Constants;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
@@ -19,7 +22,7 @@ import java.util.List;
  * 1) Set the Interval field in the {@link IsiPacket} packet (10, 20, 30... 8000 ms),<br>
  * 2) Set flag {@link pl.adrian.api.insim.packets.flags.IsiFlag#MCI Isi MCI} in the {@link IsiPacket}.
  */
-public class MciPacket extends Packet implements RequestablePacket {
+public class MciPacket extends AbstractPacket implements RequestablePacket {
     @Structure
     @Array(length = Constants.MCI_MAX_CARS, dynamicLength = true)
     private final List<CompCar> info;
@@ -52,5 +55,14 @@ public class MciPacket extends Packet implements RequestablePacket {
      */
     public List<CompCar> getInfo() {
         return info;
+    }
+
+    /**
+     * Creates builder for packet request for {@link MciPacket}.
+     * @param inSimConnection InSim connection to request packet from
+     * @return packet request builder
+     */
+    public static BasicTinyPacketRequestBuilder<MciPacket> request(InSimConnection inSimConnection) {
+        return new BasicTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.MCI);
     }
 }

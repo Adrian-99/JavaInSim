@@ -7,13 +7,14 @@ import pl.adrian.api.common.enums.DefaultCar;
 import pl.adrian.api.insim.packets.enums.VoteAction;
 import pl.adrian.api.insim.packets.flags.LcsFlag;
 import pl.adrian.internal.insim.packets.util.PacketReader;
+import pl.adrian.testutil.MockedInSimConnection;
 
+import java.io.IOException;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static pl.adrian.testutil.AssertionUtils.assertFlagsEqual;
-import static pl.adrian.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static pl.adrian.testutil.AssertionUtils.*;
 
 class SmallPacketTest {
     @Test
@@ -123,5 +124,29 @@ class SmallPacketTest {
         assertTrue(castedReadPacket.getVoteAction().isEmpty());
         assertTrue(castedReadPacket.getCars().isPresent());
         assertFlagsEqual(DefaultCar.class, Set.of(DefaultCar.FOX, DefaultCar.FO8, DefaultCar.BF1, DefaultCar.FBM), castedReadPacket.getCars().get());
+    }
+
+    @Test
+    void requestSmallPacketForAllowedCars() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        SmallPacket.request(inSimConnectionMock)
+                .forAllowedCars()
+                .listen(((inSimConnection, packet) -> {}));
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 24 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+    }
+
+    @Test
+    void requestSmallPacketForCurrentTime() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        SmallPacket.request(inSimConnectionMock)
+                .forCurrentTime()
+                .listen(((inSimConnection, packet) -> {}));
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 8 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
     }
 }

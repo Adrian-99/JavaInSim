@@ -5,7 +5,7 @@ import pl.adrian.internal.insim.packets.annotations.Char;
 import pl.adrian.internal.insim.packets.util.Constants;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Word;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
 import pl.adrian.api.common.flags.Flags;
 import pl.adrian.api.insim.packets.flags.IsiFlag;
@@ -17,7 +17,7 @@ import pl.adrian.internal.insim.packets.util.PacketValidator;
 /**
  * InSim Init - packet to initialise the InSim system.
  */
-public class IsiPacket extends Packet implements InstructionPacket {
+public class IsiPacket extends AbstractPacket implements InstructionPacket {
     @Word
     private final int udpPort;
     @Word

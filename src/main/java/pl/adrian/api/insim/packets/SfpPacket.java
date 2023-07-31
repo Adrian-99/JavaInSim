@@ -4,7 +4,7 @@ import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.insim.packets.enums.SfpFlag;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Word;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.insim.packets.util.PacketBuilder;
@@ -13,7 +13,7 @@ import pl.adrian.internal.insim.packets.util.PacketValidator;
 /**
  * State Flags Pack.
  */
-public class SfpPacket extends Packet implements InstructionPacket {
+public class SfpPacket extends AbstractPacket implements InstructionPacket {
     @Word
     private final SfpFlag flag;
     @Byte

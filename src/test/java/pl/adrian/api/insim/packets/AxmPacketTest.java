@@ -6,13 +6,14 @@ import pl.adrian.api.common.flags.Flags;
 import pl.adrian.api.insim.packets.flags.PmoFlag;
 import pl.adrian.api.insim.packets.structures.objectinfo.*;
 import pl.adrian.internal.insim.packets.util.PacketReader;
+import pl.adrian.testutil.MockedInSimConnection;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static pl.adrian.testutil.AssertionUtils.assertFlagsEqual;
-import static pl.adrian.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static pl.adrian.testutil.AssertionUtils.*;
 
 class AxmPacketTest {
     @Test
@@ -362,5 +363,29 @@ class AxmPacketTest {
         assertEquals(0, object1.getFlags());
         assertEquals(ObjectType.NULL, object1.getIndex());
         assertEquals(128, object1.getHeading());
+    }
+
+    @Test
+    void requestAxmPacketForAllLayoutObjects() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        AxmPacket.request(inSimConnectionMock)
+                .forAllLayoutObjects()
+                .listen((connection, packet) -> {});
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 25 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+    }
+
+    @Test
+    void requestAxmPacketForConnectionLayoutEditorSelection() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        AxmPacket.request(inSimConnectionMock)
+                .forConnectionLayoutEditorSelection(36)
+                .listen((connection, packet) -> {});
+
+        var expectedRequestPacketBytes = new byte[] { 2, 61, 0, 1, 36, 0, 0, 0 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
     }
 }

@@ -3,12 +3,15 @@ package pl.adrian.api.insim.packets;
 import org.junit.jupiter.api.Test;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.internal.insim.packets.util.PacketReader;
+import pl.adrian.testutil.MockedInSimConnection;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static pl.adrian.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static pl.adrian.testutil.AssertionUtils.assertRequestPacketBytesEqual;
 
 class ReoPacketTest {
     @Test
@@ -75,5 +78,15 @@ class ReoPacketTest {
                 ),
                 castedReadPacket.getPlid()
         );
+    }
+
+    @Test
+    void requestReoPacket() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        ReoPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 18 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
     }
 }

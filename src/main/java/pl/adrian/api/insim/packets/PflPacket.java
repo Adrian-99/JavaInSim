@@ -6,13 +6,13 @@ import pl.adrian.api.insim.packets.flags.PlayerFlag;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Word;
 import pl.adrian.internal.insim.packets.base.InfoPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
 /**
  * Player FLags. The packet is sent by LFS when flags of any player change.
  */
-public class PflPacket extends Packet implements InfoPacket {
+public class PflPacket extends AbstractPacket implements InfoPacket {
     @Byte
     private final short plid;
     @Word

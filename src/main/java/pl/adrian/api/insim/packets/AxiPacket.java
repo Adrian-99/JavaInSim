@@ -1,18 +1,21 @@
 package pl.adrian.api.insim.packets;
 
+import pl.adrian.api.insim.InSimConnection;
 import pl.adrian.api.insim.packets.enums.PacketType;
+import pl.adrian.api.insim.packets.enums.TinySubtype;
 import pl.adrian.internal.insim.packets.annotations.Array;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Char;
 import pl.adrian.internal.insim.packets.annotations.Word;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.RequestablePacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
+import pl.adrian.internal.insim.packets.requests.builders.SingleTinyPacketRequestBuilder;
 
 /**
  * AutoX Info. The packet is sent when a layout is loaded.
  */
-public class AxiPacket extends Packet implements RequestablePacket {
+public class AxiPacket extends AbstractPacket implements RequestablePacket {
     @Byte
     private final short aXStart;
     @Byte
@@ -63,5 +66,14 @@ public class AxiPacket extends Packet implements RequestablePacket {
      */
     public String getLName() {
         return lName;
+    }
+
+    /**
+     * Creates builder for packet request for {@link AxiPacket}.
+     * @param inSimConnection InSim connection to request packet from
+     * @return packet request builder
+     */
+    public static SingleTinyPacketRequestBuilder<AxiPacket> request(InSimConnection inSimConnection) {
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.AXI);
     }
 }

@@ -6,7 +6,7 @@ import pl.adrian.api.insim.packets.structures.objectinfo.PositionObjectInfo;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Structure;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.insim.packets.util.PacketBuilder;
 import pl.adrian.internal.insim.packets.util.PacketValidator;
@@ -22,7 +22,7 @@ import pl.adrian.internal.insim.packets.util.PacketValidator;
  * In this case, {@link JrrPacket#plid} must be set, {@link JrrPacket#jrrAction} must be
  * {@link JrrAction#RESET} or higher and {@link JrrPacket#startPos} must be set.
  */
-public class JrrPacket extends Packet implements InstructionPacket {
+public class JrrPacket extends AbstractPacket implements InstructionPacket {
     @Byte
     private final short plid;
     @Byte

@@ -5,14 +5,14 @@ import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.internal.insim.packets.annotations.Array;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Char;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.InfoPacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
 /**
  * MSg Out - system messages and user messages - variable size.
  */
-public class MsoPacket extends Packet implements InfoPacket {
+public class MsoPacket extends AbstractPacket implements InfoPacket {
     @Byte
     private final short ucid;
     @Byte

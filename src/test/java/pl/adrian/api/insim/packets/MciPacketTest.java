@@ -4,13 +4,14 @@ import org.junit.jupiter.api.Test;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.insim.packets.flags.CompCarFlag;
 import pl.adrian.internal.insim.packets.util.PacketReader;
+import pl.adrian.testutil.MockedInSimConnection;
 
+import java.io.IOException;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static pl.adrian.testutil.AssertionUtils.assertFlagsEqual;
-import static pl.adrian.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static pl.adrian.testutil.AssertionUtils.*;
 
 class MciPacketTest {
     @Test
@@ -68,5 +69,15 @@ class MciPacketTest {
         assertEquals(15842, castedReadPacket.getInfo().get(1).getDirection());
         assertEquals(14998, castedReadPacket.getInfo().get(1).getHeading());
         assertEquals(-16, castedReadPacket.getInfo().get(1).getAngVel());
+    }
+
+    @Test
+    void requestMciPacket() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        MciPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 17 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
     }
 }

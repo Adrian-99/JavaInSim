@@ -7,7 +7,7 @@ import pl.adrian.api.common.flags.Flags;
 import pl.adrian.api.insim.packets.flags.StartLightsDataFlag;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.insim.packets.util.PacketBuilder;
 import pl.adrian.internal.insim.packets.util.PacketValidator;
@@ -15,7 +15,7 @@ import pl.adrian.internal.insim.packets.util.PacketValidator;
 /**
  * Object COntrol. The packet is used for switching start lights.
  */
-public class OcoPacket extends Packet implements InstructionPacket {
+public class OcoPacket extends AbstractPacket implements InstructionPacket {
     @Byte
     private final OcoAction ocoAction;
     @Byte

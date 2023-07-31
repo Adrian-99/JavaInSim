@@ -7,7 +7,7 @@ import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Structure;
 import pl.adrian.internal.insim.packets.annotations.Unsigned;
 import pl.adrian.internal.insim.packets.base.InfoPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.api.insim.packets.structures.objectinfo.ObjectInfo;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
@@ -15,7 +15,7 @@ import pl.adrian.internal.common.util.PacketDataBytes;
  * User Control Object. The packet is sent when any player crosses InSim checkpoint
  * or enters InSim circle (from layout).
  */
-public class UcoPacket extends Packet implements InfoPacket {
+public class UcoPacket extends AbstractPacket implements InfoPacket {
     @Byte
     private final short plid;
     @Byte

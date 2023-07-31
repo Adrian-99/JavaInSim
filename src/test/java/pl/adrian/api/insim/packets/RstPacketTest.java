@@ -7,13 +7,14 @@ import pl.adrian.api.insim.packets.enums.RaceLapsUnit;
 import pl.adrian.api.insim.packets.enums.Wind;
 import pl.adrian.api.insim.packets.flags.RaceFlag;
 import pl.adrian.internal.insim.packets.util.PacketReader;
+import pl.adrian.testutil.MockedInSimConnection;
 
+import java.io.IOException;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static pl.adrian.testutil.AssertionUtils.assertFlagsEqual;
-import static pl.adrian.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static pl.adrian.testutil.AssertionUtils.*;
 
 class RstPacketTest {
     @Test
@@ -131,5 +132,15 @@ class RstPacketTest {
         assertEquals(224, castedReadPacket.getSplit1());
         assertEquals(589, castedReadPacket.getSplit2());
         assertEquals(701, castedReadPacket.getSplit3());
+    }
+
+    @Test
+    void requestRstPacket() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        RstPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 19 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
     }
 }

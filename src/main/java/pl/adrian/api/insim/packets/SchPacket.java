@@ -4,7 +4,7 @@ import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.common.flags.Flags;
 import pl.adrian.api.insim.packets.flags.SchFlag;
 import pl.adrian.internal.insim.packets.annotations.Byte;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.insim.packets.util.PacketBuilder;
@@ -16,7 +16,7 @@ import pl.adrian.internal.insim.packets.util.PacketValidator;
  * This does not work with some keys like F keys, arrows or CTRL keys.
  * Use {@link MstPacket} with the /press /shift /ctrl /alt commands for this purpose.
  */
-public class SchPacket extends Packet implements InstructionPacket {
+public class SchPacket extends AbstractPacket implements InstructionPacket {
     @Byte
     private final char charB;
     @Byte

@@ -3,11 +3,13 @@ package pl.adrian.api.insim.packets;
 import org.junit.jupiter.api.Test;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.internal.insim.packets.util.PacketReader;
+import pl.adrian.testutil.MockedInSimConnection;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static pl.adrian.testutil.AssertionUtils.assertCarEquals;
-import static pl.adrian.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static pl.adrian.testutil.AssertionUtils.*;
 
 class SlcPacketTest {
     @Test
@@ -27,5 +29,15 @@ class SlcPacketTest {
         assertPacketHeaderEquals(8, PacketType.SLC, 144, castedReadPacket);
         assertEquals(9, castedReadPacket.getUcid());
         assertCarEquals("4A68C1", castedReadPacket.getCar());
+    }
+
+    @Test
+    void requestSlcPacket() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        SlcPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 26 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
     }
 }

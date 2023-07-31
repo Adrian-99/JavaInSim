@@ -1,7 +1,7 @@
 package pl.adrian.api.insim.packets;
 
 import pl.adrian.internal.insim.packets.annotations.Byte;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.insim.packets.enums.TtcSubtype;
@@ -12,7 +12,7 @@ import pl.adrian.internal.insim.packets.util.PacketValidator;
 /**
  * General purpose 8 byte packet (Target To Connection).
  */
-public class TtcPacket extends Packet implements InstructionPacket {
+public class TtcPacket extends AbstractPacket implements InstructionPacket {
     @Byte
     private final TtcSubtype subT;
     @Byte

@@ -8,14 +8,14 @@ import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Unsigned;
 import pl.adrian.internal.insim.packets.annotations.Word;
 import pl.adrian.internal.insim.packets.base.InfoPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
 /**
  * FINished race notification. The packet is sent by LFS when any player finishes race
  * (not a final result - use {@link ResPacket}).
  */
-public class FinPacket extends Packet implements InfoPacket {
+public class FinPacket extends AbstractPacket implements InfoPacket {
     @Byte
     private final short plid;
     @Unsigned

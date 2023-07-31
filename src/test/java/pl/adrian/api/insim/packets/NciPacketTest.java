@@ -4,10 +4,14 @@ import org.junit.jupiter.api.Test;
 import pl.adrian.api.insim.packets.enums.Language;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.internal.insim.packets.util.PacketReader;
+import pl.adrian.testutil.MockedInSimConnection;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static pl.adrian.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static pl.adrian.testutil.AssertionUtils.assertRequestPacketBytesEqual;
 
 class NciPacketTest {
     @Test
@@ -29,5 +33,15 @@ class NciPacketTest {
         assertEquals(Language.POLSKI, castedReadPacket.getLanguage());
         assertEquals(54896, castedReadPacket.getUserId());
         assertEquals(1084323894, castedReadPacket.getIpAddress());
+    }
+
+    @Test
+    void requestNciPacket() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        NciPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 23 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
     }
 }

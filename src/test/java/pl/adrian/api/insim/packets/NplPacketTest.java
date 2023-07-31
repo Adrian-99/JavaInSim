@@ -9,7 +9,9 @@ import pl.adrian.api.insim.packets.flags.PlayerFlag;
 import pl.adrian.api.insim.packets.flags.PlayerTypeFlag;
 import pl.adrian.api.insim.packets.flags.SetupFlag;
 import pl.adrian.internal.insim.packets.util.PacketReader;
+import pl.adrian.testutil.MockedInSimConnection;
 
+import java.io.IOException;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -79,5 +81,15 @@ class NplPacketTest {
         assertEquals(3, castedReadPacket.getNumP());
         assertEquals(1, castedReadPacket.getConfig());
         assertEquals(54, castedReadPacket.getFuel());
+    }
+
+    @Test
+    void requestNplPacket() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        NplPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 14 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
     }
 }

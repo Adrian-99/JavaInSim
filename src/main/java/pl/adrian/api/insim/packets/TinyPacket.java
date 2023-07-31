@@ -3,7 +3,7 @@ package pl.adrian.api.insim.packets;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.insim.packets.enums.TinySubtype;
 import pl.adrian.internal.insim.packets.annotations.Byte;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.InfoPacket;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
@@ -14,7 +14,7 @@ import pl.adrian.internal.insim.packets.util.PacketValidator;
 /**
  * General purpose 4 byte packet.
  */
-public class TinyPacket extends Packet implements InstructionPacket, InfoPacket {
+public class TinyPacket extends AbstractPacket implements InstructionPacket, InfoPacket {
     @Byte
     private final TinySubtype subT;
 
@@ -43,7 +43,7 @@ public class TinyPacket extends Packet implements InstructionPacket, InfoPacket 
     @Override
     public byte[] getBytes() {
         return new PacketBuilder(size, type, reqI)
-                .writeByte(subT.ordinal())
+                .writeByte(subT.getByteValue())
                 .getBytes();
     }
 

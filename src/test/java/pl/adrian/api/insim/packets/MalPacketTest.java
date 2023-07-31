@@ -3,12 +3,15 @@ package pl.adrian.api.insim.packets;
 import org.junit.jupiter.api.Test;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.internal.insim.packets.util.PacketReader;
+import pl.adrian.testutil.MockedInSimConnection;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static pl.adrian.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static pl.adrian.testutil.AssertionUtils.assertRequestPacketBytesEqual;
 
 class MalPacketTest {
     @Test
@@ -44,5 +47,15 @@ class MalPacketTest {
         assertEquals("3D472E", castedReadPacket.getSkinId().get(0));
         assertEquals("57AC36", castedReadPacket.getSkinId().get(1));
         assertEquals("9F41B8", castedReadPacket.getSkinId().get(2));
+    }
+
+    @Test
+    void requestMalPacket() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        MalPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 27 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
     }
 }

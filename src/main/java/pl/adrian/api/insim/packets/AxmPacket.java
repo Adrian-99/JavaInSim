@@ -1,7 +1,6 @@
 package pl.adrian.api.insim.packets;
 
 import pl.adrian.api.insim.InSimConnection;
-import pl.adrian.api.insim.PacketListener;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.insim.packets.enums.PmoAction;
 import pl.adrian.api.common.flags.Flags;
@@ -14,9 +13,10 @@ import pl.adrian.internal.insim.packets.annotations.Array;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Structure;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.RequestablePacket;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
+import pl.adrian.internal.insim.packets.requests.builders.AxmPacketRequestBuilder;
 import pl.adrian.internal.insim.packets.util.*;
 
 import java.util.ArrayList;
@@ -29,11 +29,11 @@ import java.util.List;
  * If the {@link IsiFlag#AXM_EDIT} flag in the {@link IsiPacket} is set, those packets will be sent by LFS
  * when objects are edited by user or InSim.<br>
  * It is possible to add or remove objects by sending this packet, however some care must be taken with it.<br>
- * To request these packets for all layout objects and circles the {@link InSimConnection#request(Class, PacketListener)}
- * can be used.<br>
+ * To request these packets for all layout objects and circles the {@link #request} and
+ * {@link AxmPacketRequestBuilder#forAllLayoutObjects} can be used.<br>
  * LFS will send as many packets as needed to describe the whole layout. If there are no objects or circles,
  * there will be one packet with zero NumO. The final packet will have the {@link PmoFlag#FILE_END} flag set.<br>
- * It is also possible to get (using {@link InSimConnection#request(int, PacketListener)}) or
+ * It is also possible to get (using {@link #request} and {@link AxmPacketRequestBuilder#forConnectionLayoutEditorSelection}) or
  * set ({@link PmoAction#POSITION}) the current editor selection.<br>
  * The packet with {@link PmoAction#POSITION} is sent with a single object in the packet if a user
  * presses O without any object type selected. Information only - no object is added. The only valid values
@@ -45,7 +45,7 @@ import java.util.List;
  * Suggested input values for Zbyte are either 240 to get the highest point at X, Y
  * or you may use the approximate altitude (see layout file format).
  */
-public class AxmPacket extends Packet implements InstructionPacket, RequestablePacket {
+public class AxmPacket extends AbstractPacket implements InstructionPacket, RequestablePacket {
     @Byte
     private final short ucid;
     @Byte
@@ -59,7 +59,8 @@ public class AxmPacket extends Packet implements InstructionPacket, RequestableP
     /**
      * Creates autoX multiple objects packet. Constructor used only internally.
      * @param size packet size
-     * @param reqI packet reqI
+     * @param reqI 0 unless this is a reply to a {@link pl.adrian.api.insim.packets.enums.TinySubtype#AXM Tiny AXM}
+     *             or {@link pl.adrian.api.insim.packets.enums.TtcSubtype#SEL Ttc SEL} request
      * @param packetDataBytes packet data bytes
      */
     public AxmPacket(short size, short reqI, PacketDataBytes packetDataBytes) {
@@ -165,5 +166,14 @@ public class AxmPacket extends Packet implements InstructionPacket, RequestableP
                 .writeZeroByte()
                 .writeStructureArray(info, 8)
                 .getBytes();
+    }
+
+    /**
+     * Creates builder for packet request for {@link AxmPacket}.
+     * @param inSimConnection InSim connection to request packet from
+     * @return packet request builder
+     */
+    public static AxmPacketRequestBuilder request(InSimConnection inSimConnection) {
+        return new AxmPacketRequestBuilder(inSimConnection);
     }
 }

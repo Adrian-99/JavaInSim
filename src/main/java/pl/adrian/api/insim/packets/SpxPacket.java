@@ -5,13 +5,13 @@ import pl.adrian.api.insim.packets.enums.PenaltyValue;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Unsigned;
 import pl.adrian.internal.insim.packets.base.InfoPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
 /**
  * SPlit X time. The packet is sent by LFS when any player reaches split time.
  */
-public class SpxPacket extends Packet implements InfoPacket {
+public class SpxPacket extends AbstractPacket implements InfoPacket {
     @Byte
     private final short plid;
     @Unsigned

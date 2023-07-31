@@ -5,7 +5,7 @@ import pl.adrian.api.common.enums.DefaultCar;
 import pl.adrian.api.insim.packets.structures.CarHandicaps;
 import pl.adrian.internal.insim.packets.annotations.Array;
 import pl.adrian.internal.insim.packets.annotations.Structure;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
 import pl.adrian.internal.common.enums.EnumHelpers;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
@@ -19,7 +19,7 @@ import java.util.Map;
  * The same restriction applies to all drivers using a particular car model.
  * This can be useful for creating multi class hosts.
  */
-public class HcpPacket extends Packet implements InstructionPacket {
+public class HcpPacket extends AbstractPacket implements InstructionPacket {
     @Structure
     @Array(length = 32)
     private final CarHandicaps[] info;

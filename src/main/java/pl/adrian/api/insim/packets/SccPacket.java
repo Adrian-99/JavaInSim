@@ -4,13 +4,13 @@ import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.insim.packets.enums.ViewIdentifier;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.util.PacketBuilder;
 
 /**
  * Set Car Camera - Simplified camera packet (not SHIFT+U mode).
  */
-public class SccPacket extends Packet implements InstructionPacket {
+public class SccPacket extends AbstractPacket implements InstructionPacket {
     @Byte
     private final short viewPlid;
     @Byte

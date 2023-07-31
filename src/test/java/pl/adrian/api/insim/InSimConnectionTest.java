@@ -1,13 +1,12 @@
 package pl.adrian.api.insim;
 
 import org.junit.jupiter.api.*;
-import pl.adrian.api.common.enums.DefaultCar;
 import pl.adrian.api.insim.packets.*;
 import pl.adrian.api.insim.packets.enums.*;
 import pl.adrian.api.common.flags.Flags;
 import pl.adrian.api.insim.packets.flags.IsiFlag;
 import pl.adrian.api.insim.packets.flags.NcnFlag;
-import pl.adrian.api.insim.packets.flags.PmoFlag;
+import pl.adrian.api.insim.packets.requests.TinyPacketRequest;
 import pl.adrian.testutil.LfsTcpMock;
 import pl.adrian.testutil.TestInSimConnection;
 
@@ -193,15 +192,19 @@ class InSimConnectionTest {
     void request() throws IOException {
         var receivedResponsesCount = new AtomicInteger();
 
-        inSimConnection.request(IsmPacket.class, (inSimConnection, packet) -> {
-            assertEquals(this.inSimConnection, inSimConnection);
-            assertEquals(40, packet.getSize());
-            assertEquals(PacketType.ISM, packet.getType());
-            assertTrue(packet.getReqI() >= 1 && packet.getReqI() <= 255);
-            assertFalse(packet.isHost());
-            assertEquals("Example LFS Server", packet.getHName());
-            receivedResponsesCount.getAndIncrement();
-        });
+        inSimConnection.request(new TinyPacketRequest<>(
+                IsmPacket.class,
+                (inSimConnection, packet) -> {
+                    assertEquals(this.inSimConnection, inSimConnection);
+                    assertEquals(40, packet.getSize());
+                    assertEquals(PacketType.ISM, packet.getType());
+                    assertTrue(packet.getReqI() >= 1 && packet.getReqI() <= 255);
+                    assertFalse(packet.isHost());
+                    assertEquals("Example LFS Server", packet.getHName());
+                    receivedResponsesCount.getAndIncrement();
+                },
+                5000
+        ));
 
         var lfsReceivedPackets = lfsTcpMock.awaitReceivedPackets(2);
         assertEquals(2, lfsReceivedPackets.size());
@@ -226,57 +229,26 @@ class InSimConnectionTest {
     }
 
     @Test
-    void request_smallPacket() throws IOException {
-        var receivedResponsesCount = new AtomicInteger();
-
-        inSimConnection.request(TinySubtype.ALC, (inSimConnection, packet) -> {
-            assertEquals(this.inSimConnection, inSimConnection);
-            assertEquals(8, packet.getSize());
-            assertEquals(PacketType.SMALL, packet.getType());
-            assertNotEquals(0, packet.getReqI());
-            assertEquals(SmallSubtype.ALC, packet.getSubT());
-            assertEquals(12561, packet.getUVal());
-            assertTrue(packet.getVoteAction().isEmpty());
-            assertTrue(packet.getCars().isPresent());
-            assertFlagsEqual(DefaultCar.class, Set.of(DefaultCar.XFG, DefaultCar.FXO, DefaultCar.UF1, DefaultCar.XFR, DefaultCar.UFR), packet.getCars().get());
-            receivedResponsesCount.getAndIncrement();
-        });
-
-        var lfsReceivedPackets = lfsTcpMock.awaitReceivedPackets(2);
-        assertEquals(2, lfsReceivedPackets.size());
-        assertEquals(4, lfsReceivedPackets.get(1).length);
-        assertEquals(1, lfsReceivedPackets.get(1)[0]);
-        assertEquals(3, lfsReceivedPackets.get(1)[1]);
-        assertNotEquals(0, lfsReceivedPackets.get(1)[2]);
-        assertEquals(24, lfsReceivedPackets.get(1)[3]);
-
-        var responsePacketBytes = new byte[] { 2, 4, lfsReceivedPackets.get(1)[2], 8, 17, 49, 0, 0 };
-        lfsTcpMock.send(responsePacketBytes);
-
-        assertConditionMet(() -> receivedResponsesCount.get() == 1, 1000, 100);
-
-        lfsTcpMock.send(responsePacketBytes);
-
-        assertConditionNotMet(() -> receivedResponsesCount.get() > 1, 1000);
-    }
-
-    @Test
     void request_multiplePacketResponse() throws IOException {
         var receivedResponsesCount = new AtomicInteger();
 
-        inSimConnection.request(NcnPacket.class, (inSimConnection, packet) -> {
-            assertEquals(this.inSimConnection, inSimConnection);
-            assertEquals(56, packet.getSize());
-            assertEquals(PacketType.NCN, packet.getType());
-            assertNotEquals(0, packet.getReqI());
-            assertEquals(18, packet.getUcid());
-            assertEquals("theuser", packet.getUName());
-            assertEquals("New User Nick", packet.getPName());
-            assertFalse(packet.isAdmin());
-            assertEquals(12, packet.getTotal());
-            assertFlagsEqual(NcnFlag.class, Set.of(), packet.getFlags());
-            receivedResponsesCount.getAndIncrement();
-        });
+        inSimConnection.request(new TinyPacketRequest<>(
+                NcnPacket.class,
+                (inSimConnection, packet) -> {
+                    assertEquals(this.inSimConnection, inSimConnection);
+                    assertEquals(56, packet.getSize());
+                    assertEquals(PacketType.NCN, packet.getType());
+                    assertNotEquals(0, packet.getReqI());
+                    assertEquals(18, packet.getUcid());
+                    assertEquals("theuser", packet.getUName());
+                    assertEquals("New User Nick", packet.getPName());
+                    assertFalse(packet.isAdmin());
+                    assertEquals(12, packet.getTotal());
+                    assertFlagsEqual(NcnFlag.class, Set.of(), packet.getFlags());
+                    receivedResponsesCount.getAndIncrement();
+                },
+                500
+        ));
 
         var lfsReceivedPackets = lfsTcpMock.awaitReceivedPackets(2);
         assertEquals(2, lfsReceivedPackets.size());
@@ -305,14 +277,77 @@ class InSimConnectionTest {
     }
 
     @Test
+    void request_multipleRequests() throws IOException {
+        var receivedVerPacketsCount = new AtomicInteger();
+        var receivedIsmPacketsCount = new AtomicInteger();
+        var receivedStaPacketsCount = new AtomicInteger();
+
+        inSimConnection.request(new TinyPacketRequest<>(
+                VerPacket.class,
+                (inSimConnection1, packet) -> receivedVerPacketsCount.getAndIncrement(),
+                5000
+        ));
+        inSimConnection.request(new TinyPacketRequest<>(
+                IsmPacket.class,
+                (inSimConnection, packet) -> {
+                    assertEquals(this.inSimConnection, inSimConnection);
+                    assertEquals(40, packet.getSize());
+                    assertEquals(PacketType.ISM, packet.getType());
+                    assertTrue(packet.getReqI() >= 1 && packet.getReqI() <= 255);
+                    assertFalse(packet.isHost());
+                    assertEquals("Example LFS Server", packet.getHName());
+                    receivedIsmPacketsCount.getAndIncrement();
+                },
+                5000
+        ));
+        inSimConnection.request(new TinyPacketRequest<>(
+                StaPacket.class,
+                (inSimConnection1, packet) -> receivedStaPacketsCount.getAndIncrement(),
+                5000
+        ));
+
+        var lfsReceivedPackets = lfsTcpMock.awaitReceivedPackets(4);
+        assertEquals(4, lfsReceivedPackets.size());
+        assertEquals(4, lfsReceivedPackets.get(1).length);
+        assertEquals(1, lfsReceivedPackets.get(1)[0]);
+        assertEquals(3, lfsReceivedPackets.get(1)[1]);
+        assertNotEquals(0, lfsReceivedPackets.get(1)[2]);
+        assertEquals(1, lfsReceivedPackets.get(1)[3]);
+        assertEquals(4, lfsReceivedPackets.get(2).length);
+        assertEquals(1, lfsReceivedPackets.get(2)[0]);
+        assertEquals(3, lfsReceivedPackets.get(2)[1]);
+        assertNotEquals(0, lfsReceivedPackets.get(2)[2]);
+        assertEquals(10, lfsReceivedPackets.get(2)[3]);
+        assertEquals(4, lfsReceivedPackets.get(3).length);
+        assertEquals(1, lfsReceivedPackets.get(3)[0]);
+        assertEquals(3, lfsReceivedPackets.get(3)[1]);
+        assertNotEquals(0, lfsReceivedPackets.get(3)[2]);
+        assertEquals(7, lfsReceivedPackets.get(3)[3]);
+
+        var responsePacketBytes = new byte[] {
+                10, 10, lfsReceivedPackets.get(2)[2], 0, 0, 0, 0, 0, 69, 120, 97, 109, 112, 108, 101, 32, 76,
+                70, 83, 32, 83, 101, 114, 118, 101, 114, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0
+        };
+        lfsTcpMock.send(responsePacketBytes);
+
+        assertConditionMet(() -> receivedIsmPacketsCount.get() == 1, 1000, 100);
+        assertConditionNotMet(() -> receivedVerPacketsCount.get() > 0 || receivedStaPacketsCount.get() > 0, 2000);
+    }
+
+    @Test
     void request_withThrowingCallback() throws IOException {
         var firstRequestCalled = new AtomicBoolean();
         var secondRequestCalled = new AtomicBoolean();
 
-        inSimConnection.request(TinySubtype.ALC, (inSimConnection1, packet) -> {
-            firstRequestCalled.set(true);
-            throw new RuntimeException("Exception in request callback");
-        });
+        inSimConnection.request(new TinyPacketRequest<>(
+                TinySubtype.ALC,
+                (inSimConnection1, packet) -> {
+                    firstRequestCalled.set(true);
+                    throw new RuntimeException("Exception in request callback");
+                },
+                5000
+        ));
 
         var lfsReceivedPackets = lfsTcpMock.awaitReceivedPackets(2);
         var responsePacketBytes = new byte[] { 2, 4, lfsReceivedPackets.get(1)[2], 8, 17, 49, 0, 0 };
@@ -320,7 +355,11 @@ class InSimConnectionTest {
 
         assertConditionMet(() -> firstRequestCalled.get() && !secondRequestCalled.get(), 1000, 100);
 
-        inSimConnection.request(TinySubtype.ALC, (inSimConnection1, packet) -> secondRequestCalled.set(true));
+        inSimConnection.request(new TinyPacketRequest<>(
+                TinySubtype.ALC,
+                (inSimConnection1, packet) -> secondRequestCalled.set(true),
+                5000
+        ));
 
         lfsReceivedPackets = lfsTcpMock.awaitReceivedPackets(3);
         responsePacketBytes = new byte[] { 2, 4, lfsReceivedPackets.get(2)[2], 8, 17, 49, 0, 0 };
@@ -332,46 +371,13 @@ class InSimConnectionTest {
     @Test
     void request_uniqueReqICheck() throws IOException {
         for (int i = 0; i < 255; i++) {
-            inSimConnection.request(StaPacket.class, (inSimConnection, packet) -> {});
+            inSimConnection.request(
+                    new TinyPacketRequest<>(StaPacket.class, (inSimConnection, packet) -> {}, 500)
+            );
         }
         var lfsReceivedPackets = lfsTcpMock.awaitReceivedPackets(256);
-        var distinctReqIs = lfsReceivedPackets.stream().skip(1).map(bytes -> bytes[2]).distinct().count();
-        assertEquals(255, distinctReqIs);
-    }
-
-    @Test
-    void request_axmSelPacket() throws IOException {
-        var receivedResponsesCount = new AtomicInteger();
-
-        inSimConnection.request(15, (inSimConnection, packet) -> {
-            assertEquals(this.inSimConnection, inSimConnection);
-            assertEquals(8, packet.getSize());
-            assertEquals(PacketType.AXM, packet.getType());
-            assertNotEquals(0, packet.getReqI());
-            assertEquals(0, packet.getNumO());
-            assertEquals(15, packet.getUcid());
-            assertEquals(PmoAction.TTC_SEL, packet.getPmoAction());
-            assertFlagsEqual(PmoFlag.class, Set.of(PmoFlag.FILE_END), packet.getPmoFlags());
-            assertTrue(packet.getInfo().isEmpty());
-            receivedResponsesCount.getAndIncrement();
-        });
-
-        var lfsReceivedPackets = lfsTcpMock.awaitReceivedPackets(2);
-        assertEquals(2, lfsReceivedPackets.size());
-        assertEquals(8, lfsReceivedPackets.get(1).length);
-        assertEquals(2, lfsReceivedPackets.get(1)[0]);
-        assertEquals(61, lfsReceivedPackets.get(1)[1]);
-        assertNotEquals(0, lfsReceivedPackets.get(1)[2]);
-        assertEquals(1, lfsReceivedPackets.get(1)[3]);
-        assertEquals(15, lfsReceivedPackets.get(1)[4]);
-        assertEquals(0, lfsReceivedPackets.get(1)[5]);
-        assertEquals(0, lfsReceivedPackets.get(1)[6]);
-        assertEquals(0, lfsReceivedPackets.get(1)[7]);
-
-        var responsePacketBytes = new byte[] { 2, 54, lfsReceivedPackets.get(1)[2], 0, 15, 5, 1, 0 };
-        lfsTcpMock.send(responsePacketBytes);
-
-        assertConditionMet(() -> receivedResponsesCount.get() == 1, 1000, 100);
+        var distinctReqIsCount = lfsReceivedPackets.stream().skip(1).map(bytes -> bytes[2]).distinct().count();
+        assertEquals(255, distinctReqIsCount);
     }
 
     @Test

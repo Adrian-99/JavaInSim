@@ -1,5 +1,6 @@
 package pl.adrian.api.insim.packets;
 
+import pl.adrian.api.insim.InSimConnection;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.insim.packets.enums.SmallSubtype;
 import pl.adrian.api.insim.packets.enums.VoteAction;
@@ -8,10 +9,11 @@ import pl.adrian.api.common.flags.Flags;
 import pl.adrian.api.insim.packets.flags.LcsFlag;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Unsigned;
-import pl.adrian.internal.insim.packets.base.Packet;
-import pl.adrian.internal.insim.packets.base.InfoPacket;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
+import pl.adrian.internal.insim.packets.base.RequestablePacket;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
+import pl.adrian.internal.insim.packets.requests.builders.SmallPacketRequestBuilder;
 import pl.adrian.internal.insim.packets.util.PacketBuilder;
 import pl.adrian.internal.common.util.PacketDataBytes;
 import pl.adrian.internal.insim.packets.util.PacketValidator;
@@ -21,7 +23,7 @@ import java.util.Optional;
 /**
  * General purpose 8 byte packet.
  */
-public class SmallPacket extends Packet implements InstructionPacket, InfoPacket {
+public class SmallPacket extends AbstractPacket implements InstructionPacket, RequestablePacket {
     @Byte
     private final SmallSubtype subT;
     @Unsigned
@@ -42,7 +44,8 @@ public class SmallPacket extends Packet implements InstructionPacket, InfoPacket
 
     /**
      * Creates small packet. Constructor used only internally.
-     * @param reqI 0 unless it is an info request or a reply to an info request
+     * @param reqI 0 unless this is a reply to an {@link pl.adrian.api.insim.packets.enums.TinySubtype#ALC Tiny ALC}
+     *             or {@link pl.adrian.api.insim.packets.enums.TinySubtype#GTH Tiny GTH} request
      * @param packetDataBytes packet data bytes
      * @throws PacketValidationException if validation of any field in packet fails
      */
@@ -123,5 +126,14 @@ public class SmallPacket extends Packet implements InstructionPacket, InfoPacket
         } else {
             return Optional.empty();
         }
+    }
+
+    /**
+     * Creates builder for packet request for {@link SmallPacket}.
+     * @param inSimConnection InSim connection to request packet from
+     * @return packet request builder
+     */
+    public static SmallPacketRequestBuilder request(InSimConnection inSimConnection) {
+        return new SmallPacketRequestBuilder(inSimConnection);
     }
 }

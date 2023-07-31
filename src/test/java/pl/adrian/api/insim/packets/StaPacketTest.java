@@ -4,13 +4,14 @@ import org.junit.jupiter.api.Test;
 import pl.adrian.api.insim.packets.enums.*;
 import pl.adrian.api.insim.packets.flags.StaFlag;
 import pl.adrian.internal.insim.packets.util.PacketReader;
+import pl.adrian.testutil.MockedInSimConnection;
 
+import java.io.IOException;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static pl.adrian.testutil.AssertionUtils.assertFlagsEqual;
-import static pl.adrian.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static pl.adrian.testutil.AssertionUtils.*;
 
 class StaPacketTest {
     @Test
@@ -181,5 +182,15 @@ class StaPacketTest {
         assertPacketHeaderEquals(25, PacketType.STA, 144, packetReader);
 
         assertThrows(IllegalStateException.class, () -> packetReader.read(dataBytes));
+    }
+
+    @Test
+    void requestStaPacket() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        StaPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 7 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
     }
 }

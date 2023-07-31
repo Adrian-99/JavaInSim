@@ -1,0 +1,97 @@
+package pl.adrian.internal.insim.packets.requests;
+
+import org.slf4j.Logger;
+import pl.adrian.api.insim.InSimConnection;
+import pl.adrian.api.insim.PacketListener;
+import pl.adrian.api.insim.packets.enums.PacketType;
+import pl.adrian.internal.common.util.LoggerUtils;
+import pl.adrian.internal.insim.packets.base.InfoPacket;
+import pl.adrian.internal.insim.packets.base.InstructionPacket;
+import pl.adrian.internal.insim.packets.base.RequestablePacket;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
+/**
+ * This class provides basic implementations of methods from {@link PacketRequest} interface.
+ * @param <T> type of packet this request describes
+ */
+public abstract class AbstractPacketRequest<T extends RequestablePacket> implements PacketRequest {
+    private final Logger logger;
+    private final PacketType requestedPacketType;
+    private final boolean singlePacketResponse;
+    private final PacketListener<T> callback;
+    private final long timoutMillis;
+    private InstructionPacket requestPacket;
+    private LocalDateTime lastUpdate;
+
+    /**
+     * Creates basic packet request implementation.
+     * @param logger logger to be used within packet request
+     * @param requestedPacketType type of packet this request describes
+     * @param singlePacketResponse whether single packet response is expected
+     * @param callback method to be called when requested packet is received
+     * @param timeoutMillis period of time (in milliseconds) after which packet request should be considered timed out
+     */
+    protected AbstractPacketRequest(Logger logger,
+                                    PacketType requestedPacketType,
+                                    boolean singlePacketResponse,
+                                    PacketListener<T> callback,
+                                    long timeoutMillis) {
+        this.logger = logger;
+        this.requestedPacketType = requestedPacketType;
+        this.singlePacketResponse = singlePacketResponse;
+        this.callback = callback;
+        this.timoutMillis = timeoutMillis;
+        lastUpdate = LocalDateTime.now();
+    }
+
+    /**
+     * Creates packet that serves as a request.
+     * @param reqI reqI value to be used by request packet
+     * @return created request packet
+     */
+    protected abstract InstructionPacket createRequestPacket(short reqI);
+
+    @Override
+    public void assignReqI(short reqI) {
+        requestPacket = createRequestPacket(reqI);
+    }
+
+    @Override
+    public PacketType getRequestedPacketType() {
+        return requestedPacketType;
+    }
+
+    @Override
+    public InstructionPacket getRequestPacket() {
+        return requestPacket;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean handleReceivedPacket(InSimConnection inSimConnection, InfoPacket receivedPacket) {
+        if (matches(receivedPacket.getType(), receivedPacket.getReqI())) {
+            try {
+                logger.debug("Requested packet received");
+                callback.onPacketReceived(inSimConnection, (T) receivedPacket);
+            } catch (Exception exception) {
+                logger.error("Error occurred in packet request callback: {}", exception.getMessage());
+                LoggerUtils.logStacktrace(logger, "packet request callback", exception);
+            }
+            lastUpdate = LocalDateTime.now();
+            return singlePacketResponse;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean matches(PacketType packetType, short reqI) {
+        return requestedPacketType.equals(packetType) && requestPacket.getReqI() == reqI;
+    }
+
+    @Override
+    public boolean isTimedOut() {
+        return lastUpdate.until(LocalDateTime.now(), ChronoUnit.MILLIS) > timoutMillis;
+    }
+}

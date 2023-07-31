@@ -2,7 +2,7 @@ package pl.adrian.api.insim.packets;
 
 import pl.adrian.internal.insim.packets.annotations.Array;
 import pl.adrian.internal.insim.packets.annotations.Char;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
@@ -12,7 +12,7 @@ import pl.adrian.internal.insim.packets.util.PacketValidator;
 /**
  * MSg Type - send to LFS to type message or command.
  */
-public class MstPacket extends Packet implements InstructionPacket {
+public class MstPacket extends AbstractPacket implements InstructionPacket {
     @Char
     @Array(length = 64)
     private final String msg;

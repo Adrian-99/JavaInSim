@@ -3,10 +3,14 @@ package pl.adrian.api.insim.packets;
 import org.junit.jupiter.api.Test;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.internal.insim.packets.util.PacketReader;
+import pl.adrian.testutil.MockedInSimConnection;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static pl.adrian.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static pl.adrian.testutil.AssertionUtils.assertRequestPacketBytesEqual;
 
 class NlpPacketTest {
     @Test
@@ -41,5 +45,15 @@ class NlpPacketTest {
         assertEquals(15, castedReadPacket.getInfo().get(2).getLap());
         assertEquals(2, castedReadPacket.getInfo().get(2).getPlid());
         assertEquals(3, castedReadPacket.getInfo().get(2).getPosition());
+    }
+
+    @Test
+    void requestNlpPacket() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        NlpPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 16 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
     }
 }

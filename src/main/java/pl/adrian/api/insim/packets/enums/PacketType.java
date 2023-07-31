@@ -1,8 +1,8 @@
 package pl.adrian.api.insim.packets.enums;
 
 import pl.adrian.api.insim.packets.*;
-import pl.adrian.internal.insim.packets.base.Packet;
 import pl.adrian.internal.common.enums.EnumHelpers;
+import pl.adrian.internal.insim.packets.base.Packet;
 
 /**
  * Enumeration for packet types.

@@ -1,13 +1,16 @@
 package pl.adrian.api.insim.packets;
 
+import pl.adrian.api.insim.InSimConnection;
 import pl.adrian.api.insim.packets.enums.PacketType;
+import pl.adrian.api.insim.packets.enums.TinySubtype;
 import pl.adrian.internal.common.util.PacketDataBytes;
+import pl.adrian.internal.insim.packets.requests.builders.SingleTinyPacketRequestBuilder;
 import pl.adrian.internal.insim.packets.structures.ModSkinId;
 import pl.adrian.internal.insim.packets.annotations.Array;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Unsigned;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.RequestablePacket;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.insim.packets.util.*;
@@ -18,7 +21,7 @@ import java.util.List;
 /**
  * Mods ALlowed - variable size.
  */
-public class MalPacket extends Packet implements InstructionPacket, RequestablePacket {
+public class MalPacket extends AbstractPacket implements InstructionPacket, RequestablePacket {
     @Byte
     private final short ucid;
     @Unsigned
@@ -85,5 +88,14 @@ public class MalPacket extends Packet implements InstructionPacket, RequestableP
      */
     public List<String> getSkinId() {
         return skinId.stream().map(ModSkinId::getStringValue).toList();
+    }
+
+    /**
+     * Creates builder for packet request for {@link MalPacket}.
+     * @param inSimConnection InSim connection to request packet from
+     * @return packet request builder
+     */
+    public static SingleTinyPacketRequestBuilder<MalPacket> request(InSimConnection inSimConnection) {
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.MAL);
     }
 }

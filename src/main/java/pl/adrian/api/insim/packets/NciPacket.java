@@ -1,18 +1,21 @@
 package pl.adrian.api.insim.packets;
 
+import pl.adrian.api.insim.InSimConnection;
 import pl.adrian.api.insim.packets.enums.Language;
 import pl.adrian.api.insim.packets.enums.PacketType;
+import pl.adrian.api.insim.packets.enums.TinySubtype;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Unsigned;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.RequestablePacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
+import pl.adrian.internal.insim.packets.requests.builders.BasicTinyPacketRequestBuilder;
 
 /**
  * New Conn Info. The packet is sent by LFS when there is a new connection.
  * Sent on host only if an admin password has been set.
  */
-public class NciPacket extends Packet implements RequestablePacket {
+public class NciPacket extends AbstractPacket implements RequestablePacket {
     @Byte
     private final short ucid;
     @Byte
@@ -62,5 +65,14 @@ public class NciPacket extends Packet implements RequestablePacket {
      */
     public long getIpAddress() {
         return ipAddress;
+    }
+
+    /**
+     * Creates builder for packet request for {@link NciPacket}.
+     * @param inSimConnection InSim connection to request packet from
+     * @return packet request builder
+     */
+    public static BasicTinyPacketRequestBuilder<NciPacket> request(InSimConnection inSimConnection) {
+        return new BasicTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.NCI);
     }
 }

@@ -5,14 +5,14 @@ import pl.adrian.api.insim.packets.structures.CarContact;
 import pl.adrian.internal.insim.packets.annotations.Structure;
 import pl.adrian.internal.insim.packets.annotations.Word;
 import pl.adrian.internal.insim.packets.base.InfoPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
 /**
  * CONtact - between two cars (A and B are sorted by PLID).
  * To receive this packet set the {@link pl.adrian.api.insim.packets.flags.IsiFlag#CON Isi CON} flag in the {@link IsiPacket}.
  */
-public class ConPacket extends Packet implements InfoPacket {
+public class ConPacket extends AbstractPacket implements InfoPacket {
     @Word
     private final int spClose;
     @Word

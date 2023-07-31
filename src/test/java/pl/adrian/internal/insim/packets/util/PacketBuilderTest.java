@@ -90,6 +90,43 @@ class PacketBuilderTest {
     }
 
     @Test
+    void writeByteArray_fromShortArray() {
+        var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
+        var byteArray = List.of((short) 68, (short) 120, (short) 190);
+        packetBuilder.writeByteArray(byteArray, 5);
+        var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, 68, 120, -66, 0, 0 };
+
+        assertArrayEquals(expectedBytes, bytes);
+    }
+
+    @Test
+    void writeByteArray_fromLongArray() {
+        var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
+        var byteArray = List.of((short) 68, (short) 120, (short) 190, (short) 12, (short) 28, (short) 94, (short) 1);
+        packetBuilder.writeByteArray(byteArray, 5);
+        var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, 68, 120, -66, 12, 28 };
+
+        assertArrayEquals(expectedBytes, bytes);
+    }
+
+    @Test
+    void writeByteArray_fromArrayWithNull() {
+        var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
+        var byteArray = new ArrayList<Short>();
+        byteArray.add((short) 68);
+        byteArray.add(null);
+        byteArray.add((short) 190);
+        packetBuilder.writeByteArray(byteArray, 5);
+        var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 2, 1, -102, 68, 0, -66, 0, 0 };
+
+        assertArrayEquals(expectedBytes, bytes);
+    }
+
+
+    @Test
     void writeZeroByte() {
         var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
         packetBuilder.writeZeroByte();

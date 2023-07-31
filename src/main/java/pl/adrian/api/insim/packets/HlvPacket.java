@@ -7,14 +7,14 @@ import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Structure;
 import pl.adrian.internal.insim.packets.annotations.Word;
 import pl.adrian.internal.insim.packets.base.InfoPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
 /**
  * Hot Lap Validity - reports of incidents that would violate HLVC.
  * To receive this packet set the {@link pl.adrian.api.insim.packets.flags.IsiFlag#HLV Isi HLV} flag in the {@link IsiPacket}.
  */
-public class HlvPacket extends Packet implements InfoPacket {
+public class HlvPacket extends AbstractPacket implements InfoPacket {
     @Byte
     private final short plid;
     @Byte

@@ -3,10 +3,14 @@ package pl.adrian.api.insim.packets;
 import org.junit.jupiter.api.Test;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.internal.insim.packets.util.PacketReader;
+import pl.adrian.testutil.MockedInSimConnection;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static pl.adrian.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static pl.adrian.testutil.AssertionUtils.assertRequestPacketBytesEqual;
 
 class IsmPacketTest {
     @Test
@@ -30,5 +34,15 @@ class IsmPacketTest {
         assertPacketHeaderEquals(40, PacketType.ISM, 144, castedReadPacket);
         assertTrue(castedReadPacket.isHost());
         assertEquals("Example LFS Server", castedReadPacket.getHName());
+    }
+
+    @Test
+    void requestIsmPacket() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        IsmPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 10 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
     }
 }

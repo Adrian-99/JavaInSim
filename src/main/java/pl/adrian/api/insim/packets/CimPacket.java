@@ -3,7 +3,7 @@ package pl.adrian.api.insim.packets;
 import pl.adrian.api.insim.packets.enums.*;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.base.InfoPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
 import java.util.Optional;
@@ -11,7 +11,7 @@ import java.util.Optional;
 /**
  * Conn Interface Mode - connection's interface mode.
  */
-public class CimPacket extends Packet implements InfoPacket {
+public class CimPacket extends AbstractPacket implements InfoPacket {
     @Byte
     private final short ucid;
     @Byte

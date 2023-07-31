@@ -5,13 +5,13 @@ import pl.adrian.api.insim.packets.enums.PenaltyReason;
 import pl.adrian.api.insim.packets.enums.PenaltyValue;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.base.InfoPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
 /**
  * PENalty. The packet is sent by LFS when any player is given or has cleared penalty.
  */
-public class PenPacket extends Packet implements InfoPacket {
+public class PenPacket extends AbstractPacket implements InfoPacket {
     @Byte
     private final short plid;
     @Byte

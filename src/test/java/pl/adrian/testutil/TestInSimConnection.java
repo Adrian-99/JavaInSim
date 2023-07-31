@@ -7,8 +7,6 @@ import java.io.IOException;
 
 public class TestInSimConnection extends InSimConnection {
     public TestInSimConnection(String hostname, int port, IsiPacket initializationPacket) throws IOException {
-        super(hostname, port, initializationPacket);
-        packetRequestTimeoutMs = 800;
-        clearPacketRequestsIntervalMs = 450;
+        super(hostname, port, initializationPacket, 450);
     }
 }

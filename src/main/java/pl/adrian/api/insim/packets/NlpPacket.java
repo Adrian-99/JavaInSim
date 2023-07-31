@@ -1,11 +1,14 @@
 package pl.adrian.api.insim.packets;
 
+import pl.adrian.api.insim.InSimConnection;
 import pl.adrian.api.insim.packets.enums.PacketType;
+import pl.adrian.api.insim.packets.enums.TinySubtype;
 import pl.adrian.api.insim.packets.structures.NodeLap;
 import pl.adrian.internal.insim.packets.annotations.Array;
 import pl.adrian.internal.insim.packets.annotations.Structure;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.RequestablePacket;
+import pl.adrian.internal.insim.packets.requests.builders.SingleTinyPacketRequestBuilder;
 import pl.adrian.internal.insim.packets.util.Constants;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
@@ -18,7 +21,7 @@ import java.util.List;
  * 1) Set the Interval field in the {@link IsiPacket} packet (10, 20, 30... 8000 ms),<br>
  * 2) Set flag {@link pl.adrian.api.insim.packets.flags.IsiFlag#NLP Isi NLP} in the {@link IsiPacket}.
  */
-public class NlpPacket extends Packet implements RequestablePacket {
+public class NlpPacket extends AbstractPacket implements RequestablePacket {
     @Structure
     @Array(length = Constants.NLP_MAX_CARS, dynamicLength = true)
     private final List<NodeLap> info;
@@ -51,5 +54,14 @@ public class NlpPacket extends Packet implements RequestablePacket {
      */
     public List<NodeLap> getInfo() {
         return info;
+    }
+
+    /**
+     * Creates builder for packet request for {@link NlpPacket}.
+     * @param inSimConnection InSim connection to request packet from
+     * @return packet request builder
+     */
+    public static SingleTinyPacketRequestBuilder<NlpPacket> request(InSimConnection inSimConnection) {
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.NLP);
     }
 }

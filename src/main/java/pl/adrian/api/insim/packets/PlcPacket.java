@@ -5,7 +5,7 @@ import pl.adrian.api.common.enums.DefaultCar;
 import pl.adrian.api.common.flags.Flags;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Unsigned;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.insim.packets.util.PacketBuilder;
@@ -16,7 +16,7 @@ import pl.adrian.internal.insim.packets.util.PacketValidator;
  * The resulting set of selectable cars is a subset of the cars set to be available
  * on the host (by the /cars command or {@link pl.adrian.api.insim.packets.enums.SmallSubtype#ALC Small ALC}).
  */
-public class PlcPacket extends Packet implements InstructionPacket {
+public class PlcPacket extends AbstractPacket implements InstructionPacket {
     @Byte
     private final short ucid;
     @Unsigned

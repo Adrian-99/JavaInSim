@@ -7,12 +7,13 @@ import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.insim.packets.enums.ViewIdentifier;
 import pl.adrian.api.insim.packets.flags.CppFlag;
 import pl.adrian.internal.insim.packets.util.PacketReader;
+import pl.adrian.testutil.MockedInSimConnection;
 
+import java.io.IOException;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static pl.adrian.testutil.AssertionUtils.assertFlagsEqual;
-import static pl.adrian.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static pl.adrian.testutil.AssertionUtils.*;
 
 class CppPacketTest {
     @Test
@@ -66,5 +67,15 @@ class CppPacketTest {
         assertEquals(95.5, castedReadPacket.getFov());
         assertEquals(2770, castedReadPacket.getTime());
         assertFlagsEqual(CppFlag.class, Set.of(CppFlag.SHIFTU), castedReadPacket.getFlags());
+    }
+
+    @Test
+    void requestCppPacket() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        CppPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 6 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
     }
 }

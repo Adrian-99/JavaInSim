@@ -1,7 +1,6 @@
 package pl.adrian.testutil;
 
 import org.awaitility.core.ConditionTimeoutException;
-import org.opentest4j.AssertionFailedError;
 import pl.adrian.api.common.enums.DefaultCar;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.common.flags.Flags;
@@ -15,8 +14,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AssertionUtils {
     public static void assertPacketHeaderEquals(int expectedDataBytesCount,
@@ -37,39 +35,45 @@ public class AssertionUtils {
         assertEquals(expectedReqI, packet.getReqI());
     }
 
+    public static void assertRequestPacketBytesEqual(byte[] expectedBytes, byte[] actualBytes) {
+        assertEquals(expectedBytes.length, actualBytes.length, "Incorrect request packet bytes length");
+        for (var i = 0; i < expectedBytes.length; i++) {
+            if (i != 2) {
+                assertEquals(expectedBytes[i], actualBytes[i], "Incorrect request packet byte at position " + i);
+            } else {
+                assertNotEquals(0, actualBytes[i], "Request packet reqI byte is 0");
+            }
+        }
+    }
+
     public static <T extends Enum<?>> void assertFlagsEqual(Class<T> enumClass,
                                                             Set<T> expectedFlagsValues,
                                                             Flags<T> actualFlags) {
         var enumHelper = EnumHelpers.get(enumClass);
         for (var enumValue : enumHelper.getAllValuesCached()) {
             if (expectedFlagsValues.contains(enumValue)) {
-                if (!actualFlags.hasFlag(enumValue)) {
-                    throw new AssertionFailedError("Missing value " + enumValue + " in flags");
-                }
+                assertTrue(actualFlags.hasFlag(enumValue), "Missing value " + enumValue + " in flags");
             } else {
-                if (!actualFlags.hasNoFlag(enumValue)) {
-                    throw new AssertionFailedError("Unexpected value " + enumValue + " in flags");
-                }
+                assertTrue(actualFlags.hasNoFlag(enumValue), "Unexpected value " + enumValue + " in flags");
             }
         }
     }
 
     public static void assertCarEquals(DefaultCar expectedCar, Car actualCar) {
-        if (actualCar.isMod() || actualCar.getDefaultCar().isEmpty()) {
-            throw new AssertionFailedError("Expected default car, was mod car");
-        }
-        if (!actualCar.getDefaultCar().get().equals(expectedCar) || !actualCar.getSkinId().equals(expectedCar.name())) {
-            throw new AssertionFailedError("Expected: " + expectedCar + ", was: " + actualCar.getDefaultCar().get());
-        }
+        assertTrue(
+                !actualCar.isMod() && actualCar.getDefaultCar().isPresent(),
+                "Expected default car, was mod car"
+        );
+        assertEquals(expectedCar, actualCar.getDefaultCar().get(), "Unexpected car");
+        assertEquals(expectedCar.name(), actualCar.getSkinId(), "Unexpected skin ID");
     }
 
     public static void assertCarEquals(String expectedModSkinId, Car actualCar) {
-        if (!actualCar.isMod() || actualCar.getDefaultCar().isPresent()) {
-            throw new AssertionFailedError("Expected mod car, was default car");
-        }
-        if (!actualCar.getSkinId().equals(expectedModSkinId)) {
-            throw new AssertionFailedError("Expected: " + expectedModSkinId + ", was: " + actualCar.getSkinId());
-        }
+        assertTrue(
+                actualCar.isMod() && actualCar.getDefaultCar().isEmpty(),
+                "Expected mod car, was default car"
+        );
+        assertEquals(expectedModSkinId, actualCar.getSkinId(), "Unexpected skin ID");
     }
 
     public static void assertConditionMet(Callable<Boolean> condition, int atMostMs, int pollIntervalMs) {

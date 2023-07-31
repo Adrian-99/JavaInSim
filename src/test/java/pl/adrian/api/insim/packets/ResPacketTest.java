@@ -6,7 +6,9 @@ import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.insim.packets.flags.ConfirmationFlag;
 import pl.adrian.api.insim.packets.flags.PlayerFlag;
 import pl.adrian.internal.insim.packets.util.PacketReader;
+import pl.adrian.testutil.MockedInSimConnection;
 
+import java.io.IOException;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -58,6 +60,16 @@ class ResPacketTest {
         );
         assertEquals(3, castedReadPacket.getResultNum());
         assertEquals(15, castedReadPacket.getNumRes());
-        assertEquals(45, castedReadPacket.getpSeconds());
+        assertEquals(45, castedReadPacket.getPSeconds());
+    }
+
+    @Test
+    void requestResPacket() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        ResPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 15 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
     }
 }

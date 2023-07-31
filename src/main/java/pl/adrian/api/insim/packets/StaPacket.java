@@ -1,5 +1,6 @@
 package pl.adrian.api.insim.packets;
 
+import pl.adrian.api.insim.InSimConnection;
 import pl.adrian.api.insim.packets.enums.*;
 import pl.adrian.api.common.flags.Flags;
 import pl.adrian.api.insim.packets.flags.StaFlag;
@@ -7,14 +8,15 @@ import pl.adrian.internal.insim.packets.annotations.*;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Float;
 import pl.adrian.api.insim.packets.structures.RaceLaps;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.RequestablePacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
+import pl.adrian.internal.insim.packets.requests.builders.SingleTinyPacketRequestBuilder;
 
 /**
  * STAte. LFS will send this packet any time the info in it changes.
  */
-public class StaPacket extends Packet implements RequestablePacket {
+public class StaPacket extends AbstractPacket implements RequestablePacket {
     @Float
     private final float replaySpeed;
     @Word
@@ -47,7 +49,7 @@ public class StaPacket extends Packet implements RequestablePacket {
 
     /**
      * Creates state packet. Constructor used only internally.
-     * @param reqI non-zero if replying to a request packet
+     * @param reqI 0 unless this is a reply to an {@link pl.adrian.api.insim.packets.enums.TinySubtype#SST Tiny SST} request
      * @param packetDataBytes packet data bytes
      */
     public StaPacket(short reqI, PacketDataBytes packetDataBytes) {
@@ -166,5 +168,14 @@ public class StaPacket extends Packet implements RequestablePacket {
      */
     public Wind getWind() {
         return wind;
+    }
+
+    /**
+     * Creates builder for packet request for {@link StaPacket}.
+     * @param inSimConnection InSim connection to request packet from
+     * @return packet request builder
+     */
+    public static SingleTinyPacketRequestBuilder<StaPacket> request(InSimConnection inSimConnection) {
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.SST);
     }
 }

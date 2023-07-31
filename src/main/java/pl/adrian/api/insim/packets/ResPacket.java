@@ -1,20 +1,23 @@
 package pl.adrian.api.insim.packets;
 
+import pl.adrian.api.insim.InSimConnection;
 import pl.adrian.api.insim.packets.enums.PacketType;
+import pl.adrian.api.insim.packets.enums.TinySubtype;
 import pl.adrian.api.insim.packets.flags.ConfirmationFlag;
 import pl.adrian.api.common.flags.Flags;
 import pl.adrian.api.insim.packets.flags.PlayerFlag;
 import pl.adrian.api.common.structures.Car;
 import pl.adrian.internal.insim.packets.annotations.*;
 import pl.adrian.internal.insim.packets.annotations.Byte;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.RequestablePacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
+import pl.adrian.internal.insim.packets.requests.builders.BasicTinyPacketRequestBuilder;
 
 /**
  * RESult (qualify or confirmed finish).
  */
-public class ResPacket extends Packet implements RequestablePacket {
+public class ResPacket extends AbstractPacket implements RequestablePacket {
     @Byte
     private final short plid;
     @Char
@@ -165,9 +168,18 @@ public class ResPacket extends Packet implements RequestablePacket {
     }
 
     /**
-     * @return penalty time in seconds (alpacketDataBytes.ready included in race time)
+     * @return penalty time in seconds (already included in race time)
      */
-    public int getpSeconds() {
+    public int getPSeconds() {
         return pSeconds;
+    }
+
+    /**
+     * Creates builder for packet request for {@link ResPacket}.
+     * @param inSimConnection InSim connection to request packet from
+     * @return packet request builder
+     */
+    public static BasicTinyPacketRequestBuilder<ResPacket> request(InSimConnection inSimConnection) {
+        return new BasicTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.RES);
     }
 }

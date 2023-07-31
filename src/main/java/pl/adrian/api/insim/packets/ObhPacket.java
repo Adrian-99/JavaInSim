@@ -10,14 +10,14 @@ import pl.adrian.internal.insim.packets.annotations.Short;
 import pl.adrian.internal.insim.packets.annotations.Structure;
 import pl.adrian.internal.insim.packets.annotations.Word;
 import pl.adrian.internal.insim.packets.base.InfoPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
 /**
  * OBject Hit - car hit an autocross object or an unknown object.
  * To receive this packet set the {@link pl.adrian.api.insim.packets.flags.IsiFlag#OBH Isi OBH} flag in the {@link IsiPacket}.
  */
-public class ObhPacket extends Packet implements InfoPacket {
+public class ObhPacket extends AbstractPacket implements InfoPacket {
     @Byte
     private final short plid;
     @Word

@@ -7,13 +7,13 @@ import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Structure;
 import pl.adrian.internal.insim.packets.annotations.Unsigned;
 import pl.adrian.internal.insim.packets.base.InfoPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
 /**
  * Car State Changed. The packet is sent when car of any player changes state (currently start or stop).
  */
-public class CscPacket extends Packet implements InfoPacket {
+public class CscPacket extends AbstractPacket implements InfoPacket {
     @Byte
     private final short plid;
     @Byte

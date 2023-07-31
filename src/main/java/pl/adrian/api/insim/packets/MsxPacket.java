@@ -3,7 +3,7 @@ package pl.adrian.api.insim.packets;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.internal.insim.packets.annotations.Array;
 import pl.adrian.internal.insim.packets.annotations.Char;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.insim.packets.util.PacketBuilder;
@@ -12,7 +12,7 @@ import pl.adrian.internal.insim.packets.util.PacketValidator;
 /**
  * MSg eXtended - like {@link MstPacket} but longer (not for commands).
  */
-public class MsxPacket extends Packet implements InstructionPacket {
+public class MsxPacket extends AbstractPacket implements InstructionPacket {
     @Char
     @Array(length = 96)
     private final String msg;

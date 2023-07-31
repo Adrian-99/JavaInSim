@@ -3,13 +3,13 @@ package pl.adrian.api.insim.packets;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.base.InfoPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
 /**
  * PLayer Leave race. The packet is sent by LFS when player spectates (removed from player list).
  */
-public class PllPacket extends Packet implements InfoPacket {
+public class PllPacket extends AbstractPacket implements InfoPacket {
     @Byte
     private final short plid;
 

@@ -6,12 +6,13 @@ import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.insim.packets.enums.RipErrorCode;
 import pl.adrian.api.insim.packets.flags.RipOption;
 import pl.adrian.internal.insim.packets.util.PacketReader;
+import pl.adrian.testutil.MockedInSimConnection;
 
+import java.io.IOException;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static pl.adrian.testutil.AssertionUtils.assertFlagsEqual;
-import static pl.adrian.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static pl.adrian.testutil.AssertionUtils.*;
 
 class RipPacketTest {
     @Test
@@ -64,5 +65,40 @@ class RipPacketTest {
         assertEquals(169253, castedReadPacket.getCTime());
         assertEquals(2958164, castedReadPacket.getTTime());
         assertEquals("AS5X_ReplayFromAston", castedReadPacket.getRName());
+    }
+
+    @Test
+    void requestRipPacket() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        RipPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 22 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+    }
+
+    @Test
+    void requestRipPacketAsConfirmationFor() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        RipPacket.request(inSimConnectionMock)
+                .asConfirmationFor(new RipPacket(
+                        15,
+                        true,
+                        false,
+                        new Flags<>(RipOption.SKINS),
+                        7437647,
+                        "test_mpr"
+                ))
+                .listen(((inSimConnection, packet) -> {}));
+
+        var expectedRequestPacketBytes = new byte[] {
+                20, 48, 0, 0, 1, 0, 2, 0, 79, 125, 113, 0, 0, 0, 0, 0,
+                116, 101, 115, 116, 95, 109, 112, 114, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
     }
 }

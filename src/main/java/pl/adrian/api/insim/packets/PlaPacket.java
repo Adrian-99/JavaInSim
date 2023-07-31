@@ -4,13 +4,13 @@ import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.insim.packets.enums.PitLaneFact;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.base.InfoPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
 /**
  * Pit LAne. The packet is sent by LFS when any player enters or leaves pit lane.
  */
-public class PlaPacket extends Packet implements InfoPacket {
+public class PlaPacket extends AbstractPacket implements InfoPacket {
     @Byte
     private final short plid;
     @Byte

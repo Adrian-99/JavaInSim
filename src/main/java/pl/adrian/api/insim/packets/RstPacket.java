@@ -1,6 +1,8 @@
 package pl.adrian.api.insim.packets;
 
+import pl.adrian.api.insim.InSimConnection;
 import pl.adrian.api.insim.packets.enums.PacketType;
+import pl.adrian.api.insim.packets.enums.TinySubtype;
 import pl.adrian.api.insim.packets.enums.Wind;
 import pl.adrian.api.common.flags.Flags;
 import pl.adrian.api.insim.packets.flags.RaceFlag;
@@ -9,15 +11,16 @@ import pl.adrian.internal.insim.packets.annotations.Char;
 import pl.adrian.api.insim.packets.structures.LapTiming;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Word;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.RequestablePacket;
 import pl.adrian.api.insim.packets.structures.RaceLaps;
 import pl.adrian.internal.common.util.PacketDataBytes;
+import pl.adrian.internal.insim.packets.requests.builders.SingleTinyPacketRequestBuilder;
 
 /**
  * Race STart. The packet is sent by LFS when race starts.
  */
-public class RstPacket extends Packet implements RequestablePacket {
+public class RstPacket extends AbstractPacket implements RequestablePacket {
     @Byte
     private final RaceLaps raceLaps;
     @Byte
@@ -158,5 +161,14 @@ public class RstPacket extends Packet implements RequestablePacket {
      */
     public int getSplit3() {
         return split3;
+    }
+
+    /**
+     * Creates builder for packet request for {@link RstPacket}.
+     * @param inSimConnection InSim connection to request packet from
+     * @return packet request builder
+     */
+    public static SingleTinyPacketRequestBuilder<RstPacket> request(InSimConnection inSimConnection) {
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.RST);
     }
 }

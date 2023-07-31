@@ -139,7 +139,7 @@ public class PacketBuilder {
      * @return packet builder
      */
     public PacketBuilder writeCharArray(String value, int length, boolean variableLength) {
-        if (value != null && value.length() > 0) {
+        if (value != null && !value.isEmpty()) {
             var bytes = value.getBytes();
             for (var i = 0; i < length - 1; i++) {
                 if (i < bytes.length) {

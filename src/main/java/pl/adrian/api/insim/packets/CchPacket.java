@@ -4,7 +4,7 @@ import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.insim.packets.enums.ViewIdentifier;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.base.InfoPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.common.util.PacketDataBytes;
 
 /**
@@ -15,7 +15,7 @@ import pl.adrian.internal.common.util.PacketDataBytes;
  * means {@link ViewIdentifier#CUSTOM} at start or pit exit<br>
  * 3) {@link CchPacket}: sent when an existing driver changes camera
  */
-public class CchPacket extends Packet implements InfoPacket {
+public class CchPacket extends AbstractPacket implements InfoPacket {
     @Byte
     private final short plid;
     @Byte

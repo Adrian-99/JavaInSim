@@ -1,6 +1,7 @@
 package pl.adrian.api.insim.packets;
 
 import pl.adrian.api.common.flags.Flags;
+import pl.adrian.api.insim.InSimConnection;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.api.insim.packets.enums.RipErrorCode;
 import pl.adrian.api.insim.packets.flags.RipOption;
@@ -10,9 +11,11 @@ import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Char;
 import pl.adrian.internal.insim.packets.annotations.Unsigned;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.RequestablePacket;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
+import pl.adrian.api.insim.packets.requests.RipPacketRequest;
+import pl.adrian.internal.insim.packets.requests.builders.RipPacketRequestBuilder;
 import pl.adrian.internal.insim.packets.util.PacketBuilder;
 import pl.adrian.internal.insim.packets.util.PacketValidator;
 
@@ -21,7 +24,7 @@ import pl.adrian.internal.insim.packets.util.PacketValidator;
  *  with this packet. Replay positions and lengths are specified in hundredths of a second.
  *  LFS will reply with another {@link RipPacket} when the request is completed.
  */
-public class RipPacket extends Packet implements InstructionPacket, RequestablePacket {
+public class RipPacket extends AbstractPacket implements InstructionPacket, RequestablePacket {
     @Byte
     private final RipErrorCode error;
     @Byte
@@ -39,8 +42,10 @@ public class RipPacket extends Packet implements InstructionPacket, RequestableP
     private final String rName;
 
     /**
-     * Creates replay information packet.
-     * @param reqI must not be zero
+     * Creates replay information packet. To receive confirmation from LFS upon sending this packet that
+     * request has been completed, it is recommended to use request mechanism: {@link #request} method
+     * and then {@link RipPacketRequestBuilder#asConfirmationFor} method.
+     * @param reqI should not be zero (however this value will be overwritten if used within {@link RipPacketRequest})
      * @param isMpr whether is MPR or SPR
      * @param isPaused whether replay should be paused
      * @param options options
@@ -67,7 +72,8 @@ public class RipPacket extends Packet implements InstructionPacket, RequestableP
 
     /**
      * Creates replay information packet. Constructor used only internally.
-     * @param reqI 0 unless this is a reply to request
+     * @param reqI 0 unless this is a reply to {@link pl.adrian.api.insim.packets.enums.TinySubtype#RIP Tiny RIP}
+     *             or {@link RipPacket} request
      * @param packetDataBytes packet data bytes
      */
     public RipPacket(short reqI, PacketDataBytes packetDataBytes) {
@@ -80,6 +86,14 @@ public class RipPacket extends Packet implements InstructionPacket, RequestableP
         cTime = packetDataBytes.readUnsigned();
         tTime = packetDataBytes.readUnsigned();
         rName = packetDataBytes.readCharArray(64);
+    }
+
+    /**
+     * Sets the reqI value. Method used only internally.
+     * @param reqI new reqI value
+     */
+    public void setReqI(short reqI) {
+        this.reqI = reqI;
     }
 
     /**
@@ -143,5 +157,14 @@ public class RipPacket extends Packet implements InstructionPacket, RequestableP
                 .writeUnsigned(tTime)
                 .writeCharArray(rName, 64, false)
                 .getBytes();
+    }
+
+    /**
+     * Creates builder for packet request for {@link RipPacket}.
+     * @param inSimConnection InSim connection to request packet from
+     * @return packet request builder
+     */
+    public static RipPacketRequestBuilder request(InSimConnection inSimConnection) {
+        return new RipPacketRequestBuilder(inSimConnection);
     }
 }

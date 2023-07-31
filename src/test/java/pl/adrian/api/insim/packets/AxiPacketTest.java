@@ -3,10 +3,13 @@ package pl.adrian.api.insim.packets;
 import org.junit.jupiter.api.Test;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.internal.insim.packets.util.PacketReader;
+import pl.adrian.testutil.MockedInSimConnection;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static pl.adrian.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static pl.adrian.testutil.AssertionUtils.assertRequestPacketBytesEqual;
 
 class AxiPacketTest {
     @Test
@@ -32,5 +35,15 @@ class AxiPacketTest {
         assertEquals(22, castedReadPacket.getNumCP());
         assertEquals(1452, castedReadPacket.getNumO());
         assertEquals("test_layout_name", castedReadPacket.getLName());
+    }
+
+    @Test
+    void requestAxiPacket() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        AxiPacket.request(inSimConnectionMock).listen((connection, packet) -> {});
+
+        var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 20 };
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
     }
 }

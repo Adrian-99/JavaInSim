@@ -2,7 +2,9 @@ package pl.adrian.api.insim.packets;
 
 import pl.adrian.api.common.flags.Flags;
 import pl.adrian.api.common.structures.Vec;
+import pl.adrian.api.insim.InSimConnection;
 import pl.adrian.api.insim.packets.enums.PacketType;
+import pl.adrian.api.insim.packets.enums.TinySubtype;
 import pl.adrian.api.insim.packets.enums.ViewIdentifier;
 import pl.adrian.api.insim.packets.flags.CppFlag;
 import pl.adrian.internal.common.util.PacketDataBytes;
@@ -11,9 +13,10 @@ import pl.adrian.internal.insim.packets.annotations.Float;
 import pl.adrian.internal.insim.packets.annotations.Structure;
 import pl.adrian.internal.insim.packets.annotations.Word;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.RequestablePacket;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
+import pl.adrian.internal.insim.packets.requests.builders.SingleTinyPacketRequestBuilder;
 import pl.adrian.internal.insim.packets.util.PacketBuilder;
 import pl.adrian.internal.insim.packets.util.PacketValidator;
 
@@ -37,7 +40,7 @@ import pl.adrian.internal.insim.packets.util.PacketValidator;
  * If the requested camera mode is different from the one LFS is already in, it cannot
  * move smoothly to the new position, so in this case the {@link #time} value is ignored.
  */
-public class CppPacket extends Packet implements InstructionPacket, RequestablePacket {
+public class CppPacket extends AbstractPacket implements InstructionPacket, RequestablePacket {
     @Structure
     private final Vec pos;
     @Word
@@ -189,5 +192,14 @@ public class CppPacket extends Packet implements InstructionPacket, RequestableP
                 .writeWord(time)
                 .writeWord(flags.getWordValue())
                 .getBytes();
+    }
+
+    /**
+     * Creates builder for packet request for {@link CppPacket}.
+     * @param inSimConnection InSim connection to request packet from
+     * @return packet request builder
+     */
+    public static SingleTinyPacketRequestBuilder<CppPacket> request(InSimConnection inSimConnection) {
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.SCP);
     }
 }

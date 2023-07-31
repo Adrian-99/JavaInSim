@@ -5,7 +5,7 @@ import pl.adrian.internal.insim.packets.annotations.*;
 import pl.adrian.internal.insim.packets.annotations.Byte;
 import pl.adrian.internal.insim.packets.annotations.Float;
 import pl.adrian.internal.insim.packets.annotations.Short;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.internal.common.enums.EnumWithCustomValue;
@@ -696,7 +696,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class ValidTestPacket extends Packet implements InstructionPacket {
+    private static class ValidTestPacket extends AbstractPacket implements InstructionPacket {
         @Byte
         private final Character characterByte;
         @Byte
@@ -779,7 +779,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithFieldWithoutAnnotation extends Packet implements InstructionPacket {
+    private static class PacketWithFieldWithoutAnnotation extends AbstractPacket implements InstructionPacket {
         private final int fieldWithNoAnnotation;
 
         protected PacketWithFieldWithoutAnnotation(int size,
@@ -797,7 +797,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithInvalidByteType extends Packet implements InstructionPacket {
+    private static class PacketWithInvalidByteType extends AbstractPacket implements InstructionPacket {
 
         @Byte
         private final String stringByte;
@@ -817,7 +817,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithInvalidWordType extends Packet implements InstructionPacket {
+    private static class PacketWithInvalidWordType extends AbstractPacket implements InstructionPacket {
 
         @Word
         private final String stringWord;
@@ -837,7 +837,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithInvalidShortType extends Packet implements InstructionPacket {
+    private static class PacketWithInvalidShortType extends AbstractPacket implements InstructionPacket {
 
         @Short
         private final String stringShort;
@@ -857,7 +857,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithInvalidCharArrayType extends Packet implements InstructionPacket {
+    private static class PacketWithInvalidCharArrayType extends AbstractPacket implements InstructionPacket {
 
         @Char
         @Array(length = 5)
@@ -878,7 +878,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithMissingArrayAnnotationForChar extends Packet implements InstructionPacket {
+    private static class PacketWithMissingArrayAnnotationForChar extends AbstractPacket implements InstructionPacket {
 
         @Char
         private final String stringChar;
@@ -898,7 +898,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithInvalidUnsignedType extends Packet implements InstructionPacket {
+    private static class PacketWithInvalidUnsignedType extends AbstractPacket implements InstructionPacket {
 
         @Unsigned
         private final String stringUnsigned;
@@ -918,7 +918,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithInvalidIntType extends Packet implements InstructionPacket {
+    private static class PacketWithInvalidIntType extends AbstractPacket implements InstructionPacket {
 
         @Int
         private final String stringInt;
@@ -938,7 +938,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithInvalidFloatType extends Packet implements InstructionPacket {
+    private static class PacketWithInvalidFloatType extends AbstractPacket implements InstructionPacket {
 
         @Float
         private final String stringFloat;
@@ -958,7 +958,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithInvalidStructureArrayType extends Packet implements InstructionPacket {
+    private static class PacketWithInvalidStructureArrayType extends AbstractPacket implements InstructionPacket {
 
         @Structure
         @Array(length = 2)
@@ -979,7 +979,7 @@ class PacketValidatorTest {
     }
 
     @SuppressWarnings("all")
-    private static class PacketWithInvalidStructureType extends Packet implements InstructionPacket {
+    private static class PacketWithInvalidStructureType extends AbstractPacket implements InstructionPacket {
 
         @Structure
         private final String stringStructure;

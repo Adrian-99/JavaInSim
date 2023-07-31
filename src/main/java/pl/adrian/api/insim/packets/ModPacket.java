@@ -2,7 +2,7 @@ package pl.adrian.api.insim.packets;
 
 import pl.adrian.api.insim.packets.enums.PacketType;
 import pl.adrian.internal.insim.packets.annotations.Int;
-import pl.adrian.internal.insim.packets.base.Packet;
+import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
 import pl.adrian.internal.insim.packets.util.PacketBuilder;
@@ -11,7 +11,7 @@ import pl.adrian.internal.insim.packets.util.PacketValidator;
 /**
  * MODe: send to LFS to change screen mode.
  */
-public class ModPacket extends Packet implements InstructionPacket {
+public class ModPacket extends AbstractPacket implements InstructionPacket {
     @Int
     private final int bits16;
     @Int
