@@ -109,6 +109,7 @@ public class PacketReader {
             case AXM -> new AxmPacket(packetSize, packetReqI, packetDataBytes);
             case CPP -> new CppPacket(packetReqI, packetDataBytes);
             case RIP -> new RipPacket(packetReqI, packetDataBytes);
+            case SSH -> new SshPacket(packetReqI, packetDataBytes);
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }

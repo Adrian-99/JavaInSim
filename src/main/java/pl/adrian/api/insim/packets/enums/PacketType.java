@@ -207,7 +207,7 @@ public enum PacketType {
     /**
      * 49 - both ways: screenshot
      */
-    SSH,
+    SSH(SshPacket.class),
     /**
      * 50 - info: contact between cars (collision report)
      */
