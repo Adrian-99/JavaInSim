@@ -48,7 +48,7 @@ public class BtnPacket extends AbstractPacket implements InstructionPacket {
 
     /**
      * Creates button packet for type-in button.
-     * @param reqI non-zero (returned in {@link BtcPacket} and IS_BTT packets)
+     * @param reqI non-zero (returned in {@link BtcPacket} and {@link BttPacket} packets)
      * @param ucid connection to display the button (0 = local / 255 = all)
      * @param clickID button ID (0 to {@value Constants#BUTTON_MAX_CLICK_ID})
      * @param inst some extra flags
@@ -103,7 +103,7 @@ public class BtnPacket extends AbstractPacket implements InstructionPacket {
 
     /**
      * Creates button packet for non-type-in button.
-     * @param reqI non-zero (returned in {@link BtcPacket} and IS_BTT packets)
+     * @param reqI non-zero (returned in {@link BtcPacket} and {@link BttPacket} packets)
      * @param ucid connection to display the button (0 = local / 255 = all)
      * @param clickID button ID (0 to {@value Constants#BUTTON_MAX_CLICK_ID})
      * @param inst some extra flags
@@ -131,7 +131,7 @@ public class BtnPacket extends AbstractPacket implements InstructionPacket {
 
     /**
      * Creates button packet for existing button text and caption update.
-     * @param reqI non-zero (returned in {@link BtcPacket} and IS_BTT packets)
+     * @param reqI non-zero (returned in {@link BtcPacket} and {@link BttPacket} packets)
      * @param ucid connection to display the button (0 = local / 255 = all)
      * @param clickID button ID (0 to {@value Constants#BUTTON_MAX_CLICK_ID})
      * @param text button text

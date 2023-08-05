@@ -199,7 +199,7 @@ public enum PacketType {
     /**
      * 47 - info: sent after typing into a button
      */
-    BTT,
+    BTT(BttPacket.class),
     /**
      * 48 - both ways: replay information packet
      */
@@ -277,10 +277,6 @@ public enum PacketType {
 
     PacketType(Class<? extends Packet> packetClass) {
         this.packetClass = packetClass;
-    }
-
-    PacketType() {
-        packetClass = null;
     }
 
     /**
