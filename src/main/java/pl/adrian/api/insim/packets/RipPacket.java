@@ -155,7 +155,7 @@ public class RipPacket extends AbstractPacket implements InstructionPacket, Requ
                 .writeZeroByte()
                 .writeUnsigned(cTime)
                 .writeUnsigned(tTime)
-                .writeCharArray(rName, 64, false)
+                .writeCharArray(rName, 64)
                 .getBytes();
     }
 

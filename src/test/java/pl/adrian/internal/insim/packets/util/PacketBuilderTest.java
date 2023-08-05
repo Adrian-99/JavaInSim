@@ -10,8 +10,7 @@ import pl.adrian.internal.insim.packets.structures.base.UnsignedInstructionStruc
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PacketBuilderTest {
 
@@ -193,7 +192,7 @@ class PacketBuilderTest {
     @Test
     void writeCharArray_fromShortString() {
         var packetBuilder = new PacketBuilder((short) 12, PacketType.fromOrdinal(1), (short) 154);
-        packetBuilder.writeCharArray("Test", 8, false);
+        packetBuilder.writeCharArray("Test", 8);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
         var expectedBytes = new byte[] { 3, 1, -102, 84, 101, 115, 116, 0, 0, 0, 0, 55 };
@@ -204,7 +203,7 @@ class PacketBuilderTest {
     @Test
     void writeCharArray_fromLongString() {
         var packetBuilder = new PacketBuilder((short) 12, PacketType.fromOrdinal(1), (short) 154);
-        packetBuilder.writeCharArray("Test long text", 8, false);
+        packetBuilder.writeCharArray("Test long text", 8);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
         var expectedBytes = new byte[] { 3, 1, -102, 84, 101, 115, 116, 32, 108, 111, 0, 55 };
@@ -215,7 +214,7 @@ class PacketBuilderTest {
     @Test
     void writeCharArray_fromNull() {
         var packetBuilder = new PacketBuilder((short) 12, PacketType.fromOrdinal(1), (short) 154);
-        packetBuilder.writeCharArray(null, 8, false);
+        packetBuilder.writeCharArray(null, 8);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
         var expectedBytes = new byte[] { 3, 1, -102, 0, 0, 0, 0, 0, 0, 0, 0, 55 };
@@ -226,7 +225,7 @@ class PacketBuilderTest {
     @Test
     void writeCharArray_fromShortStringWithVariableLength() {
         var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
-        packetBuilder.writeCharArray("Tes", 8, true);
+        packetBuilder.writeCharArray("Tes", 8, 4);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
         var expectedBytes = new byte[] { 2, 1, -102, 84, 101, 115, 0, 55 };
@@ -237,7 +236,7 @@ class PacketBuilderTest {
     @Test
     void writeCharArray_fromLongStringWithVariableLength() {
         var packetBuilder = new PacketBuilder((short) 12, PacketType.fromOrdinal(1), (short) 154);
-        packetBuilder.writeCharArray("Test long text", 8, true);
+        packetBuilder.writeCharArray("Test long text", 8, 4);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
         var expectedBytes = new byte[] { 3, 1, -102, 84, 101, 115, 116, 32, 108, 111, 0, 55 };
@@ -248,12 +247,34 @@ class PacketBuilderTest {
     @Test
     void writeCharArray_fromNullWithVariableLength() {
         var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
-        packetBuilder.writeCharArray(null, 8, true);
+        packetBuilder.writeCharArray(null, 8, 4);
         packetBuilder.writeByte(55);
         var bytes = packetBuilder.getBytes();
         var expectedBytes = new byte[] { 2, 1, -102, 0, 0, 0, 0, 55 };
 
         assertArrayEquals(expectedBytes, bytes);
+    }
+
+    @Test
+    void writeCharArray_withSmallDifferenceBetweenMinAndMaxLength() {
+        var packetBuilder = new PacketBuilder((short) 12, PacketType.fromOrdinal(1), (short) 154);
+        packetBuilder.writeCharArray("Test", 6, 4);
+        packetBuilder.writeByte(55);
+        packetBuilder.writeByte(55);
+        packetBuilder.writeByte(55);
+        var bytes = packetBuilder.getBytes();
+        var expectedBytes = new byte[] { 3, 1, -102, 84, 101, 115, 116, 0, 0, 55, 55, 55 };
+
+        assertArrayEquals(expectedBytes, bytes);
+    }
+
+    @Test
+    void writeCharArray_withMaxLengthLowerThanMinLength() {
+        var packetBuilder = new PacketBuilder((short) 8, PacketType.fromOrdinal(1), (short) 154);
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> packetBuilder.writeCharArray("Test", 4, 8)
+        );
     }
 
     @Test

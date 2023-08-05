@@ -82,7 +82,7 @@ public class SshPacket extends AbstractPacket implements InstructionPacket, Requ
         return new PacketBuilder(size, type, reqI)
                 .writeByte(error.ordinal())
                 .writeZeroBytes(4)
-                .writeCharArray(name, 32, false)
+                .writeCharArray(name, 32)
                 .getBytes();
     }
 

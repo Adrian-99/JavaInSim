@@ -38,7 +38,7 @@ public class MslPacket extends AbstractPacket implements InstructionPacket {
     public byte[] getBytes() {
         return new PacketBuilder(size, type, reqI)
                 .writeByte(sound.ordinal())
-                .writeCharArray(msg, 128, false)
+                .writeCharArray(msg, 128)
                 .getBytes();
     }
 }

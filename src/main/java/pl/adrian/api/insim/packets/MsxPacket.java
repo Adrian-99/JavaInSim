@@ -32,7 +32,7 @@ public class MsxPacket extends AbstractPacket implements InstructionPacket {
     public byte[] getBytes() {
         return new PacketBuilder(size, type, reqI)
                 .writeZeroByte()
-                .writeCharArray(msg, 96, false)
+                .writeCharArray(msg, 96)
                 .getBytes();
     }
 }

@@ -135,26 +135,41 @@ public class PacketBuilder {
      * Appends to packet bytes char array, that is converted from String value.
      * @param value char array value
      * @param length length of the char array that should be appended
-     * @param variableLength whether length of char array is variable (the lowest possible multiply of 4)
      * @return packet builder
      */
-    public PacketBuilder writeCharArray(String value, int length, boolean variableLength) {
+    public PacketBuilder writeCharArray(String value, int length) {
+        return writeCharArray(value, length, length);
+    }
+
+    /**
+     * Appends to packet bytes char array, that is converted from String value.
+     * @param value char array value
+     * @param maxLength maximum length of the char array that should be appended
+     * @param minLength minimum length of the char array that should be appended
+     * @return packet builder
+     */
+    public PacketBuilder writeCharArray(String value, int maxLength, int minLength) {
+        if (maxLength < minLength) {
+            throw new IllegalArgumentException("maxLength must not be lower than minLength");
+        }
         if (value != null && !value.isEmpty()) {
             var bytes = value.getBytes();
-            for (var i = 0; i < length - 1; i++) {
+            for (var i = 0; i < maxLength - 1; i++) {
                 if (i < bytes.length) {
                     packetBytes[currentIndex++] = bytes[i];
-                } else if (variableLength) {
-                    return writeZeroBytes(4 - (bytes.length % 4));
                 } else {
-                    return writeZeroBytes(length - bytes.length);
+                    var bytesWrote = bytes.length;
+                    if (bytes.length < minLength - 1) {
+                        var missingBytesToMinLength = minLength - bytes.length - 1;
+                        writeZeroBytes(missingBytesToMinLength);
+                        bytesWrote += missingBytesToMinLength;
+                    }
+                    return writeZeroBytes(Math.min(4 - (bytesWrote % 4), maxLength - bytesWrote));
                 }
             }
             return writeZeroByte();
-        } else if (variableLength) {
-            return writeZeroBytes(4);
         } else {
-            return writeZeroBytes(length);
+            return writeZeroBytes(minLength);
         }
     }
 

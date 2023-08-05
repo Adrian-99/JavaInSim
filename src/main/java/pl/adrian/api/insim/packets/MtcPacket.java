@@ -50,7 +50,7 @@ public class MtcPacket extends AbstractPacket implements InstructionPacket {
                 .writeByte(ucid)
                 .writeByte(plid)
                 .writeZeroBytes(2)
-                .writeCharArray(text, 128, true)
+                .writeCharArray(text, 128, 4)
                 .getBytes();
     }
 }

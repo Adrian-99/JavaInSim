@@ -71,8 +71,8 @@ public class IsiPacket extends AbstractPacket implements InstructionPacket {
                 .writeByte(inSimVer)
                 .writeByte(prefix)
                 .writeWord(interval)
-                .writeCharArray(admin, 16, false)
-                .writeCharArray(iName, 16, false)
+                .writeCharArray(admin, 16)
+                .writeCharArray(iName, 16)
                 .getBytes();
     }
 

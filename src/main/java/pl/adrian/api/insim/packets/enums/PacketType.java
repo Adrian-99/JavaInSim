@@ -191,7 +191,7 @@ public enum PacketType {
     /**
      * 45 - instruction: show a button on local or remote screen
      */
-    BTN,
+    BTN(BtnPacket.class),
     /**
      * 46 - info: sent when a user clicks a button
      */

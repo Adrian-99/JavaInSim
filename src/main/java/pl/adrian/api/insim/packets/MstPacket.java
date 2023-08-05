@@ -32,7 +32,7 @@ public class MstPacket extends AbstractPacket implements InstructionPacket {
     public byte[] getBytes() {
         return new PacketBuilder(size, type, reqI)
                 .writeZeroByte()
-                .writeCharArray(msg, 64, false)
+                .writeCharArray(msg, 64)
                 .getBytes();
     }
 }
