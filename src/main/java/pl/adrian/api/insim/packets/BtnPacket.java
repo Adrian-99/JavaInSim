@@ -2,7 +2,7 @@ package pl.adrian.api.insim.packets;
 
 import pl.adrian.api.common.flags.Flags;
 import pl.adrian.api.insim.packets.enums.PacketType;
-import pl.adrian.api.insim.packets.flags.BtnFlag;
+import pl.adrian.api.insim.packets.flags.ButtonInstFlag;
 import pl.adrian.api.insim.packets.flags.ButtonStyle;
 import pl.adrian.internal.insim.packets.annotations.Array;
 import pl.adrian.internal.insim.packets.annotations.Byte;
@@ -11,6 +11,7 @@ import pl.adrian.internal.insim.packets.base.AbstractPacket;
 import pl.adrian.internal.insim.packets.base.InstructionPacket;
 import pl.adrian.internal.insim.packets.enums.ValidationFailureCategory;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
+import pl.adrian.internal.insim.packets.util.Constants;
 import pl.adrian.internal.insim.packets.util.PacketBuilder;
 import pl.adrian.internal.insim.packets.util.PacketUtils;
 import pl.adrian.internal.insim.packets.util.PacketValidator;
@@ -25,10 +26,10 @@ import pl.adrian.internal.insim.packets.util.PacketValidator;
 public class BtnPacket extends AbstractPacket implements InstructionPacket {
     @Byte
     private final short ucid;
-    @Byte(maxValue = 239)
+    @Byte(maxValue = Constants.BUTTON_MAX_CLICK_ID)
     private final short clickID;
     @Byte
-    private final Flags<BtnFlag> inst;
+    private final Flags<ButtonInstFlag> inst;
     @Byte
     private final Flags<ButtonStyle> bStyle;
     @Byte
@@ -49,7 +50,7 @@ public class BtnPacket extends AbstractPacket implements InstructionPacket {
      * Creates button packet for type-in button.
      * @param reqI non-zero (returned in IS_BTC and IS_BTT packets)
      * @param ucid connection to display the button (0 = local / 255 = all)
-     * @param clickID button ID (0 to 239)
+     * @param clickID button ID (0 to {@value Constants#BUTTON_MAX_CLICK_ID})
      * @param inst some extra flags
      * @param bStyle button style flags
      * @param typeInCharacters max chars to type in (0 to 95) - if greater than 0, on clicking the button, a text entry
@@ -67,7 +68,7 @@ public class BtnPacket extends AbstractPacket implements InstructionPacket {
     public BtnPacket(int reqI,
                      int ucid,
                      int clickID,
-                     Flags<BtnFlag> inst,
+                     Flags<ButtonInstFlag> inst,
                      Flags<ButtonStyle> bStyle,
                      int typeInCharacters,
                      boolean initializeWithButtonText,
@@ -104,7 +105,7 @@ public class BtnPacket extends AbstractPacket implements InstructionPacket {
      * Creates button packet for non-type-in button.
      * @param reqI non-zero (returned in IS_BTC and IS_BTT packets)
      * @param ucid connection to display the button (0 = local / 255 = all)
-     * @param clickID button ID (0 to 239)
+     * @param clickID button ID (0 to {@value Constants#BUTTON_MAX_CLICK_ID})
      * @param inst some extra flags
      * @param bStyle button style flags
      * @param l left (0 to 200)
@@ -118,7 +119,7 @@ public class BtnPacket extends AbstractPacket implements InstructionPacket {
     public BtnPacket(int reqI,
                      int ucid,
                      int clickID,
-                     Flags<BtnFlag> inst,
+                     Flags<ButtonInstFlag> inst,
                      Flags<ButtonStyle> bStyle,
                      int l,
                      int t,
@@ -132,7 +133,7 @@ public class BtnPacket extends AbstractPacket implements InstructionPacket {
      * Creates button packet for existing button text and caption update.
      * @param reqI non-zero (returned in IS_BTC and IS_BTT packets)
      * @param ucid connection to display the button (0 = local / 255 = all)
-     * @param clickID button ID (0 to 239)
+     * @param clickID button ID (0 to {@value Constants#BUTTON_MAX_CLICK_ID})
      * @param text button text
      * @param caption dialog caption (optional)
      * @throws PacketValidationException if validation of any field in packet fails

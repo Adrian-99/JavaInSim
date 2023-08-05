@@ -32,6 +32,10 @@ public class Constants {
      * Maximum number of objects that can be sent in single {@link AxmPacket}.
      */
     public static final short AXM_MAX_OBJECTS = 60;
+    /**
+     * Maximum value of clickID of the button.
+     */
+    public static final short BUTTON_MAX_CLICK_ID = 239;
 
     private Constants() {}
 }

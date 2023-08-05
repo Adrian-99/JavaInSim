@@ -110,6 +110,7 @@ public class PacketReader {
             case CPP -> new CppPacket(packetReqI, packetDataBytes);
             case RIP -> new RipPacket(packetReqI, packetDataBytes);
             case SSH -> new SshPacket(packetReqI, packetDataBytes);
+            case BFN -> new BfnPacket(packetDataBytes);
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }

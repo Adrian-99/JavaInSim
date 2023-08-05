@@ -179,7 +179,7 @@ public enum PacketType {
     /**
      * 42 - both ways: delete buttons / receive button requests
      */
-    BFN,
+    BFN(BfnPacket.class),
     /**
      * 43 - info: autocross layout information
      */

@@ -6,7 +6,7 @@ import pl.adrian.internal.common.flags.FlagWithCustomValue;
 /**
  * Enumeration for flags used in {@link BtnPacket}.
  */
-public enum BtnFlag implements FlagWithCustomValue {
+public enum ButtonInstFlag implements FlagWithCustomValue {
     /**
      * bit 7, value 128: the button is visible in all screens<br>
      * NOTE: You should not use this flag for most buttons. This is a special flag for buttons
@@ -19,7 +19,7 @@ public enum BtnFlag implements FlagWithCustomValue {
 
     private final int value;
 
-    BtnFlag(int value) {
+    ButtonInstFlag(int value) {
         this.value = value;
     }
 

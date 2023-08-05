@@ -32,7 +32,7 @@ class FlagsTest {
 
     @Test
     void createFlags_fromFlagWithCustomValue() {
-        var flags = new Flags<>(LcsFlag.SIGNALS_HAZARD, LcsFlag.FLASH_OFF, LcsFlag.HORN_3, LcsFlag.SIREN_OFF);
+        var flags = new Flags<>(LcsFlag.SIGNALS_HAZARD, LcsFlag.SIGNALS_LEFT, LcsFlag.FLASH_OFF, LcsFlag.HORN_3, LcsFlag.SIREN_OFF);
 
         assertEquals(795, flags.getByteValue());
         assertEquals(197403, flags.getWordValue());
@@ -57,14 +57,14 @@ class FlagsTest {
     }
 
     @Test
-    void createFlags_fromFlagWithCustomBehavior() {
-        var flags = new Flags<>(ConfirmationFlag.class, 10);
+    void createFlags_fromFlagsWithCustomBehavior() {
+        var flags = new Flags<>(ConfirmationFlag.MENTIONED, ConfirmationFlag.PENALTY_SG, ConfirmationFlag.DISQ);
 
-        assertEquals(10, flags.getByteValue());
-        assertEquals(10, flags.getWordValue());
-        assertEquals(10, flags.getUnsignedValue());
-        assertTrue(flags.hasNoFlag(ConfirmationFlag.MENTIONED));
-        assertTrue(flags.hasFlag(ConfirmationFlag.CONFIRMED));
+        assertEquals(9, flags.getByteValue());
+        assertEquals(9, flags.getWordValue());
+        assertEquals(9, flags.getUnsignedValue());
+        assertTrue(flags.hasFlag(ConfirmationFlag.MENTIONED));
+        assertTrue(flags.hasNoFlag(ConfirmationFlag.CONFIRMED));
         assertTrue(flags.hasNoFlag(ConfirmationFlag.PENALTY_DT));
         assertTrue(flags.hasFlag(ConfirmationFlag.PENALTY_SG));
         assertTrue(flags.hasNoFlag(ConfirmationFlag.PENALTY_30));
@@ -119,5 +119,23 @@ class FlagsTest {
         assertTrue(flags.hasFlag(LcsFlag.SIREN_OFF));
         assertTrue(flags.hasNoFlag(LcsFlag.SIREN_FAST));
         assertTrue(flags.hasNoFlag(LcsFlag.SIREN_SLOW));
+    }
+
+    @Test
+    void createFlags_fromBinaryOfFlagWithCustomBehavior() {
+        var flags = new Flags<>(ConfirmationFlag.class, 10);
+
+        assertEquals(10, flags.getByteValue());
+        assertEquals(10, flags.getWordValue());
+        assertEquals(10, flags.getUnsignedValue());
+        assertTrue(flags.hasNoFlag(ConfirmationFlag.MENTIONED));
+        assertTrue(flags.hasFlag(ConfirmationFlag.CONFIRMED));
+        assertTrue(flags.hasNoFlag(ConfirmationFlag.PENALTY_DT));
+        assertTrue(flags.hasFlag(ConfirmationFlag.PENALTY_SG));
+        assertTrue(flags.hasNoFlag(ConfirmationFlag.PENALTY_30));
+        assertTrue(flags.hasNoFlag(ConfirmationFlag.PENALTY_45));
+        assertTrue(flags.hasNoFlag(ConfirmationFlag.DID_NOT_PIT));
+        assertTrue(flags.hasFlag(ConfirmationFlag.DISQ));
+        assertTrue(flags.hasNoFlag(ConfirmationFlag.TIME));
     }
 }

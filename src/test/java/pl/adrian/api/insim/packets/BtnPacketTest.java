@@ -2,7 +2,7 @@ package pl.adrian.api.insim.packets;
 
 import org.junit.jupiter.api.Test;
 import pl.adrian.api.common.flags.Flags;
-import pl.adrian.api.insim.packets.flags.BtnFlag;
+import pl.adrian.api.insim.packets.flags.ButtonInstFlag;
 import pl.adrian.api.insim.packets.flags.ButtonStyle;
 import pl.adrian.internal.insim.packets.enums.ValidationFailureCategory;
 import pl.adrian.internal.insim.packets.exceptions.PacketValidationException;
@@ -16,7 +16,7 @@ class BtnPacketTest {
                 144,
                 34,
                 201,
-                new Flags<>(BtnFlag.ALWAYS_ON),
+                new Flags<>(ButtonInstFlag.ALWAYS_ON),
                 new Flags<>(ButtonStyle.COLOUR_OK, ButtonStyle.CLICK, ButtonStyle.DARK, ButtonStyle.RIGHT),
                 60,
                 true,
@@ -43,7 +43,7 @@ class BtnPacketTest {
                 144,
                 34,
                 201,
-                new Flags<>(BtnFlag.ALWAYS_ON),
+                new Flags<>(ButtonInstFlag.ALWAYS_ON),
                 new Flags<>(ButtonStyle.COLOUR_OK, ButtonStyle.CLICK, ButtonStyle.DARK, ButtonStyle.RIGHT),
                 30,
                 120,
@@ -81,7 +81,7 @@ class BtnPacketTest {
 
     @Test
     void createBtnPacket_withTooHighTypeInValue() {
-        var instFlags = new Flags<>(BtnFlag.ALWAYS_ON);
+        var instFlags = new Flags<>(ButtonInstFlag.ALWAYS_ON);
         var bStyleFlags = new Flags<>(ButtonStyle.COLOUR_OK, ButtonStyle.CLICK, ButtonStyle.DARK, ButtonStyle.RIGHT);
 
         var exception = assertThrows(

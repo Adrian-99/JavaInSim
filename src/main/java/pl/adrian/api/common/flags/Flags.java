@@ -25,7 +25,22 @@ public class Flags<T extends Enum<?>> implements ByteInstructionStructure,
      */
     @SafeVarargs
     public Flags(T... flags) {
-        this.flagsSet = Set.of(flags);
+        this.flagsSet = new HashSet<>();
+        var usedMask = 0;
+        for (var flag : flags) {
+            int flagMask;
+            if (flag instanceof FlagWithCustomValue flagWithCustomValue) {
+                flagMask = flagWithCustomValue.getValueMask();
+            } else if (flag instanceof FlagWithCustomBehavior enumWithCustomValue) {
+                flagMask = enumWithCustomValue.getValue();
+            } else {
+                flagMask = 1 << flag.ordinal();
+            }
+            if ((usedMask & flagMask) == 0) {
+                usedMask |= flagMask;
+                flagsSet.add(flag);
+            }
+        }
     }
 
     /**
