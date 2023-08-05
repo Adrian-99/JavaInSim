@@ -195,7 +195,7 @@ public enum PacketType {
     /**
      * 46 - info: sent when a user clicks a button
      */
-    BTC,
+    BTC(BtcPacket.class),
     /**
      * 47 - info: sent after typing into a button
      */

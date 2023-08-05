@@ -111,6 +111,7 @@ public class PacketReader {
             case RIP -> new RipPacket(packetReqI, packetDataBytes);
             case SSH -> new SshPacket(packetReqI, packetDataBytes);
             case BFN -> new BfnPacket(packetDataBytes);
+            case BTC -> new BtcPacket(packetReqI, packetDataBytes);
             default -> throw new PacketReadingException("Unrecognized readable packet type");
         };
     }
