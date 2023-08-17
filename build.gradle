@@ -3,8 +3,8 @@ plugins {
     id 'maven-publish'
 }
 
-group 'pl.adrian'
-version '1.0-SNAPSHOT'
+group 'com.github.adrian-99'
+version '1.0.0'
 
 repositories {
     mavenCentral()
@@ -12,8 +12,6 @@ repositories {
 
 dependencies {
     implementation 'org.slf4j:slf4j-api:2.0.7'
-//    compileOnly 'org.projectlombok:lombok:1.18.26'
-//    annotationProcessor 'org.projectlombok:lombok:1.18.26'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     testImplementation 'org.slf4j:slf4j-simple:2.0.7'

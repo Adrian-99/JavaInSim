@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2023, Adrian-99
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+package com.github.adrian99.javainsim.api.insim.packets;
+
+import com.github.adrian99.javainsim.internal.insim.packets.util.PacketReader;
+import org.junit.jupiter.api.Test;
+import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
+import com.github.adrian99.javainsim.api.insim.packets.enums.PitLaneFact;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.github.adrian99.javainsim.testutil.AssertionUtils.assertPacketHeaderEquals;
+
+class PlaPacketTest {
+    @Test
+    void readPlaPacket() {
+        var headerBytes = new byte[] { 2, 28, 0 };
+        var dataBytes = new byte[] { 19, 2, 0, 0, 0 };
+        var packetReader = new PacketReader(headerBytes);
+
+        assertPacketHeaderEquals(5, PacketType.PLA, 0, packetReader);
+
+        var readPacket = packetReader.read(dataBytes);
+
+        assertTrue(readPacket instanceof PlaPacket);
+
+        var castedReadPacket = (PlaPacket) readPacket;
+
+        assertPacketHeaderEquals(8, PacketType.PLA, 0, castedReadPacket);
+        assertEquals(19, castedReadPacket.getPlid());
+        assertEquals(PitLaneFact.NO_PURPOSE, castedReadPacket.getFact());
+    }
+}
