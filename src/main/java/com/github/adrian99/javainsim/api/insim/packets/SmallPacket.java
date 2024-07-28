@@ -15,6 +15,7 @@ import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
 import com.github.adrian99.javainsim.api.insim.packets.enums.SmallSubtype;
 import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
 import com.github.adrian99.javainsim.api.insim.packets.enums.VoteAction;
+import com.github.adrian99.javainsim.api.insim.packets.flags.LclFlag;
 import com.github.adrian99.javainsim.api.insim.packets.flags.LcsFlag;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
@@ -71,6 +72,15 @@ public class SmallPacket extends AbstractPacket implements InstructionPacket, Re
      */
     public SmallPacket(LcsFlag... lcsFlags) throws PacketValidationException {
         this(SmallSubtype.LCS, new Flags<>(lcsFlags).getUnsignedValue());
+    }
+
+    /**
+     * Creates small packet for local car lights.
+     * @param lclFlags local car lights
+     * @throws PacketValidationException if validation of any field in packet fails
+     */
+    public SmallPacket(LclFlag... lclFlags) throws PacketValidationException {
+        this(SmallSubtype.LCL, new Flags<>(lclFlags).getUnsignedValue());
     }
 
     /**

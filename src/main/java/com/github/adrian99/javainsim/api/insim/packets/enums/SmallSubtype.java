@@ -51,9 +51,13 @@ public enum SmallSubtype {
      */
     ALC,
     /**
-     * 9 - instruction: set local car switches (lights, horn, siren)
+     * 9 - instruction: set local car switches (flash, horn, siren)
      */
-    LCS;
+    LCS,
+    /**
+     * 10 - instruction: set local car lights
+     */
+    LCL;
 
     /**
      * Converts ordinal number to enum value.

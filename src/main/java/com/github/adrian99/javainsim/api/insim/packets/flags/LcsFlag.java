@@ -9,27 +9,36 @@
 package com.github.adrian99.javainsim.api.insim.packets.flags;
 
 import com.github.adrian99.javainsim.api.insim.packets.SmallPacket;
+import com.github.adrian99.javainsim.api.insim.packets.enums.SmallSubtype;
 import com.github.adrian99.javainsim.internal.common.flags.FlagWithCustomValue;
 
 /**
- * Flags used in {@link SmallPacket SmallPacket}.
+ * Flags used in {@link SmallSubtype#LCS} {@link SmallPacket SmallPacket}.
  */
 public enum LcsFlag implements FlagWithCustomValue {
     /**
      * signals off
+     * @deprecated {@link SmallSubtype#LCL} {@link SmallPacket SmallPacket} should be used instead
      */
+    @Deprecated
     SIGNALS_OFF(1, 769),
     /**
      * signals left
+     * @deprecated {@link SmallSubtype#LCL} {@link SmallPacket SmallPacket} should be used instead
      */
+    @Deprecated
     SIGNALS_LEFT(257, 769),
     /**
      * signals right
+     * @deprecated {@link SmallSubtype#LCL} {@link SmallPacket SmallPacket} should be used instead
      */
+    @Deprecated
     SIGNALS_RIGHT(513, 769),
     /**
      * signals hazard
+     * @deprecated {@link SmallSubtype#LCL} {@link SmallPacket SmallPacket} should be used instead
      */
+    @Deprecated
     SIGNALS_HAZARD(769, 769),
     /**
      * flash off
@@ -41,11 +50,15 @@ public enum LcsFlag implements FlagWithCustomValue {
     FLASH_ON(1026, 1026),
     /**
      * headlights off
+     * @deprecated {@link SmallSubtype#LCL} {@link SmallPacket SmallPacket} should be used instead
      */
+    @Deprecated
     HEADLIGHTS_OFF(4, 2052),
     /**
      * headlights on
+     * @deprecated {@link SmallSubtype#LCL} {@link SmallPacket SmallPacket} should be used instead
      */
+    @Deprecated
     HEADLIGHTS_ON(2052, 2052),
     /**
      * horn off

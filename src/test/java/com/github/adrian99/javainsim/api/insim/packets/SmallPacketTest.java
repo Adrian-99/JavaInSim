@@ -9,6 +9,7 @@
 package com.github.adrian99.javainsim.api.insim.packets;
 
 import com.github.adrian99.javainsim.api.common.enums.DefaultCar;
+import com.github.adrian99.javainsim.api.insim.packets.flags.LclFlag;
 import com.github.adrian99.javainsim.internal.insim.packets.util.PacketReader;
 import com.github.adrian99.javainsim.testutil.AssertionUtils;
 import com.github.adrian99.javainsim.testutil.MockedInSimConnection;
@@ -38,11 +39,23 @@ class SmallPacketTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     void createSmallPacket_withLcsFlags() {
         var packet = new SmallPacket(LcsFlag.SIGNALS_LEFT, LcsFlag.HEADLIGHTS_OFF, LcsFlag.HORN_1);
         var bytes = packet.getBytes();
         var expectedBytes = new byte[] {
                 2, 4, 0, 9, 13, 1, 1, 0
+        };
+
+        assertArrayEquals(expectedBytes, bytes);
+    }
+
+    @Test
+    void createSmallPacket_withLclFlags() {
+        var packet = new SmallPacket(LclFlag.SIGNALS_RIGHT, LclFlag.LIGHTS_LOW, LclFlag.EXTRA_ON);
+        var bytes = packet.getBytes();
+        var expectedBytes = new byte[] {
+                2, 4, 0, 10, 69, 0, 74, 0
         };
 
         assertArrayEquals(expectedBytes, bytes);
@@ -80,7 +93,7 @@ class SmallPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof SmallPacket);
+        assertInstanceOf(SmallPacket.class, readPacket);
 
         var castedReadPacket = (SmallPacket) readPacket;
 
@@ -101,7 +114,7 @@ class SmallPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof SmallPacket);
+        assertInstanceOf(SmallPacket.class, readPacket);
 
         var castedReadPacket = (SmallPacket) readPacket;
 
@@ -123,7 +136,7 @@ class SmallPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof SmallPacket);
+        assertInstanceOf(SmallPacket.class, readPacket);
 
         var castedReadPacket = (SmallPacket) readPacket;
 
