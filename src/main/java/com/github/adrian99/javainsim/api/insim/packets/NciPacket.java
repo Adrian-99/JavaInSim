@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Adrian-99
+ * Copyright (c) 2024, Adrian-99
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -10,6 +10,7 @@ package com.github.adrian99.javainsim.api.insim.packets;
 
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.Language;
+import com.github.adrian99.javainsim.api.insim.packets.enums.License;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
 import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
@@ -28,6 +29,8 @@ public class NciPacket extends AbstractPacket implements RequestablePacket {
     private final short ucid;
     @Byte
     private final Language language;
+    @Byte
+    private final License license;
     @Unsigned
     private final long userId;
     @Unsigned
@@ -42,7 +45,8 @@ public class NciPacket extends AbstractPacket implements RequestablePacket {
         super(16, PacketType.NCI, reqI);
         ucid = packetDataBytes.readByte();
         language = Language.fromOrdinal(packetDataBytes.readByte());
-        packetDataBytes.skipZeroBytes(3);
+        license = License.fromOrdinal(packetDataBytes.readByte());
+        packetDataBytes.skipZeroBytes(2);
         userId = packetDataBytes.readUnsigned();
         ipAddress = packetDataBytes.readUnsigned();
     }
@@ -59,6 +63,13 @@ public class NciPacket extends AbstractPacket implements RequestablePacket {
      */
     public Language getLanguage() {
         return language;
+    }
+
+    /**
+     * @return LFS license
+     */
+    public License getLicense() {
+        return license;
     }
 
     /**
