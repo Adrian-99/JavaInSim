@@ -279,7 +279,11 @@ public enum PacketType {
     /**
      * 65 - both ways: set mods allowed
      */
-    MAL(MalPacket.class);
+    MAL(MalPacket.class),
+    /**
+     * 66 - both ways: set player handicaps
+     */
+    PLH(PlhPacket.class);
 
     private final Class<? extends Packet> packetClass;
 

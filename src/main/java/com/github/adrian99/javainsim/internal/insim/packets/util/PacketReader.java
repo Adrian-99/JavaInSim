@@ -80,6 +80,7 @@ public class PacketReader {
             case ACR -> new AcrPacket(packetSize, packetDataBytes);
             case ISM -> new IsmPacket(packetReqI, packetDataBytes);
             case VTN -> new VtnPacket(packetDataBytes);
+            case PLH -> new PlhPacket(packetSize, packetReqI, packetDataBytes);
             case RST -> new RstPacket(packetReqI, packetDataBytes);
             case NCN -> new NcnPacket(packetReqI, packetDataBytes);
             case NCI -> new NciPacket(packetReqI, packetDataBytes);

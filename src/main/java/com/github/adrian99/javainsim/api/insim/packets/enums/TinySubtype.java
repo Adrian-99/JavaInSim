@@ -193,9 +193,13 @@ public class TinySubtype implements ByteInstructionStructure {
      */
     public static final Requesting<SlcPacket> SLC = new Requesting<>(26, SlcPacket.class, true);
     /**
-     * 27 - info request: send {@link MalPacket} listing the currently allowed mods
+     * 27 - info request: send {@link MalPacket} listing the allowed mods
      */
     public static final Requesting<MalPacket> MAL = new Requesting<>(27, MalPacket.class, false);
+    /**
+     * 28 - info request: send {@link PlhPacket} listing player handicaps
+     */
+    public static final Requesting<PlhPacket> PLH = new Requesting<>(28, PlhPacket.class, false);
 
     /**
      * Converts ordinal number to enum value.

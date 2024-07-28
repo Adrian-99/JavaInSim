@@ -11,6 +11,7 @@ package com.github.adrian99.javainsim.internal.insim.packets.util;
 import com.github.adrian99.javainsim.api.insim.packets.AxmPacket;
 import com.github.adrian99.javainsim.api.insim.packets.MciPacket;
 import com.github.adrian99.javainsim.api.insim.packets.NlpPacket;
+import com.github.adrian99.javainsim.api.insim.packets.PlhPacket;
 
 /**
  * This class contains constant values used in library
@@ -24,6 +25,10 @@ public class Constants {
      * Size (in bytes) of header of each packet
      */
     public static final short PACKET_HEADER_SIZE = 3;
+    /**
+     * Maximum number of player handicaps that can be sent in single {@link PlhPacket}.
+     */
+    public static final short PLH_MAX_PLAYERS = 40;
     /**
      * Maximum number of mods that can be allowed to be used on host
      */
