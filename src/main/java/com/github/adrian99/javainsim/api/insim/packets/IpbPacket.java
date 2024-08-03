@@ -11,10 +11,10 @@ package com.github.adrian99.javainsim.api.insim.packets;
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
 import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
-import com.github.adrian99.javainsim.api.insim.packets.structures.PlayerHandicaps;
+import com.github.adrian99.javainsim.api.insim.packets.structures.IPAddress;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Array;
-import com.github.adrian99.javainsim.internal.insim.packets.annotations.Structure;
+import com.github.adrian99.javainsim.internal.insim.packets.annotations.Unsigned;
 import com.github.adrian99.javainsim.internal.insim.packets.base.AbstractPacket;
 import com.github.adrian99.javainsim.internal.insim.packets.base.InstructionPacket;
 import com.github.adrian99.javainsim.internal.insim.packets.base.RequestablePacket;
@@ -25,46 +25,44 @@ import com.github.adrian99.javainsim.internal.insim.packets.util.PacketBuilder;
 import com.github.adrian99.javainsim.internal.insim.packets.util.PacketUtils;
 import com.github.adrian99.javainsim.internal.insim.packets.util.PacketValidator;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 /**
- * PLayer Handicaps - variable size
+ * IP Bans - variable size
  */
-public class PlhPacket extends AbstractPacket implements InstructionPacket, RequestablePacket {
-    @Structure
-    @Array(length = Constants.PLH_MAX_PLAYERS, dynamicLength = true)
-    private final List<PlayerHandicaps> hCaps;
+public class IpbPacket extends AbstractPacket implements InstructionPacket, RequestablePacket {
+    @Unsigned
+    @Array(length = Constants.IPB_MAX_BANS, dynamicLength = true)
+    private final List<IPAddress> banIPs;
 
     /**
-     * Creates player handicaps packet. Constructor used only internally.
+     * Creates IP bans packet. Constructor used only internally.
      * @param size packet size
-     * @param reqI 0 unless this is a reply to a {@link TinySubtype#PLH Tiny PLH} request
+     * @param reqI 0 unless this is a reply to a {@link TinySubtype#IPB Tiny IPB} request
      * @param packetDataBytes packet data bytes
      */
-    public PlhPacket(short size, short reqI, PacketDataBytes packetDataBytes) {
-        super(size, PacketType.PLH, reqI);
-        final var numP = packetDataBytes.readByte();
-        var hCapsTmp = new ArrayList<PlayerHandicaps>();
-        for (var i = 0; i < numP; i++) {
-            hCapsTmp.add(new PlayerHandicaps(packetDataBytes));
-        }
-        hCaps = Collections.unmodifiableList(hCapsTmp);
+    public IpbPacket(short size, short reqI, PacketDataBytes packetDataBytes) {
+        super(size, PacketType.IPB, reqI);
+        final var numB = packetDataBytes.readByte();
+        packetDataBytes.skipZeroBytes(4);
+        banIPs = Arrays.stream(packetDataBytes.readUnsignedArray(numB))
+                .mapToObj(IPAddress::new)
+                .toList();
     }
 
     /**
-     * Creates player handicaps packet.
-     * @param hCaps player handicaps
+     * Creates IP bans packet.
+     * @param banIPs IP addresses
      * @throws PacketValidationException if validation of any field in packet fails
      */
-    public PlhPacket(List<PlayerHandicaps> hCaps) throws PacketValidationException {
+    public IpbPacket(List<IPAddress> banIPs) throws PacketValidationException {
         super(
-                PacketUtils.getPacketSize(4, hCaps.size(), 4, Constants.PLH_MAX_PLAYERS),
-                PacketType.PLH,
+                PacketUtils.getPacketSize(8, banIPs.size(), 4, Constants.IPB_MAX_BANS),
+                PacketType.IPB,
                 0
         );
-        this.hCaps = hCaps;
+        this.banIPs = banIPs;
 
         PacketValidator.validate(this);
     }
@@ -72,31 +70,32 @@ public class PlhPacket extends AbstractPacket implements InstructionPacket, Requ
     @Override
     public byte[] getBytes() {
         return new PacketBuilder(size, type, reqI)
-                .writeByte(hCaps.size())
-                .writeStructureArray(hCaps, 4)
+                .writeByte(banIPs.size())
+                .writeZeroBytes(4)
+                .writeUnsignedArray(banIPs)
                 .getBytes();
     }
 
     /**
-     * @return number of players in this packet
+     * @return number of bans in this packet
      */
-    public short getNumP() {
-        return (short) hCaps.size();
+    public short getNumB() {
+        return (short) banIPs.size();
     }
 
     /**
-     * @return player handicaps
+     * @return IP addresses
      */
-    public List<PlayerHandicaps> getHCaps() {
-        return hCaps;
+    public List<IPAddress> getBanIPs() {
+        return banIPs;
     }
 
     /**
-     * Creates builder for packet request for {@link PlhPacket}.
+     * Creates builder for packet request for {@link IpbPacket}.
      * @param inSimConnection InSim connection to request packet from
      * @return packet request builder
      */
-    public static SingleTinyPacketRequestBuilder<PlhPacket> request(InSimConnection inSimConnection) {
-        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.PLH);
+    public static SingleTinyPacketRequestBuilder<IpbPacket> request(InSimConnection inSimConnection) {
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.IPB);
     }
 }

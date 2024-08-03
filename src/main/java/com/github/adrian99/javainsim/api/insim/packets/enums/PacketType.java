@@ -283,7 +283,11 @@ public enum PacketType {
     /**
      * 66 - both ways: set player handicaps
      */
-    PLH(PlhPacket.class);
+    PLH(PlhPacket.class),
+    /**
+     * 67 - both ways: set IP bans
+     */
+    IPB(IpbPacket.class);
 
     private final Class<? extends Packet> packetClass;
 

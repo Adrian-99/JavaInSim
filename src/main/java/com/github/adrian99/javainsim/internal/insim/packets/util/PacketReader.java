@@ -86,6 +86,7 @@ public class PacketReader {
             case NCI -> new NciPacket(packetReqI, packetDataBytes);
             case SLC -> new SlcPacket(packetReqI, packetDataBytes);
             case MAL -> new MalPacket(packetSize, packetReqI, packetDataBytes);
+            case IPB -> new IpbPacket(packetSize, packetReqI, packetDataBytes);
             case CIM -> new CimPacket(packetDataBytes);
             case CNL -> new CnlPacket(packetDataBytes);
             case CPR -> new CprPacket(packetDataBytes);

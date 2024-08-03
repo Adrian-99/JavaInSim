@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Adrian-99
+ * Copyright (c) 2024, Adrian-99
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -200,6 +200,10 @@ public class TinySubtype implements ByteInstructionStructure {
      * 28 - info request: send {@link PlhPacket} listing player handicaps
      */
     public static final Requesting<PlhPacket> PLH = new Requesting<>(28, PlhPacket.class, false);
+    /**
+     * 29 - info request: send {@link IpbPacket} listing the IP bans
+     */
+    public static final Requesting<IpbPacket> IPB = new Requesting<>(29, IpbPacket.class, false);
 
     /**
      * Converts ordinal number to enum value.

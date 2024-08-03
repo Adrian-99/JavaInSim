@@ -34,6 +34,10 @@ public class Constants {
      */
     public static final short MAL_MAX_MODS = 120;
     /**
+     * Maximum number of IP addresses that are not allowed to join a host
+     */
+    public static final short IPB_MAX_BANS = 120;
+    /**
      * Maximum number of cars that can be sent in single {@link NlpPacket}
      */
     public static final short NLP_MAX_CARS = 40;

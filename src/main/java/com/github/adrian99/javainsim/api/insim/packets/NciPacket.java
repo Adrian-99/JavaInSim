@@ -13,6 +13,7 @@ import com.github.adrian99.javainsim.api.insim.packets.enums.Language;
 import com.github.adrian99.javainsim.api.insim.packets.enums.License;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
 import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
+import com.github.adrian99.javainsim.api.insim.packets.structures.IPAddress;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Unsigned;
@@ -34,7 +35,7 @@ public class NciPacket extends AbstractPacket implements RequestablePacket {
     @Unsigned
     private final long userId;
     @Unsigned
-    private final long ipAddress;
+    private final IPAddress ipAddress;
 
     /**
      * Creates new connection info packet. Constructor used only internally.
@@ -48,7 +49,7 @@ public class NciPacket extends AbstractPacket implements RequestablePacket {
         license = License.fromOrdinal(packetDataBytes.readByte());
         packetDataBytes.skipZeroBytes(2);
         userId = packetDataBytes.readUnsigned();
-        ipAddress = packetDataBytes.readUnsigned();
+        ipAddress = new IPAddress(packetDataBytes.readUnsigned());
     }
 
     /**
@@ -82,7 +83,7 @@ public class NciPacket extends AbstractPacket implements RequestablePacket {
     /**
      * @return IP address
      */
-    public long getIpAddress() {
+    public IPAddress getIpAddress() {
         return ipAddress;
     }
 

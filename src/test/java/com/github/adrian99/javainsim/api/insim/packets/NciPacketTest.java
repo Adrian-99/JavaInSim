@@ -41,7 +41,8 @@ class NciPacketTest {
         assertEquals(Language.POLSKI, castedReadPacket.getLanguage());
         assertEquals(License.S2, castedReadPacket.getLicense());
         assertEquals(54896, castedReadPacket.getUserId());
-        assertEquals(1084323894, castedReadPacket.getIpAddress());
+        assertEquals(1084323894L, castedReadPacket.getIpAddress().getUnsignedValue());
+        assertEquals("64.161.120.54", castedReadPacket.getIpAddress().getStringValue());
     }
 
     @Test
