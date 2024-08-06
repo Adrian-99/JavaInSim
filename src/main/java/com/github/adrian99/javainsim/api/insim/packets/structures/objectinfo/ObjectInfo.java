@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Adrian-99
+ * Copyright (c) 2024, Adrian-99
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -156,8 +156,8 @@ public abstract class ObjectInfo implements ComplexInstructionStructure {
                 return new ChalkLineInfo(x, y, zByte, flags, objectType, heading);
             } else if (index >= 48 && index <= 55) {
                 return new TyreObjectInfo(x, y, zByte, flags, objectType, heading);
-            } else if (index == 149) {
-                return new StartLightsInfo(x, y, zByte, flags, heading);
+            } else if (index >= 149 && index <= 151) {
+                return new StartLightsInfo(x, y, zByte, flags, objectType, heading);
             } else if (index >= 172 && index <= 179) {
                 return switch (index) {
                     case 173 -> new ConcreteRampInfo(x, y, zByte, flags, heading);

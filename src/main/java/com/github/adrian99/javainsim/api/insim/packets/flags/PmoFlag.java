@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Adrian-99
+ * Copyright (c) 2024, Adrian-99
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -34,7 +34,7 @@ public enum PmoFlag {
      * that it is needed to improve the frame rate.<br>
      *
      * NOTE 1) LFS makes sure that all objects are optimised when the race restarts.<br>
-     * NOTE 2) In the 'more' section of SHIFT+U there is info about optimised objects.<br>
+     * NOTE 2) In the 'more' section of free view there is info about optimised objects.<br>
      *
      * If you are using InSim to send many packets of objects (for example loading an
      * entire layout through InSim) then you must take care of the bandwidth and buffer

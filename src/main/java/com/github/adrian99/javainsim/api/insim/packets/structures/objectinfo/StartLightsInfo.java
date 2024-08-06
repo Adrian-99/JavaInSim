@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Adrian-99
+ * Copyright (c) 2024, Adrian-99
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -20,10 +20,11 @@ public class StartLightsInfo extends AutocrossObjectInfo {
      * @param y Y position (1 metre = 16)
      * @param zByte height (1m = 4)
      * @param flags object flags
+     * @param index object index
      * @param heading heading
      */
-    StartLightsInfo(short x, short y, short zByte, short flags, short heading) {
-        super(x, y, zByte, flags, ObjectType.START_LIGHTS, heading);
+    StartLightsInfo(short x, short y, short zByte, short flags, ObjectType index, short heading) {
+        super(x, y, zByte, flags, index, heading);
     }
 
     /**
@@ -33,15 +34,16 @@ public class StartLightsInfo extends AutocrossObjectInfo {
      * @param zByte height (1m = 4)
      * @param isFloating whether object is floating
      * @param identifier identifier
+     * @param index object index
      * @param heading heading
      */
-    public StartLightsInfo(int x, int y, int zByte, boolean isFloating, int identifier, int heading) {
+    public StartLightsInfo(int x, int y, int zByte, boolean isFloating, int identifier, ObjectType index, int heading) {
         super(
                 (short) x,
                 (short) y,
                 (short) zByte,
                 calculateFlagsValue(isFloating, identifier),
-                ObjectType.START_LIGHTS,
+                index,
                 (short) heading
         );
     }

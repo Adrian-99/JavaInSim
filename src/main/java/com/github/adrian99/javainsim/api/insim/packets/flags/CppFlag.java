@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Adrian-99
+ * Copyright (c) 2024, Adrian-99
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -16,7 +16,7 @@ import com.github.adrian99.javainsim.internal.common.flags.FlagWithCustomValue;
  */
 public enum CppFlag implements FlagWithCustomValue {
     /**
-     * bit 3, value 8: in SHIFT+U mode
+     * bit 3, value 8: in free view mode
      */
     SHIFTU(8),
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Adrian-99
+ * Copyright (c) 2024, Adrian-99
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -48,7 +48,7 @@ class AxmPacketTest {
                         new RouteCheckerInfo(16458, -6987, 25, true, 12, 9),
                         new SpecialControlObjectInfo(8596, -75, 38, true, SpecialControlObjectType.FINISH_LINE, 6, 38),
                         new SpecialControlObjectInfo(-3657, 7856, 12, false, SpecialControlObjectType.START_POSITION, 16, 48),
-                        new StartLightsInfo(7543, 9543, 3, false, 3, 21),
+                        new StartLightsInfo(7543, 9543, 3, false, 3, ObjectType.START_LIGHTS1, 21),
                         new StartObjectInfo(-8552, -6952, 9, false, 2, ObjectType.PIT_START_POINT, 53),
                         new TyreObjectInfo(-8452, -7596, 15, true, TyreObjectColour.BLUE, ObjectType.TYRE_SINGLE_BIG, 6)
                 )
@@ -112,7 +112,7 @@ class AxmPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof AxmPacket);
+        assertInstanceOf(AxmPacket.class, readPacket);
 
         var castedReadPacket = (AxmPacket) readPacket;
 
@@ -121,7 +121,7 @@ class AxmPacketTest {
         assertEquals(PmoAction.TINY_AXM, castedReadPacket.getPmoAction());
         AssertionUtils.assertFlagsEqual(PmoFlag.class, Set.of(PmoFlag.FILE_END), castedReadPacket.getPmoFlags());
 
-        assertTrue(castedReadPacket.getInfo().get(0) instanceof AutocrossObjectInfo);
+        assertInstanceOf(AutocrossObjectInfo.class, castedReadPacket.getInfo().get(0));
         var object1 = (AutocrossObjectInfo) castedReadPacket.getInfo().get(0);
         assertEquals(-9554, object1.getX());
         assertEquals(-1594, object1.getY());
@@ -130,7 +130,7 @@ class AxmPacketTest {
         assertEquals(ObjectType.CONE_PTR_RED, object1.getIndex());
         assertEquals(97, object1.getHeading());
 
-        assertTrue(castedReadPacket.getInfo().get(1) instanceof ChalkLineInfo);
+        assertInstanceOf(ChalkLineInfo.class, castedReadPacket.getInfo().get(1));
         var object2 = (ChalkLineInfo) castedReadPacket.getInfo().get(1);
         assertEquals(3658, object2.getX());
         assertEquals(-8516, object2.getY());
@@ -140,7 +140,7 @@ class AxmPacketTest {
         assertEquals(ObjectType.CHALK_LINE2, object2.getIndex());
         assertEquals(10, object2.getHeading());
 
-        assertTrue(castedReadPacket.getInfo().get(2) instanceof ConcretePillarInfo);
+        assertInstanceOf(ConcretePillarInfo.class, castedReadPacket.getInfo().get(2));
         var object3 = (ConcretePillarInfo) castedReadPacket.getInfo().get(2);
         assertEquals(7456, object3.getX());
         assertEquals(785, object3.getY());
@@ -152,7 +152,7 @@ class AxmPacketTest {
         assertEquals(ObjectType.CONCRETE_PILLAR, object3.getIndex());
         assertEquals(185, object3.getHeading());
 
-        assertTrue(castedReadPacket.getInfo().get(3) instanceof ConcreteRampInfo);
+        assertInstanceOf(ConcreteRampInfo.class, castedReadPacket.getInfo().get(3));
         var object4 = (ConcreteRampInfo) castedReadPacket.getInfo().get(3);
         assertEquals(-7856, object4.getX());
         assertEquals(-354, object4.getY());
@@ -164,7 +164,7 @@ class AxmPacketTest {
         assertEquals(ObjectType.CONCRETE_RAMP, object4.getIndex());
         assertEquals(53, object4.getHeading());
 
-        assertTrue(castedReadPacket.getInfo().get(4) instanceof ConcreteRampWallInfo);
+        assertInstanceOf(ConcreteRampWallInfo.class, castedReadPacket.getInfo().get(4));
         var object5 = (ConcreteRampWallInfo) castedReadPacket.getInfo().get(4);
         assertEquals(5632, object5.getX());
         assertEquals(4896, object5.getY());
@@ -176,7 +176,7 @@ class AxmPacketTest {
         assertEquals(ObjectType.CONCRETE_RAMP_WALL, object5.getIndex());
         assertEquals(41, object5.getHeading());
 
-        assertTrue(castedReadPacket.getInfo().get(5) instanceof ConcreteShortSlabWallInfo);
+        assertInstanceOf(ConcreteShortSlabWallInfo.class, castedReadPacket.getInfo().get(5));
         var object6 = (ConcreteShortSlabWallInfo) castedReadPacket.getInfo().get(5);
         assertEquals(12589, object6.getX());
         assertEquals(-9852, object6.getY());
@@ -188,7 +188,7 @@ class AxmPacketTest {
         assertEquals(ObjectType.CONCRETE_SHORT_SLAB_WALL, object6.getIndex());
         assertEquals(222, object6.getHeading());
 
-        assertTrue(castedReadPacket.getInfo().get(6) instanceof ConcreteSlabInfo);
+        assertInstanceOf(ConcreteSlabInfo.class, castedReadPacket.getInfo().get(6));
         var object7 = (ConcreteSlabInfo) castedReadPacket.getInfo().get(6);
         assertEquals(-16985, object7.getX());
         assertEquals(-7856, object7.getY());
@@ -200,7 +200,7 @@ class AxmPacketTest {
         assertEquals(ObjectType.CONCRETE_SLAB, object7.getIndex());
         assertEquals(28, object7.getHeading());
 
-        assertTrue(castedReadPacket.getInfo().get(7) instanceof ConcreteSlabWallInfo);
+        assertInstanceOf(ConcreteSlabWallInfo.class, castedReadPacket.getInfo().get(7));
         var object8 = (ConcreteSlabWallInfo) castedReadPacket.getInfo().get(7);
         assertEquals(-785, object8.getX());
         assertEquals(12674, object8.getY());
@@ -212,7 +212,7 @@ class AxmPacketTest {
         assertEquals(ObjectType.CONCRETE_SLAB_WALL, object8.getIndex());
         assertEquals(75, object8.getHeading());
 
-        assertTrue(castedReadPacket.getInfo().get(8) instanceof ConcreteWallInfo);
+        assertInstanceOf(ConcreteWallInfo.class, castedReadPacket.getInfo().get(8));
         var object9 = (ConcreteWallInfo) castedReadPacket.getInfo().get(8);
         assertEquals(-15963, object9.getX());
         assertEquals(845, object9.getY());
@@ -224,7 +224,7 @@ class AxmPacketTest {
         assertEquals(ObjectType.CONCRETE_WALL, object9.getIndex());
         assertEquals(72, object9.getHeading());
 
-        assertTrue(castedReadPacket.getInfo().get(9) instanceof ConcreteWedgeInfo);
+        assertInstanceOf(ConcreteWedgeInfo.class, castedReadPacket.getInfo().get(9));
         var object10 = (ConcreteWedgeInfo) castedReadPacket.getInfo().get(9);
         assertEquals(12369, object10.getX());
         assertEquals(-11258, object10.getY());
@@ -236,7 +236,7 @@ class AxmPacketTest {
         assertEquals(ObjectType.CONCRETE_WEDGE, object10.getIndex());
         assertEquals(190, object10.getHeading());
 
-        assertTrue(castedReadPacket.getInfo().get(10) instanceof InSimCheckpointInfo);
+        assertInstanceOf(InSimCheckpointInfo.class, castedReadPacket.getInfo().get(10));
         var object11 = (InSimCheckpointInfo) castedReadPacket.getInfo().get(10);
         assertEquals(654, object11.getX());
         assertEquals(-8455, object11.getY());
@@ -247,7 +247,7 @@ class AxmPacketTest {
         assertEquals(ObjectType.MARSH_IS_CP, object11.getIndex());
         assertEquals(39, object11.getHeading());
 
-        assertTrue(castedReadPacket.getInfo().get(11) instanceof InSimCircleInfo);
+        assertInstanceOf(InSimCircleInfo.class, castedReadPacket.getInfo().get(11));
         var object12 = (InSimCircleInfo) castedReadPacket.getInfo().get(11);
         assertEquals(-16952, object12.getX());
         assertEquals(-9456, object12.getY());
@@ -257,7 +257,7 @@ class AxmPacketTest {
         assertEquals(ObjectType.MARSH_IS_AREA, object12.getIndex());
         assertEquals(5, object12.getCircleIndex());
 
-        assertTrue(castedReadPacket.getInfo().get(12) instanceof RestrictedAreaInfo);
+        assertInstanceOf(RestrictedAreaInfo.class, castedReadPacket.getInfo().get(12));
         var object13 = (RestrictedAreaInfo) castedReadPacket.getInfo().get(12);
         assertEquals(15897, object13.getX());
         assertEquals(-7896, object13.getY());
@@ -268,7 +268,7 @@ class AxmPacketTest {
         assertEquals(ObjectType.MARSH_MARSHAL, object13.getIndex());
         assertEquals(148, object13.getHeading());
 
-        assertTrue(castedReadPacket.getInfo().get(13) instanceof RouteCheckerInfo);
+        assertInstanceOf(RouteCheckerInfo.class, castedReadPacket.getInfo().get(13));
         var object14 = (RouteCheckerInfo) castedReadPacket.getInfo().get(13);
         assertEquals(8456, object14.getX());
         assertEquals(-785, object14.getY());
@@ -278,7 +278,7 @@ class AxmPacketTest {
         assertEquals(ObjectType.MARSH_ROUTE, object14.getIndex());
         assertEquals(3, object14.getRouteIndex());
 
-        assertTrue(castedReadPacket.getInfo().get(14) instanceof SpecialControlObjectInfo);
+        assertInstanceOf(SpecialControlObjectInfo.class, castedReadPacket.getInfo().get(14));
         var object15 = (SpecialControlObjectInfo) castedReadPacket.getInfo().get(14);
         assertEquals(-7856, object15.getX());
         assertEquals(-365, object15.getY());
@@ -289,7 +289,7 @@ class AxmPacketTest {
         assertEquals(ObjectType.NULL, object15.getIndex());
         assertEquals(84, object15.getHeading());
 
-        assertTrue(castedReadPacket.getInfo().get(15) instanceof SpecialControlObjectInfo);
+        assertInstanceOf(SpecialControlObjectInfo.class, castedReadPacket.getInfo().get(15));
         var object16 = (SpecialControlObjectInfo) castedReadPacket.getInfo().get(15);
         assertEquals(3654, object16.getX());
         assertEquals(-14596, object16.getY());
@@ -300,17 +300,17 @@ class AxmPacketTest {
         assertEquals(ObjectType.NULL, object16.getIndex());
         assertEquals(36, object16.getHeading());
 
-        assertTrue(castedReadPacket.getInfo().get(16) instanceof StartLightsInfo);
+        assertInstanceOf(StartLightsInfo.class, castedReadPacket.getInfo().get(16));
         var object17 = (StartLightsInfo) castedReadPacket.getInfo().get(16);
         assertEquals(-8945, object17.getX());
         assertEquals(21548, object17.getY());
         assertEquals(10, object17.getZByte());
         assertFalse(object17.isFloating());
         assertEquals(15, object17.getIdentifier());
-        assertEquals(ObjectType.START_LIGHTS, object17.getIndex());
+        assertEquals(ObjectType.START_LIGHTS1, object17.getIndex());
         assertEquals(46, object17.getHeading());
 
-        assertTrue(castedReadPacket.getInfo().get(17) instanceof StartObjectInfo);
+        assertInstanceOf(StartObjectInfo.class, castedReadPacket.getInfo().get(17));
         var object18 = (StartObjectInfo) castedReadPacket.getInfo().get(17);
         assertEquals(7845, object18.getX());
         assertEquals(3654, object18.getY());
@@ -320,7 +320,7 @@ class AxmPacketTest {
         assertEquals(ObjectType.START_POSITION, object18.getIndex());
         assertEquals(64, object18.getHeading());
 
-        assertTrue(castedReadPacket.getInfo().get(18) instanceof TyreObjectInfo);
+        assertInstanceOf(TyreObjectInfo.class, castedReadPacket.getInfo().get(18));
         var object19 = (TyreObjectInfo) castedReadPacket.getInfo().get(18);
         assertEquals(-3658, object19.getX());
         assertEquals(2896, object19.getY());
@@ -330,7 +330,7 @@ class AxmPacketTest {
         assertEquals(ObjectType.TYRE_STACK3, object19.getIndex());
         assertEquals(111, object19.getHeading());
 
-        assertTrue(castedReadPacket.getInfo().get(19) instanceof UnknownObjectInfo);
+        assertInstanceOf(UnknownObjectInfo.class, castedReadPacket.getInfo().get(19));
         var object20 = (UnknownObjectInfo) castedReadPacket.getInfo().get(19);
         assertEquals(7485, object20.getX());
         assertEquals(-6365, object20.getY());
@@ -353,7 +353,7 @@ class AxmPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof AxmPacket);
+        assertInstanceOf(AxmPacket.class, readPacket);
 
         var castedReadPacket = (AxmPacket) readPacket;
 
@@ -363,7 +363,7 @@ class AxmPacketTest {
         assertEquals(PmoAction.POSITION, castedReadPacket.getPmoAction());
         AssertionUtils.assertFlagsEqual(PmoFlag.class, Set.of(), castedReadPacket.getPmoFlags());
 
-        assertTrue(castedReadPacket.getInfo().get(0) instanceof UnknownObjectInfo);
+        assertInstanceOf(UnknownObjectInfo.class, castedReadPacket.getInfo().get(0));
         var object1 = (UnknownObjectInfo) castedReadPacket.getInfo().get(0);
         assertEquals(-1964, object1.getX());
         assertEquals(-248, object1.getY());

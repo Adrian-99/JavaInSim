@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Adrian-99
+ * Copyright (c) 2024, Adrian-99
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -27,7 +27,7 @@ public enum StaFlag {
      */
     PAUSED,
     /**
-     * bit 3, value 8: SHIFT+U mode
+     * bit 3, value 8: free view mode
      */
     SHIFTU,
     /**
@@ -39,7 +39,7 @@ public enum StaFlag {
      */
     SHIFTU_FOLLOW,
     /**
-     * bit 6, value 64: SHIFT+U buttons hidden
+     * bit 6, value 64: free view buttons hidden
      */
     SHIFTU_NO_OPT,
     /**

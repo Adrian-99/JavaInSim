@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Adrian-99
+ * Copyright (c) 2024, Adrian-99
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -16,7 +16,7 @@ import com.github.adrian99.javainsim.internal.insim.packets.base.AbstractPacket;
 import com.github.adrian99.javainsim.internal.insim.packets.util.PacketBuilder;
 
 /**
- * Set Car Camera - Simplified camera packet (not SHIFT+U mode).
+ * Set Car Camera - Simplified camera packet (not free view mode).
  */
 public class SccPacket extends AbstractPacket implements InstructionPacket {
     @Byte

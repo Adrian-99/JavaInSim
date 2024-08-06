@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Adrian-99
+ * Copyright (c) 2024, Adrian-99
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -29,18 +29,18 @@ import com.github.adrian99.javainsim.internal.insim.packets.util.PacketBuilder;
 import com.github.adrian99.javainsim.internal.insim.packets.util.PacketValidator;
 
 /**
- * Cam Pos Pack - Full camera packet (in car OR SHIFT+U mode).<br>
+ * Cam Pos Pack - Full camera packet (in car OR free view mode).<br>
  * On receiving this packet, LFS will set up the camera
- * to match the values in the packet, including switching into or out of SHIFT+U mode depending on the
+ * to match the values in the packet, including switching into or out of free view mode depending on the
  * {@link CppFlag#SHIFTU} flag.<br>
  * If {@link CppFlag#VIEW_OVERRIDE} is set, the in-car view Heading, Pitch, Roll and FOV [not smooth]
  * can be set using this packet. Otherwise, normal in game control will be used.<br>
- * Position vector ({@link #pos}) - in SHIFT+U mode, {@link #pos} can be either relative or absolute.
+ * Position vector ({@link #pos}) - in free view mode, {@link #pos} can be either relative or absolute.
  * If {@link CppFlag#SHIFTU_FOLLOW} is set, it's a following camera, so the position is relative to
- * the selected car  Otherwise, the position is absolute, as used in normal SHIFT+U mode.<br>
+ * the selected car  Otherwise, the position is absolute, as used in normal free view mode.<br>
  * The {@link #time} value in the packet is used for camera smoothing. A zero {@link #time} means instant
  * positioning. Any other value (milliseconds) will cause the camera to move smoothly to
- * the requested position in that time. This is most useful in SHIFT+U camera modes or
+ * the requested position in that time. This is most useful in free view camera modes or
  * for smooth changes of internal view when using the {@link CppFlag#VIEW_OVERRIDE} flag.<br>
  * NOTE: You can use frequently updated camera positions with a longer {@link #time} value than
  * the update frequency. For example, sending a camera position every 100 ms, with a

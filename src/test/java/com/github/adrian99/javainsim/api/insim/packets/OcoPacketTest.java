@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Adrian-99
+ * Copyright (c) 2024, Adrian-99
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -21,7 +21,7 @@ class OcoPacketTest {
     void createOcoPacket() {
         var packet = new OcoPacket(
                 OcoAction.LIGHTS_SET,
-                StartLightsIndex.START_LIGHTS,
+                StartLightsIndex.START_LIGHTS1,
                 55,
                 new Flags<>(StartLightsDataFlag.RED1, StartLightsDataFlag.RED2_AMBER)
         );

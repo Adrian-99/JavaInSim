@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Adrian-99
+ * Copyright (c) 2024, Adrian-99
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -17,7 +17,7 @@ import com.github.adrian99.javainsim.internal.common.enums.EnumWithCustomValue;
  */
 public enum SfpFlag implements EnumWithCustomValue {
     /**
-     * bit 6, value 64: SHIFT+U buttons hidden
+     * bit 6, value 64: free view buttons hidden
      */
     SHIFTU_NO_OPT(StaFlag.SHIFTU_NO_OPT.ordinal()),
     /**
