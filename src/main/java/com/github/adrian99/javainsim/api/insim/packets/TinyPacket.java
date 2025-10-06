@@ -8,7 +8,7 @@
 
 package com.github.adrian99.javainsim.api.insim.packets;
 
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtype;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
 import com.github.adrian99.javainsim.internal.insim.packets.base.InfoPacket;

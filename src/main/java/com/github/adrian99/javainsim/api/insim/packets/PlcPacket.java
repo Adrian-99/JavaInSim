@@ -9,9 +9,9 @@
 package com.github.adrian99.javainsim.api.insim.packets;
 
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.SmallSubtype;
 import com.github.adrian99.javainsim.api.common.enums.DefaultCar;
 import com.github.adrian99.javainsim.api.common.flags.Flags;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.small.SmallSubtypes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Unsigned;
 import com.github.adrian99.javainsim.internal.insim.packets.base.AbstractPacket;
@@ -23,7 +23,7 @@ import com.github.adrian99.javainsim.internal.insim.packets.util.PacketValidator
 /**
  * PLayer Cars. Allows limiting the cars that can be used by a given connection.
  * The resulting set of selectable cars is a subset of the cars set to be available
- * on the host (by the /cars command or {@link SmallSubtype#ALC Small ALC}).
+ * on the host (by the /cars command or {@link SmallSubtypes#ALC Small ALC}).
  */
 public class PlcPacket extends AbstractPacket implements InstructionPacket {
     @Byte

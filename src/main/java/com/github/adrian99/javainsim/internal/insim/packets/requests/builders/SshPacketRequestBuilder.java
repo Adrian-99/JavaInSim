@@ -12,16 +12,17 @@ import com.github.adrian99.javainsim.api.insim.packets.requests.SshPacketRequest
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.PacketListener;
 import com.github.adrian99.javainsim.api.insim.packets.SshPacket;
-
-import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
+import com.github.adrian99.javainsim.internal.insim.packets.requests.PacketRequest;
+import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.base.BasePacketRequestBuilder;
+import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.base.SinglePacketRequestBuilder;
 
 /**
  * Builder of packet request where {@link SshPacket} serves as a request. Only {@link SshPacket}
  * can be requested this way.
  */
-public class SshPacketRequestBuilder {
-    private final InSimConnection inSimConnection;
+public class SshPacketRequestBuilder
+        extends BasePacketRequestBuilder<SshPacket>
+        implements SinglePacketRequestBuilder<SshPacket> {
     private final SshPacket requestPacket;
 
     /**
@@ -30,29 +31,12 @@ public class SshPacketRequestBuilder {
      * @param requestPacket packet that serves as a request
      */
     public SshPacketRequestBuilder(InSimConnection inSimConnection, SshPacket requestPacket) {
-        this.inSimConnection = inSimConnection;
+        super(inSimConnection);
         this.requestPacket = requestPacket;
     }
 
-    /**
-     * Concludes building packet request, which is then registered in provided InSim connection.
-     * That causes sending appropriate {@link SshPacket} that serves as a request.
-     * @param callback method to be called when requested packet is received
-     * @throws IOException if I/O error occurs when sending request packet
-     */
-    public void listen(PacketListener<SshPacket> callback) throws IOException {
-        inSimConnection.request(new SshPacketRequest(requestPacket, callback, 5000));
-    }
-
-    /**
-     * Concludes building packet request, which is then registered in provided InSim connection.
-     * That causes sending appropriate {@link SshPacket} that serves as a request.
-     * @return {@link CompletableFuture} that will complete with requested packet value when it is received
-     * @throws IOException if I/O error occurs when sending request packet
-     */
-    public CompletableFuture<SshPacket> asCompletableFuture() throws IOException {
-        var completableFuture = new CompletableFuture<SshPacket>();
-        listen((connection, packet) -> completableFuture.complete(packet));
-        return completableFuture;
+    @Override
+    protected PacketRequest buildPacketRequest(PacketListener<SshPacket> callback) {
+        return new SshPacketRequest(requestPacket, callback, requestTimeoutMillis);
     }
 }

@@ -10,12 +10,12 @@ package com.github.adrian99.javainsim.api.insim.packets;
 
 import com.github.adrian99.javainsim.api.common.enums.DefaultCar;
 import com.github.adrian99.javainsim.api.insim.packets.flags.LclFlag;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.small.SmallSubtypes;
 import com.github.adrian99.javainsim.internal.insim.packets.util.PacketReader;
 import com.github.adrian99.javainsim.testutil.AssertionUtils;
 import com.github.adrian99.javainsim.testutil.MockedInSimConnection;
 import org.junit.jupiter.api.Test;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.SmallSubtype;
 import com.github.adrian99.javainsim.api.insim.packets.enums.VoteAction;
 import com.github.adrian99.javainsim.api.insim.packets.flags.LcsFlag;
 
@@ -29,7 +29,7 @@ import static com.github.adrian99.javainsim.testutil.AssertionUtils.*;
 class SmallPacketTest {
     @Test
     void createSmallPacket() {
-        var packet = new SmallPacket(SmallSubtype.NONE, 3885174239L);
+        var packet = new SmallPacket(SmallSubtypes.NONE, 3885174239L);
         var bytes = packet.getBytes();
         var expectedBytes = new byte[] {
                 2, 4, 0, 0, -33, 13, -109, -25
@@ -98,7 +98,7 @@ class SmallPacketTest {
         var castedReadPacket = (SmallPacket) readPacket;
 
         assertPacketHeaderEquals(8, PacketType.SMALL, 144, castedReadPacket);
-        assertEquals(SmallSubtype.NONE, castedReadPacket.getSubT());
+        assertEquals(SmallSubtypes.NONE, castedReadPacket.getSubT());
         assertEquals(3646985702L, castedReadPacket.getUVal());
         assertTrue(castedReadPacket.getVoteAction().isEmpty());
         assertTrue(castedReadPacket.getCars().isEmpty());
@@ -119,7 +119,7 @@ class SmallPacketTest {
         var castedReadPacket = (SmallPacket) readPacket;
 
         assertPacketHeaderEquals(8, PacketType.SMALL, 144, castedReadPacket);
-        assertEquals(SmallSubtype.VTA, castedReadPacket.getSubT());
+        assertEquals(SmallSubtypes.VTA, castedReadPacket.getSubT());
         assertEquals(3, castedReadPacket.getUVal());
         assertTrue(castedReadPacket.getVoteAction().isPresent());
         assertEquals(VoteAction.QUALIFY, castedReadPacket.getVoteAction().get());
@@ -141,7 +141,7 @@ class SmallPacketTest {
         var castedReadPacket = (SmallPacket) readPacket;
 
         assertPacketHeaderEquals(8, PacketType.SMALL, 144, castedReadPacket);
-        assertEquals(SmallSubtype.ALC, castedReadPacket.getSubT());
+        assertEquals(SmallSubtypes.ALC, castedReadPacket.getSubT());
         assertEquals(804864, castedReadPacket.getUVal());
         assertTrue(castedReadPacket.getVoteAction().isEmpty());
         assertTrue(castedReadPacket.getCars().isPresent());

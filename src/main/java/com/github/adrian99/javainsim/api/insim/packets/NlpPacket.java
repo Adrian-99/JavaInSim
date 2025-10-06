@@ -10,9 +10,9 @@ package com.github.adrian99.javainsim.api.insim.packets;
 
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
 import com.github.adrian99.javainsim.api.insim.packets.flags.IsiFlag;
 import com.github.adrian99.javainsim.api.insim.packets.structures.NodeLap;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Array;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Structure;
@@ -38,7 +38,7 @@ public class NlpPacket extends AbstractPacket implements RequestablePacket {
     /**
      * Creates node and lap packet. Constructor used only internally.
      * @param size packet size
-     * @param reqI 0 unless this is a reply to a {@link TinySubtype#NLP Tiny NLP} request
+     * @param reqI 0 unless this is a reply to a {@link TinySubtypes#NLP Tiny NLP} request
      * @param packetDataBytes packet data bytes
      */
     public NlpPacket(short size, short reqI, PacketDataBytes packetDataBytes) {
@@ -71,6 +71,6 @@ public class NlpPacket extends AbstractPacket implements RequestablePacket {
      * @return packet request builder
      */
     public static SingleTinyPacketRequestBuilder<NlpPacket> request(InSimConnection inSimConnection) {
-        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.NLP);
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtypes.NLP);
     }
 }

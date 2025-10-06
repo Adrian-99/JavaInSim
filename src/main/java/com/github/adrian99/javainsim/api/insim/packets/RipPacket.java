@@ -12,9 +12,9 @@ import com.github.adrian99.javainsim.api.common.flags.Flags;
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
 import com.github.adrian99.javainsim.api.insim.packets.enums.RipErrorCode;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
 import com.github.adrian99.javainsim.api.insim.packets.flags.RipOption;
 import com.github.adrian99.javainsim.api.insim.packets.requests.RipPacketRequest;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Array;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
@@ -81,7 +81,7 @@ public class RipPacket extends AbstractPacket implements InstructionPacket, Requ
 
     /**
      * Creates replay information packet. Constructor used only internally.
-     * @param reqI 0 unless this is a reply to {@link TinySubtype#RIP Tiny RIP}
+     * @param reqI 0 unless this is a reply to {@link TinySubtypes#RIP Tiny RIP}
      *             or {@link RipPacket} request
      * @param packetDataBytes packet data bytes
      */

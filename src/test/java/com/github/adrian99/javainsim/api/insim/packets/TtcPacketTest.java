@@ -8,8 +8,8 @@
 
 package com.github.adrian99.javainsim.api.insim.packets;
 
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.ttc.TtcSubtypes;
 import org.junit.jupiter.api.Test;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TtcSubtype;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
@@ -18,7 +18,7 @@ class TtcPacketTest {
     @Test
     void createTtcPacket_withReqI() {
         var packet = new TtcPacket(
-                TtcSubtype.NONE,
+                TtcSubtypes.NONE,
                 128,
                 129,
                 130,
@@ -36,7 +36,7 @@ class TtcPacketTest {
     @Test
     void createTtcPacket_withoutReqI() {
         var packet = new TtcPacket(
-                TtcSubtype.NONE,
+                TtcSubtypes.NONE,
                 128,
                 129,
                 130,

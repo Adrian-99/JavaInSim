@@ -10,7 +10,7 @@ package com.github.adrian99.javainsim.api.insim.packets;
 
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Array;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
@@ -42,7 +42,7 @@ public class MalPacket extends AbstractPacket implements InstructionPacket, Requ
     /**
      * Creates mods allowed packet. Constructor used only internally.
      * @param size packet size
-     * @param reqI 0 unless this is a reply to a {@link TinySubtype#MAL Tiny MAL} request
+     * @param reqI 0 unless this is a reply to a {@link TinySubtypes#MAL Tiny MAL} request
      * @param packetDataBytes packet data bytes
      */
     public MalPacket(short size, short reqI, PacketDataBytes packetDataBytes) {
@@ -107,6 +107,6 @@ public class MalPacket extends AbstractPacket implements InstructionPacket, Requ
      * @return packet request builder
      */
     public static SingleTinyPacketRequestBuilder<MalPacket> request(InSimConnection inSimConnection) {
-        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.MAL);
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtypes.MAL);
     }
 }

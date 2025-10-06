@@ -11,11 +11,11 @@ package com.github.adrian99.javainsim.api.insim.packets;
 import com.github.adrian99.javainsim.api.common.flags.Flags;
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
 import com.github.adrian99.javainsim.api.insim.packets.enums.Wind;
 import com.github.adrian99.javainsim.api.insim.packets.flags.RaceFlag;
 import com.github.adrian99.javainsim.api.insim.packets.structures.LapTiming;
 import com.github.adrian99.javainsim.api.insim.packets.structures.RaceLaps;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Array;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
@@ -59,7 +59,7 @@ public class RstPacket extends AbstractPacket implements RequestablePacket {
 
     /**
      * Creates race start packet. Constructor used only internally.
-     * @param reqI 0 unless this is a reply to an {@link TinySubtype#RST Tiny RST} request
+     * @param reqI 0 unless this is a reply to an {@link TinySubtypes#RST Tiny RST} request
      * @param packetDataBytes packet data bytes
      */
     public RstPacket(short reqI, PacketDataBytes packetDataBytes) {
@@ -177,6 +177,6 @@ public class RstPacket extends AbstractPacket implements RequestablePacket {
      * @return packet request builder
      */
     public static SingleTinyPacketRequestBuilder<RstPacket> request(InSimConnection inSimConnection) {
-        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.RST);
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtypes.RST);
     }
 }

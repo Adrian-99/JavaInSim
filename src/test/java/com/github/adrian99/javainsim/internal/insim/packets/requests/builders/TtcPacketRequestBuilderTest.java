@@ -8,6 +8,7 @@
 
 package com.github.adrian99.javainsim.internal.insim.packets.requests.builders;
 
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.ttc.TtcSubtypes;
 import com.github.adrian99.javainsim.testutil.MockedInSimConnection;
 import org.junit.jupiter.api.Test;
 import com.github.adrian99.javainsim.api.insim.packets.AxmPacket;
@@ -32,7 +33,7 @@ class TtcPacketRequestBuilderTest {
         var receivedAxmPacketsCount = new AtomicInteger();
         var inSimConnectionMock = new MockedInSimConnection();
 
-        new TtcPacketRequestBuilder(inSimConnectionMock, 29)
+        new TtcPacketRequestBuilder<>(inSimConnectionMock, TtcSubtypes.SEL, 29, 0, 0, 0)
                 .listen((inSimConnection, packet) -> {
                     assertEquals(inSimConnectionMock, inSimConnection);
                     assertEquals(8, packet.getSize());
@@ -64,7 +65,7 @@ class TtcPacketRequestBuilderTest {
     void asCompletableFuture() throws IOException, ExecutionException, InterruptedException {
         var inSimConnectionMock = new MockedInSimConnection();
 
-        var packetCompletableFuture = new TtcPacketRequestBuilder(inSimConnectionMock, 29)
+        var packetCompletableFuture = new TtcPacketRequestBuilder<>(inSimConnectionMock, TtcSubtypes.SEL, 29, 0, 0, 0)
                 .asCompletableFuture();
 
         var requestPacketBytes = inSimConnectionMock.assertAndGetSentPacketBytes();

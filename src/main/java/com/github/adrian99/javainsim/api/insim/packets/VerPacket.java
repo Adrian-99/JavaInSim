@@ -11,7 +11,7 @@ package com.github.adrian99.javainsim.api.insim.packets;
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
 import com.github.adrian99.javainsim.api.insim.packets.enums.Product;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Array;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
@@ -35,7 +35,7 @@ public class VerPacket extends AbstractPacket implements RequestablePacket {
 
     /**
      * Creates version packet.
-     * @param reqI 0 unless this is a reply to an {@link TinySubtype#VER Tiny VER} request
+     * @param reqI 0 unless this is a reply to an {@link TinySubtypes#VER Tiny VER} request
      * @param packetDataBytes packet data bytes
      */
     public VerPacket(short reqI, PacketDataBytes packetDataBytes) {
@@ -73,6 +73,6 @@ public class VerPacket extends AbstractPacket implements RequestablePacket {
      * @return packet request builder
      */
     public static SingleTinyPacketRequestBuilder<VerPacket> request(InSimConnection inSimConnection) {
-        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.VER);
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtypes.VER);
     }
 }

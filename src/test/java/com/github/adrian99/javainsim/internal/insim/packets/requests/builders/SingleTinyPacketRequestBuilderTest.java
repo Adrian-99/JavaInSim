@@ -8,12 +8,12 @@
 
 package com.github.adrian99.javainsim.internal.insim.packets.requests.builders;
 
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.small.SmallSubtypes;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.testutil.MockedInSimConnection;
 import org.junit.jupiter.api.Test;
 import com.github.adrian99.javainsim.api.insim.packets.SmallPacket;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.SmallSubtype;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ class SingleTinyPacketRequestBuilderTest {
     @Test
     void asCompletableFuture() throws IOException, ExecutionException, InterruptedException {
         var inSimConnectionMock = new MockedInSimConnection();
-        var packetCompletableFuture = new SingleTinyPacketRequestBuilder<>(inSimConnectionMock, TinySubtype.GTH)
+        var packetCompletableFuture = new SingleTinyPacketRequestBuilder<>(inSimConnectionMock, TinySubtypes.GTH)
                 .asCompletableFuture();
 
         var requestPacketBytes = inSimConnectionMock.assertAndGetSentPacketBytes();
@@ -45,7 +45,7 @@ class SingleTinyPacketRequestBuilderTest {
         assertEquals(8, packet.getSize());
         assertEquals(PacketType.SMALL, packet.getType());
         assertNotEquals(0, packet.getReqI());
-        assertEquals(SmallSubtype.RTP, packet.getSubT());
+        assertEquals(SmallSubtypes.RTP, packet.getSubT());
         assertEquals(353456, packet.getUVal());
     }
 }

@@ -12,15 +12,15 @@ import com.github.adrian99.javainsim.api.common.flags.Flags;
 import com.github.adrian99.javainsim.api.common.structures.Car;
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
 import com.github.adrian99.javainsim.api.insim.packets.flags.*;
 import com.github.adrian99.javainsim.api.insim.packets.structures.Tyres;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Array;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Char;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Word;
-import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.BasicTinyPacketRequestBuilder;
+import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.TinyPacketRequestBuilder;
 import com.github.adrian99.javainsim.internal.insim.packets.base.AbstractPacket;
 import com.github.adrian99.javainsim.internal.insim.packets.base.RequestablePacket;
 
@@ -78,7 +78,7 @@ public class NplPacket extends AbstractPacket implements RequestablePacket {
 
     /**
      * Creates new player joining race packet. Constructor used only internally.
-     * @param reqI 0 unless this is a reply to an {@link TinySubtype#NPL Tiny NPL} request
+     * @param reqI 0 unless this is a reply to an {@link TinySubtypes#NPL Tiny NPL} request
      * @param packetDataBytes packet data bytes
      */
     public NplPacket(short reqI, PacketDataBytes packetDataBytes) {
@@ -245,7 +245,7 @@ public class NplPacket extends AbstractPacket implements RequestablePacket {
      * @param inSimConnection InSim connection to request packet from
      * @return packet request builder
      */
-    public static BasicTinyPacketRequestBuilder<NplPacket> request(InSimConnection inSimConnection) {
-        return new BasicTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.NPL);
+    public static TinyPacketRequestBuilder<NplPacket> request(InSimConnection inSimConnection) {
+        return new TinyPacketRequestBuilder<>(inSimConnection, TinySubtypes.NPL);
     }
 }

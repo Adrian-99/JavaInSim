@@ -13,8 +13,8 @@ import com.github.adrian99.javainsim.api.insim.packets.IsiPacket;
 import com.github.adrian99.javainsim.api.insim.packets.SmallPacket;
 import com.github.adrian99.javainsim.api.insim.packets.TinyPacket;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.SmallSubtype;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.small.SmallSubtypes;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.api.outgauge.OutGaugeConnection;
 import com.github.adrian99.javainsim.api.outsim.OutSimConnection;
 import com.github.adrian99.javainsim.api.outsim.flags.OutSimOpts;
@@ -83,7 +83,7 @@ public class InSimConnection implements Closeable {
     public void close() throws IOException {
         logger.debug("Closing InSim connection");
         if (isConnected && !socket.isClosed()) {
-            var closePacket = new TinyPacket(0, TinySubtype.CLOSE);
+            var closePacket = new TinyPacket(0, TinySubtypes.CLOSE);
             send(closePacket);
         }
         isConnected = false;
@@ -169,7 +169,7 @@ public class InSimConnection implements Closeable {
     /**
      * Initializes OutSim from InSim. If OutSim has not been set up in cfg.txt, this method makes LFS send UDP packets
      * if in game, using the OutSim system. The OutSim packets will be sent to the UDP port specified in the
-     * {@link IsiPacket}. This method sends appropriate {@link SmallSubtype#SSP SSP} {@link SmallPacket}
+     * {@link IsiPacket}. This method sends appropriate {@link SmallSubtypes#SSP SSP} {@link SmallPacket}
      * to LFS and creates {@link OutSimConnection}. To cancel sending OutSim packets by LFS, {@link #stopOutSim}
      * method should be used.
      * @param interval time between updates - must be greater than 0
@@ -184,7 +184,7 @@ public class InSimConnection implements Closeable {
     /**
      * Initializes OutSim from InSim. If OutSim has not been set up in cfg.txt, this method makes LFS send UDP packets
      * if in game, using the OutSim system. The OutSim packets will be sent to the UDP port specified in the
-     * {@link IsiPacket}. This method sends appropriate {@link SmallSubtype#SSP SSP} {@link SmallPacket}
+     * {@link IsiPacket}. This method sends appropriate {@link SmallSubtypes#SSP SSP} {@link SmallPacket}
      * to LFS and creates {@link OutSimConnection}. To cancel sending OutSim packets by LFS, {@link #stopOutSim}
      * method should be used.
      * @param interval time between updates - must be greater than 0
@@ -193,23 +193,23 @@ public class InSimConnection implements Closeable {
      * @throws IOException if I/O error occurs while sending {@link SmallPacket} or creating {@link OutSimConnection}
      */
     public OutSimConnection initializeOutSim(long interval, Flags<OutSimOpts> opts) throws IOException {
-        send(new SmallPacket(SmallSubtype.SSP, interval));
+        send(new SmallPacket(SmallSubtypes.SSP, interval));
         return new OutSimConnection(udpPort, opts);
     }
 
     /**
      * Cancels sending OutSim packets by LFS that have been previously requested using {@link #initializeOutSim}
-     * method. This method sends appropriate {@link SmallSubtype#SSP SSP} {@link SmallPacket} to LFS.
+     * method. This method sends appropriate {@link SmallSubtypes#SSP SSP} {@link SmallPacket} to LFS.
      * @throws IOException if I/O error occurs while sending {@link SmallPacket}
      */
     public void stopOutSim() throws IOException {
-        send(new SmallPacket(SmallSubtype.SSP, 0));
+        send(new SmallPacket(SmallSubtypes.SSP, 0));
     }
 
     /**
      * Initializes OutGauge from InSim. If OutGauge has not been set up in cfg.txt, this method makes LFS send UDP packets
      * if in game, using the OutGauge system. The OutGauge packets will be sent to the UDP port specified in the
-     * {@link IsiPacket}. This method sends appropriate {@link SmallSubtype#SSG SSG} {@link SmallPacket}
+     * {@link IsiPacket}. This method sends appropriate {@link SmallSubtypes#SSG SSG} {@link SmallPacket}
      * to LFS and creates {@link OutGaugeConnection}. To cancel sending OutGauge packets by LFS, {@link #stopOutGauge}
      * method should be used.
      * @param interval time between updates - must be greater than 0
@@ -217,17 +217,17 @@ public class InSimConnection implements Closeable {
      * @throws IOException if I/O error occurs while sending {@link SmallPacket} or creating {@link OutGaugeConnection}
      */
     public OutGaugeConnection initializeOutGauge(long interval) throws IOException {
-        send(new SmallPacket(SmallSubtype.SSG, interval));
+        send(new SmallPacket(SmallSubtypes.SSG, interval));
         return new OutGaugeConnection(udpPort);
     }
 
     /**
      * Cancels sending OutGauge packets by LFS that have been previously requested using {@link #initializeOutGauge}
-     * method. This method sends appropriate {@link SmallSubtype#SSG SSG} {@link SmallPacket} to LFS.
+     * method. This method sends appropriate {@link SmallSubtypes#SSG SSG} {@link SmallPacket} to LFS.
      * @throws IOException if I/O error occurs while sending {@link SmallPacket}
      */
     public void stopOutGauge() throws IOException {
-        send(new SmallPacket(SmallSubtype.SSG, 0));
+        send(new SmallPacket(SmallSubtypes.SSG, 0));
     }
 
     /**
@@ -299,7 +299,7 @@ public class InSimConnection implements Closeable {
             isConnected = true;
         } else if (packet.getType().equals(PacketType.TINY)) {
             var tinyPacket = (TinyPacket) packet;
-            if (tinyPacket.getReqI() == 0 && tinyPacket.getSubT().equals(TinySubtype.NONE)) {
+            if (tinyPacket.getReqI() == 0 && tinyPacket.getSubT().equals(TinySubtypes.NONE)) {
                 logger.debug("Received keep alive packet");
                 send(tinyPacket);
                 isConnected = true;

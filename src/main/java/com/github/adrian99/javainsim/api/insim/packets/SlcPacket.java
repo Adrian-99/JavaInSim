@@ -11,12 +11,12 @@ package com.github.adrian99.javainsim.api.insim.packets;
 import com.github.adrian99.javainsim.api.common.structures.Car;
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Array;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Char;
-import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.BasicTinyPacketRequestBuilder;
+import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.TinyPacketRequestBuilder;
 import com.github.adrian99.javainsim.internal.insim.packets.base.AbstractPacket;
 import com.github.adrian99.javainsim.internal.insim.packets.base.RequestablePacket;
 
@@ -34,7 +34,7 @@ public class SlcPacket extends AbstractPacket implements RequestablePacket {
 
     /**
      * Creates selected car packet. Constructor used only internally.
-     * @param reqI 0 unless this is a reply to a {@link TinySubtype#SLC Tiny SLC} request
+     * @param reqI 0 unless this is a reply to a {@link TinySubtypes#SLC Tiny SLC} request
      * @param packetDataBytes packet data bytes
      */
     public SlcPacket(short reqI, PacketDataBytes packetDataBytes) {
@@ -62,7 +62,7 @@ public class SlcPacket extends AbstractPacket implements RequestablePacket {
      * @param inSimConnection InSim connection to request packet from
      * @return packet request builder
      */
-    public static BasicTinyPacketRequestBuilder<SlcPacket> request(InSimConnection inSimConnection) {
-        return new BasicTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.SLC);
+    public static TinyPacketRequestBuilder<SlcPacket> request(InSimConnection inSimConnection) {
+        return new TinyPacketRequestBuilder<>(inSimConnection, TinySubtypes.SLC);
     }
 }

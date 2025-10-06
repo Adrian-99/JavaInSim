@@ -10,8 +10,8 @@ package com.github.adrian99.javainsim.api.insim.packets;
 
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
 import com.github.adrian99.javainsim.api.insim.packets.structures.PlayerHandicaps;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Array;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Structure;
@@ -40,7 +40,7 @@ public class PlhPacket extends AbstractPacket implements InstructionPacket, Requ
     /**
      * Creates player handicaps packet. Constructor used only internally.
      * @param size packet size
-     * @param reqI 0 unless this is a reply to a {@link TinySubtype#PLH Tiny PLH} request
+     * @param reqI 0 unless this is a reply to a {@link TinySubtypes#PLH Tiny PLH} request
      * @param packetDataBytes packet data bytes
      */
     public PlhPacket(short size, short reqI, PacketDataBytes packetDataBytes) {
@@ -97,6 +97,6 @@ public class PlhPacket extends AbstractPacket implements InstructionPacket, Requ
      * @return packet request builder
      */
     public static SingleTinyPacketRequestBuilder<PlhPacket> request(InSimConnection inSimConnection) {
-        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.PLH);
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtypes.PLH);
     }
 }

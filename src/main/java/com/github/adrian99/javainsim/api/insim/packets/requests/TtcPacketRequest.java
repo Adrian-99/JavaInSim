@@ -10,8 +10,9 @@ package com.github.adrian99.javainsim.api.insim.packets.requests;
 
 import com.github.adrian99.javainsim.api.insim.PacketListener;
 import com.github.adrian99.javainsim.api.insim.packets.AxmPacket;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TtcSubtype;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.ttc.TtcRequestingSubtype;
 import com.github.adrian99.javainsim.internal.insim.packets.base.InstructionPacket;
+import com.github.adrian99.javainsim.internal.insim.packets.base.RequestablePacket;
 import com.github.adrian99.javainsim.internal.insim.packets.requests.AbstractPacketRequest;
 import org.slf4j.LoggerFactory;
 import com.github.adrian99.javainsim.api.insim.packets.TtcPacket;
@@ -19,29 +20,47 @@ import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
 
 /**
  * Packet request where {@link TtcPacket} serves as a request packet. Currently only {@link AxmPacket}
- *  * can be requested this way.
+ * can be requested this way.
  */
-public class TtcPacketRequest extends AbstractPacketRequest<AxmPacket> {
+public class TtcPacketRequest<T extends RequestablePacket> extends AbstractPacketRequest<T> {
+    private final TtcRequestingSubtype<T> subtype;
     private final int ucid;
+    private final int b1;
+    private final int b2;
+    private final int b3;
     /**
      * Creates packet request.
+     * @param ttcSubtype subtype to be used in request packet
      * @param ucid unique connection id (0 = local / non-zero = guest)
+     * @param b1Value additional value 1 to be sent in request packet
+     * @param b2Value additional value 2 to be sent in request packet
+     * @param b3Value additional value 3 to be sent in request packet
      * @param callback method to be called when requested packet is received
      * @param timeoutMillis period of time (in milliseconds) after which packet request should be considered timed out
      */
-    public TtcPacketRequest(int ucid, PacketListener<AxmPacket> callback, long timeoutMillis) {
+    public TtcPacketRequest(TtcRequestingSubtype<T> ttcSubtype,
+                            int ucid,
+                            int b1Value,
+                            int b2Value,
+                            int b3Value,
+                            PacketListener<T> callback,
+                            long timeoutMillis) {
         super(
                 LoggerFactory.getLogger(TtcPacketRequest.class),
-                PacketType.AXM,
-                false,
+                PacketType.fromPacketClass(ttcSubtype.getRequestingPacketClass()),
+                ttcSubtype.isSinglePacketResponse(),
                 callback,
                 timeoutMillis
         );
+        this.subtype = ttcSubtype;
         this.ucid = ucid;
+        this.b1 = b1Value;
+        this.b2 = b2Value;
+        this.b3 = b3Value;
     }
 
     @Override
     protected InstructionPacket createRequestPacket(short reqI) {
-        return new TtcPacket(TtcSubtype.SEL, ucid, 0, 0, 0, reqI);
+        return new TtcPacket(subtype, ucid, b1, b2, b3, reqI);
     }
 }

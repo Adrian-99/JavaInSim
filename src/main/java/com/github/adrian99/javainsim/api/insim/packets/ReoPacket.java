@@ -10,8 +10,8 @@ package com.github.adrian99.javainsim.api.insim.packets;
 
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.SmallSubtype;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.small.SmallSubtypes;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Array;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
@@ -32,10 +32,10 @@ import java.util.List;
  * 1) In the race setup screen, to immediately rearrange the grid when the packet arrives.<br>
  * 2) In game, just before a restart or exit, to specify the order on the restart or exit.
  * If sending an {@link ReoPacket} in game, the packet should be sent when
- * {@link SmallSubtype#VTA Small VTA} is received
+ * {@link SmallSubtypes#VTA Small VTA} is received
  * informing that the Vote Action (VOTE_END / VOTE_RESTART / VOTE_QUALIFY) is about
  * to take place. Any {@link ReoPacket} received before the
- * {@link SmallSubtype#VTA Small VTA} is sent will be ignored.
+ * {@link SmallSubtypes#VTA Small VTA} is sent will be ignored.
  */
 public class ReoPacket extends AbstractPacket implements InstructionPacket, RequestablePacket {
     @Byte
@@ -44,7 +44,7 @@ public class ReoPacket extends AbstractPacket implements InstructionPacket, Requ
 
     /**
      * Creates reorder packet. Constructor used only internally.
-     * @param reqI 0 unless this is a reply to an {@link TinySubtype#REO Tiny REO} request
+     * @param reqI 0 unless this is a reply to an {@link TinySubtypes#REO Tiny REO} request
      * @param packetDataBytes packet data bytes
      */
     public ReoPacket(short reqI, PacketDataBytes packetDataBytes) {
@@ -92,6 +92,6 @@ public class ReoPacket extends AbstractPacket implements InstructionPacket, Requ
      * @return packet request builder
      */
     public static SingleTinyPacketRequestBuilder<ReoPacket> request(InSimConnection inSimConnection) {
-        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.REO);
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtypes.REO);
     }
 }

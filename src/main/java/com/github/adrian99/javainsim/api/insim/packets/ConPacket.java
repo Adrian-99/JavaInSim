@@ -8,8 +8,8 @@
 
 package com.github.adrian99.javainsim.api.insim.packets;
 
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
 import com.github.adrian99.javainsim.api.insim.packets.flags.IsiFlag;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
 import com.github.adrian99.javainsim.api.insim.packets.structures.CarContact;
@@ -53,7 +53,7 @@ public class ConPacket extends AbstractPacket implements InfoPacket {
     }
 
     /**
-     * @return looping time stamp (hundredths - time since reset - like {@link TinySubtype#GTH Tiny GTH})
+     * @return looping time stamp (hundredths - time since reset - like {@link TinySubtypes#GTH Tiny GTH})
      */
     public int getTime() {
         return time;

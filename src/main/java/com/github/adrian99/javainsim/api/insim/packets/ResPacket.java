@@ -12,13 +12,13 @@ import com.github.adrian99.javainsim.api.common.flags.Flags;
 import com.github.adrian99.javainsim.api.common.structures.Car;
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
 import com.github.adrian99.javainsim.api.insim.packets.flags.ConfirmationFlag;
 import com.github.adrian99.javainsim.api.insim.packets.flags.PlayerFlag;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.*;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
-import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.BasicTinyPacketRequestBuilder;
+import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.TinyPacketRequestBuilder;
 import com.github.adrian99.javainsim.internal.insim.packets.base.AbstractPacket;
 import com.github.adrian99.javainsim.internal.insim.packets.base.RequestablePacket;
 
@@ -61,7 +61,7 @@ public class ResPacket extends AbstractPacket implements RequestablePacket {
 
     /**
      * Creates result packet. Constructor used only internally.
-     * @param reqI 0 unless this is a reply to a {@link TinySubtype#RES Tiny RES} request
+     * @param reqI 0 unless this is a reply to a {@link TinySubtypes#RES Tiny RES} request
      * @param packetDataBytes packet data bytes
      */
     public ResPacket(short reqI, PacketDataBytes packetDataBytes) {
@@ -187,7 +187,7 @@ public class ResPacket extends AbstractPacket implements RequestablePacket {
      * @param inSimConnection InSim connection to request packet from
      * @return packet request builder
      */
-    public static BasicTinyPacketRequestBuilder<ResPacket> request(InSimConnection inSimConnection) {
-        return new BasicTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.RES);
+    public static TinyPacketRequestBuilder<ResPacket> request(InSimConnection inSimConnection) {
+        return new TinyPacketRequestBuilder<>(inSimConnection, TinySubtypes.RES);
     }
 }

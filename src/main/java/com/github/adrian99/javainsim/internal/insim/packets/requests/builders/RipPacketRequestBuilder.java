@@ -11,8 +11,8 @@ package com.github.adrian99.javainsim.internal.insim.packets.requests.builders;
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.PacketListener;
 import com.github.adrian99.javainsim.api.insim.packets.RipPacket;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
 import com.github.adrian99.javainsim.api.insim.packets.requests.RipPacketRequest;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 
 import java.io.IOException;
 
@@ -28,7 +28,7 @@ public class RipPacketRequestBuilder extends SingleTinyPacketRequestBuilder<RipP
      * @param inSimConnection InSim connection that packet should be requested from
      */
     public RipPacketRequestBuilder(InSimConnection inSimConnection) {
-        super(inSimConnection, TinySubtype.RIP);
+        super(inSimConnection, TinySubtypes.RIP);
         ripPacket = null;
         requestTimeoutMillis = 300000;
     }

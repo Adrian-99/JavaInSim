@@ -9,8 +9,8 @@
 package com.github.adrian99.javainsim.internal.insim.packets.requests.builders;
 
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
 import com.github.adrian99.javainsim.api.insim.packets.SmallPacket;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 
 /**
  * Builder for {@link SmallPacket} request.
@@ -31,7 +31,7 @@ public class SmallPacketRequestBuilder {
      * @return packet request builder
      */
     public SingleTinyPacketRequestBuilder<SmallPacket> forCurrentTime() {
-        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.GTH);
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtypes.GTH);
     }
 
     /**
@@ -39,6 +39,6 @@ public class SmallPacketRequestBuilder {
      * @return packet request builder
      */
     public SingleTinyPacketRequestBuilder<SmallPacket> forAllowedCars() {
-        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.ALC);
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtypes.ALC);
     }
 }

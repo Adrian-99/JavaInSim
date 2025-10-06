@@ -12,12 +12,12 @@ import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.Language;
 import com.github.adrian99.javainsim.api.insim.packets.enums.License;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
 import com.github.adrian99.javainsim.api.insim.packets.structures.IPAddress;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Unsigned;
-import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.BasicTinyPacketRequestBuilder;
+import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.TinyPacketRequestBuilder;
 import com.github.adrian99.javainsim.internal.insim.packets.base.AbstractPacket;
 import com.github.adrian99.javainsim.internal.insim.packets.base.RequestablePacket;
 
@@ -39,7 +39,7 @@ public class NciPacket extends AbstractPacket implements RequestablePacket {
 
     /**
      * Creates new connection info packet. Constructor used only internally.
-     * @param reqI 0 unless this is a reply to a {@link TinySubtype#NCI Tiny NCI} request
+     * @param reqI 0 unless this is a reply to a {@link TinySubtypes#NCI Tiny NCI} request
      * @param packetDataBytes packet data bytes
      */
     public NciPacket(short reqI, PacketDataBytes packetDataBytes) {
@@ -92,7 +92,7 @@ public class NciPacket extends AbstractPacket implements RequestablePacket {
      * @param inSimConnection InSim connection to request packet from
      * @return packet request builder
      */
-    public static BasicTinyPacketRequestBuilder<NciPacket> request(InSimConnection inSimConnection) {
-        return new BasicTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.NCI);
+    public static TinyPacketRequestBuilder<NciPacket> request(InSimConnection inSimConnection) {
+        return new TinyPacketRequestBuilder<>(inSimConnection, TinySubtypes.NCI);
     }
 }

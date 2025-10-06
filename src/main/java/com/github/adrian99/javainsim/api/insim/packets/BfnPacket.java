@@ -9,7 +9,8 @@
 package com.github.adrian99.javainsim.api.insim.packets;
 
 import com.github.adrian99.javainsim.api.common.flags.Flags;
-import com.github.adrian99.javainsim.api.insim.packets.enums.BfnSubtype;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.bfn.BfnSubtype;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.bfn.BfnSubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
 import com.github.adrian99.javainsim.internal.insim.packets.base.InfoPacket;
@@ -42,8 +43,8 @@ public class BfnPacket extends AbstractPacket implements InstructionPacket, Info
      * Creates button function packet.
      * @param subT subtype
      * @param ucid connection to send to (0 = local / 255 = all)
-     * @param clickID if {@link #subT} is {@link BfnSubtype#DEL_BTN}: ID of single button to delete or first button in range
-     * @param clickMax if {@link #subT} is {@link BfnSubtype#DEL_BTN}: ID of last button in range (if greater than {@link #clickID})
+     * @param clickID if {@link #subT} is {@link BfnSubtypes#DEL_BTN}: ID of single button to delete or first button in range
+     * @param clickMax if {@link #subT} is {@link BfnSubtypes#DEL_BTN}: ID of last button in range (if greater than {@link #clickID})
      * @throws PacketValidationException if validation of any field in packet fails
      */
     public BfnPacket(BfnSubtype subT,
@@ -89,7 +90,7 @@ public class BfnPacket extends AbstractPacket implements InstructionPacket, Info
     @Override
     public byte[] getBytes() {
         return new PacketBuilder(size, type, reqI)
-                .writeByte(subT.ordinal())
+                .writeByte(subT.getByteValue())
                 .writeByte(ucid)
                 .writeByte(clickID)
                 .writeByte(clickMax)

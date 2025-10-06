@@ -287,7 +287,15 @@ public enum PacketType {
     /**
      * 67 - both ways: set IP bans
      */
-    IPB(IpbPacket.class);
+    IPB(IpbPacket.class),
+    /**
+     * 68 - instruction: set AI control value
+     */
+    AIC(AicPacket.class),
+    /**
+     * 69 - info: info about AI car
+     */
+    AII(AiiPacket.class);
 
     private final Class<? extends Packet> packetClass;
 

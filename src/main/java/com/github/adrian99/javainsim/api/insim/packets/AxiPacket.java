@@ -9,6 +9,7 @@
 package com.github.adrian99.javainsim.api.insim.packets;
 
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Array;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
@@ -16,7 +17,6 @@ import com.github.adrian99.javainsim.internal.insim.packets.annotations.Char;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Word;
 import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.SingleTinyPacketRequestBuilder;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
 import com.github.adrian99.javainsim.internal.insim.packets.base.AbstractPacket;
 import com.github.adrian99.javainsim.internal.insim.packets.base.RequestablePacket;
 
@@ -36,7 +36,7 @@ public class AxiPacket extends AbstractPacket implements RequestablePacket {
 
     /**
      * Creates autoX info packet. Constructor used only internally.
-     * @param reqI 0 unless this is a reply to an {@link TinySubtype#AXI Tiny AXI} request
+     * @param reqI 0 unless this is a reply to an {@link TinySubtypes#AXI Tiny AXI} request
      * @param packetDataBytes packet data bytes
      */
     public AxiPacket(short reqI, PacketDataBytes packetDataBytes) {
@@ -82,6 +82,6 @@ public class AxiPacket extends AbstractPacket implements RequestablePacket {
      * @return packet request builder
      */
     public static SingleTinyPacketRequestBuilder<AxiPacket> request(InSimConnection inSimConnection) {
-        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.AXI);
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtypes.AXI);
     }
 }

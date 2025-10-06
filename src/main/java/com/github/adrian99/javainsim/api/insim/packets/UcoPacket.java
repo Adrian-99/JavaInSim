@@ -8,7 +8,7 @@
 
 package com.github.adrian99.javainsim.api.insim.packets;
 
-import com.github.adrian99.javainsim.api.insim.packets.enums.SmallSubtype;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.small.SmallSubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Structure;
@@ -66,7 +66,7 @@ public class UcoPacket extends AbstractPacket implements InfoPacket {
     }
 
     /**
-     * @return hundredths of a second since start (as in {@link SmallSubtype#RTP Small RTP})
+     * @return hundredths of a second since start (as in {@link SmallSubtypes#RTP Small RTP})
      */
     public long getTime() {
         return time;

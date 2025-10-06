@@ -8,7 +8,7 @@
 
 package com.github.adrian99.javainsim.api.insim.packets;
 
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.insim.packets.util.PacketReader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import static com.github.adrian99.javainsim.testutil.AssertionUtils.assertPacket
 class TinyPacketTest {
     @Test
     void createTinyPacket() {
-        var packet = new TinyPacket(150, TinySubtype.NONE);
+        var packet = new TinyPacket(150, TinySubtypes.NONE);
         var bytes = packet.getBytes();
         var expectedBytes = new byte[] {
                 1, 3, -106, 0
@@ -39,11 +39,11 @@ class TinyPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof TinyPacket);
+        assertInstanceOf(TinyPacket.class, readPacket);
 
         var castedReadPacket = (TinyPacket) readPacket;
 
         assertPacketHeaderEquals(4, PacketType.TINY, 144, castedReadPacket);
-        Assertions.assertEquals(TinySubtype.NONE, castedReadPacket.getSubT());
+        Assertions.assertEquals(TinySubtypes.NONE, castedReadPacket.getSubT());
     }
 }

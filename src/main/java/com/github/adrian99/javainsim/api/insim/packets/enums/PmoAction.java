@@ -9,6 +9,8 @@
 package com.github.adrian99.javainsim.api.insim.packets.enums;
 
 import com.github.adrian99.javainsim.api.insim.packets.AxmPacket;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.ttc.TtcSubtypes;
 import com.github.adrian99.javainsim.internal.common.enums.EnumHelpers;
 
 /**
@@ -32,11 +34,11 @@ public enum PmoAction {
      */
     CLEAR_ALL,
     /**
-     * value 4: a reply to a {@link TinySubtype#AXM Tiny AXM} request
+     * value 4: a reply to a {@link TinySubtypes#AXM Tiny AXM} request
      */
     TINY_AXM,
     /**
-     * value 5: a reply to a {@link TtcSubtype#SEL Ttc SEL} request
+     * value 5: a reply to a {@link TtcSubtypes#SEL Ttc SEL} request
      */
     TTC_SEL,
     /**

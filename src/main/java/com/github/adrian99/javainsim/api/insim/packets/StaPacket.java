@@ -13,6 +13,7 @@ import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.*;
 import com.github.adrian99.javainsim.api.insim.packets.flags.StaFlag;
 import com.github.adrian99.javainsim.api.insim.packets.structures.RaceLaps;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.*;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
@@ -57,7 +58,7 @@ public class StaPacket extends AbstractPacket implements RequestablePacket {
 
     /**
      * Creates state packet. Constructor used only internally.
-     * @param reqI 0 unless this is a reply to an {@link TinySubtype#SST Tiny SST} request
+     * @param reqI 0 unless this is a reply to an {@link TinySubtypes#SST Tiny SST} request
      * @param packetDataBytes packet data bytes
      */
     public StaPacket(short reqI, PacketDataBytes packetDataBytes) {
@@ -184,6 +185,6 @@ public class StaPacket extends AbstractPacket implements RequestablePacket {
      * @return packet request builder
      */
     public static SingleTinyPacketRequestBuilder<StaPacket> request(InSimConnection inSimConnection) {
-        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.SST);
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtypes.SST);
     }
 }

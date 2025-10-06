@@ -8,8 +8,6 @@
 
 package com.github.adrian99.javainsim.api.insim.packets;
 
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TtcSubtype;
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PmoAction;
@@ -18,6 +16,8 @@ import com.github.adrian99.javainsim.api.insim.packets.flags.IsiFlag;
 import com.github.adrian99.javainsim.api.insim.packets.flags.PmoFlag;
 import com.github.adrian99.javainsim.api.insim.packets.structures.objectinfo.ObjectInfo;
 import com.github.adrian99.javainsim.api.insim.packets.structures.objectinfo.PositionObjectInfo;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.ttc.TtcSubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Array;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
@@ -72,8 +72,8 @@ public class AxmPacket extends AbstractPacket implements InstructionPacket, Requ
     /**
      * Creates autoX multiple objects packet. Constructor used only internally.
      * @param size packet size
-     * @param reqI 0 unless this is a reply to a {@link TinySubtype#AXM Tiny AXM}
-     *             or {@link TtcSubtype#SEL Ttc SEL} request
+     * @param reqI 0 unless this is a reply to a {@link TinySubtypes#AXM Tiny AXM}
+     *             or {@link TtcSubtypes#SEL Ttc SEL} request
      * @param packetDataBytes packet data bytes
      */
     public AxmPacket(short size, short reqI, PacketDataBytes packetDataBytes) {

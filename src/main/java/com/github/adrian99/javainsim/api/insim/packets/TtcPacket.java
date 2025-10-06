@@ -9,7 +9,7 @@
 package com.github.adrian99.javainsim.api.insim.packets;
 
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TtcSubtype;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.ttc.TtcSubtype;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
 import com.github.adrian99.javainsim.internal.insim.packets.base.AbstractPacket;
 import com.github.adrian99.javainsim.internal.insim.packets.base.InstructionPacket;
@@ -68,7 +68,7 @@ public class TtcPacket extends AbstractPacket implements InstructionPacket {
     @Override
     public byte[] getBytes() {
         return new PacketBuilder(size, type, reqI)
-                .writeByte(subT.ordinal())
+                .writeByte(subT.getByteValue())
                 .writeByte(ucid)
                 .writeByte(b1)
                 .writeByte(b2)

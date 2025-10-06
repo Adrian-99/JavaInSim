@@ -10,8 +10,8 @@ package com.github.adrian99.javainsim.api.insim.packets;
 
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
 import com.github.adrian99.javainsim.api.insim.packets.structures.IPAddress;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Array;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Unsigned;
@@ -39,7 +39,7 @@ public class IpbPacket extends AbstractPacket implements InstructionPacket, Requ
     /**
      * Creates IP bans packet. Constructor used only internally.
      * @param size packet size
-     * @param reqI 0 unless this is a reply to a {@link TinySubtype#IPB Tiny IPB} request
+     * @param reqI 0 unless this is a reply to a {@link TinySubtypes#IPB Tiny IPB} request
      * @param packetDataBytes packet data bytes
      */
     public IpbPacket(short size, short reqI, PacketDataBytes packetDataBytes) {
@@ -96,6 +96,6 @@ public class IpbPacket extends AbstractPacket implements InstructionPacket, Requ
      * @return packet request builder
      */
     public static SingleTinyPacketRequestBuilder<IpbPacket> request(InSimConnection inSimConnection) {
-        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.IPB);
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtypes.IPB);
     }
 }

@@ -12,9 +12,9 @@ import com.github.adrian99.javainsim.api.common.flags.Flags;
 import com.github.adrian99.javainsim.api.insim.packets.*;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
 import com.github.adrian99.javainsim.api.insim.packets.enums.Product;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
 import com.github.adrian99.javainsim.api.insim.packets.flags.IsiFlag;
 import com.github.adrian99.javainsim.api.insim.packets.flags.NcnFlag;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.testutil.AssertionUtils;
 import com.github.adrian99.javainsim.testutil.TestInSimConnection;
 import org.junit.jupiter.api.*;
@@ -112,18 +112,18 @@ class InSimConnectionTest {
         var tinyPacketListener2Calls = new AtomicInteger();
         var smallPacketListenerCalls = new AtomicInteger();
 
-        PacketListener<TinyPacket> tinyPacketListener1 = (inSimConnection, packet) -> {
-            assertEquals(this.inSimConnection, inSimConnection);
+        PacketListener<TinyPacket> tinyPacketListener1 = (ic, packet) -> {
+            assertEquals(inSimConnection, ic);
             assertArrayEquals(KEEP_ALIVE_PACKET_BYTES, packet.getBytes());
             tinyPacketListener1Calls.getAndIncrement();
         };
-        PacketListener<TinyPacket> tinyPacketListener2 = (inSimConnection, packet) -> {
-            assertEquals(this.inSimConnection, inSimConnection);
+        PacketListener<TinyPacket> tinyPacketListener2 = (ic, packet) -> {
+            assertEquals(inSimConnection, ic);
             assertArrayEquals(KEEP_ALIVE_PACKET_BYTES, packet.getBytes());
             tinyPacketListener2Calls.getAndIncrement();
         };
-        PacketListener<SmallPacket> smallPacketListener = (inSimConnection, packet) -> {
-            assertEquals(this.inSimConnection, inSimConnection);
+        PacketListener<SmallPacket> smallPacketListener = (ic, packet) -> {
+            assertEquals(inSimConnection, ic);
             assertArrayEquals(SMALL_PACKET_BYTES, packet.getBytes());
             smallPacketListenerCalls.getAndIncrement();
         };
@@ -179,9 +179,9 @@ class InSimConnectionTest {
         AtomicInteger smallPacketListener2Calls = new AtomicInteger();
 
         PacketListener<SmallPacket> smallPacketListener1 =
-                (inSimConnection, packet) -> smallPacketListener1Calls.getAndIncrement();
+                (ic, packet) -> smallPacketListener1Calls.getAndIncrement();
         PacketListener<SmallPacket> smallPacketListener2 =
-                (inSimConnection, packet) -> smallPacketListener2Calls.getAndIncrement();
+                (ic, packet) -> smallPacketListener2Calls.getAndIncrement();
 
         inSimConnection.listen(SmallPacket.class, smallPacketListener1);
         inSimConnection.listen(SmallPacket.class, smallPacketListener2);
@@ -203,9 +203,9 @@ class InSimConnectionTest {
         var receivedResponsesCount = new AtomicInteger();
 
         inSimConnection.request(new TinyPacketRequest<>(
-                IsmPacket.class,
-                (inSimConnection, packet) -> {
-                    assertEquals(this.inSimConnection, inSimConnection);
+                TinySubtypes.ISM,
+                (ic, packet) -> {
+                    assertEquals(inSimConnection, ic);
                     assertEquals(40, packet.getSize());
                     assertEquals(PacketType.ISM, packet.getType());
                     assertTrue(packet.getReqI() >= 1 && packet.getReqI() <= 255);
@@ -243,9 +243,9 @@ class InSimConnectionTest {
         var receivedResponsesCount = new AtomicInteger();
 
         inSimConnection.request(new TinyPacketRequest<>(
-                NcnPacket.class,
-                (inSimConnection, packet) -> {
-                    assertEquals(this.inSimConnection, inSimConnection);
+                TinySubtypes.NCN,
+                (ic, packet) -> {
+                    assertEquals(inSimConnection, ic);
                     assertEquals(56, packet.getSize());
                     assertEquals(PacketType.NCN, packet.getType());
                     assertNotEquals(0, packet.getReqI());
@@ -293,14 +293,14 @@ class InSimConnectionTest {
         var receivedStaPacketsCount = new AtomicInteger();
 
         inSimConnection.request(new TinyPacketRequest<>(
-                VerPacket.class,
-                (inSimConnection1, packet) -> receivedVerPacketsCount.getAndIncrement(),
+                TinySubtypes.VER,
+                (ic, packet) -> receivedVerPacketsCount.getAndIncrement(),
                 5000
         ));
         inSimConnection.request(new TinyPacketRequest<>(
-                IsmPacket.class,
-                (inSimConnection, packet) -> {
-                    assertEquals(this.inSimConnection, inSimConnection);
+                TinySubtypes.ISM,
+                (ic, packet) -> {
+                    assertEquals(inSimConnection, ic);
                     assertEquals(40, packet.getSize());
                     assertEquals(PacketType.ISM, packet.getType());
                     assertTrue(packet.getReqI() >= 1 && packet.getReqI() <= 255);
@@ -311,7 +311,7 @@ class InSimConnectionTest {
                 5000
         ));
         inSimConnection.request(new TinyPacketRequest<>(
-                StaPacket.class,
+                TinySubtypes.SST,
                 (inSimConnection1, packet) -> receivedStaPacketsCount.getAndIncrement(),
                 5000
         ));
@@ -351,7 +351,7 @@ class InSimConnectionTest {
         var secondRequestCalled = new AtomicBoolean();
 
         inSimConnection.request(new TinyPacketRequest<>(
-                TinySubtype.ALC,
+                TinySubtypes.ALC,
                 (inSimConnection1, packet) -> {
                     firstRequestCalled.set(true);
                     throw new RuntimeException("Exception in request callback");
@@ -366,7 +366,7 @@ class InSimConnectionTest {
         AssertionUtils.assertConditionMet(() -> firstRequestCalled.get() && !secondRequestCalled.get(), 1000, 100);
 
         inSimConnection.request(new TinyPacketRequest<>(
-                TinySubtype.ALC,
+                TinySubtypes.ALC,
                 (inSimConnection1, packet) -> secondRequestCalled.set(true),
                 5000
         ));
@@ -382,7 +382,7 @@ class InSimConnectionTest {
     void request_uniqueReqICheck() throws IOException {
         for (int i = 0; i < 255; i++) {
             inSimConnection.request(
-                    new TinyPacketRequest<>(StaPacket.class, (inSimConnection, packet) -> {}, 500)
+                    new TinyPacketRequest<>(TinySubtypes.SST, (ic, packet) -> {}, 500)
             );
         }
         var lfsReceivedPackets = lfsTcpMock.awaitReceivedPackets(256);

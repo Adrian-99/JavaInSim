@@ -13,7 +13,6 @@ import com.github.adrian99.javainsim.api.common.structures.Vec;
 import com.github.adrian99.javainsim.internal.insim.packets.util.PacketReader;
 import com.github.adrian99.javainsim.testutil.AssertionUtils;
 import com.github.adrian99.javainsim.testutil.MockedInSimConnection;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
 import com.github.adrian99.javainsim.api.insim.packets.enums.ViewIdentifier;
@@ -61,14 +60,14 @@ class CppPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof CppPacket);
+        assertInstanceOf(CppPacket.class, readPacket);
 
         var castedReadPacket = (CppPacket) readPacket;
 
         assertPacketHeaderEquals(32, PacketType.CPP, 144, castedReadPacket);
-        Assertions.assertEquals(-2589854, castedReadPacket.getPos().getX());
-        Assertions.assertEquals(7984562, castedReadPacket.getPos().getY());
-        Assertions.assertEquals(83542, castedReadPacket.getPos().getZ());
+        assertEquals(-2589854, castedReadPacket.getPos().getX());
+        assertEquals(7984562, castedReadPacket.getPos().getY());
+        assertEquals(83542, castedReadPacket.getPos().getZ());
         assertEquals(15642, castedReadPacket.getH());
         assertEquals(325, castedReadPacket.getP());
         assertEquals(55, castedReadPacket.getR());
@@ -76,7 +75,7 @@ class CppPacketTest {
         assertEquals(ViewIdentifier.CAM, castedReadPacket.getInGameCam());
         assertEquals(95.5, castedReadPacket.getFov());
         assertEquals(2770, castedReadPacket.getTime());
-        AssertionUtils.assertFlagsEqual(CppFlag.class, Set.of(CppFlag.SHIFTU), castedReadPacket.getFlags());
+        assertFlagsEqual(CppFlag.class, Set.of(CppFlag.SHIFTU), castedReadPacket.getFlags());
     }
 
     @Test

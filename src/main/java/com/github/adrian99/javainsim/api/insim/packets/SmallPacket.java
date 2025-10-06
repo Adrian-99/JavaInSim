@@ -12,11 +12,12 @@ import com.github.adrian99.javainsim.api.common.enums.DefaultCar;
 import com.github.adrian99.javainsim.api.common.flags.Flags;
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.SmallSubtype;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.small.SmallSubtype;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.small.SmallSubtypes;
 import com.github.adrian99.javainsim.api.insim.packets.enums.VoteAction;
 import com.github.adrian99.javainsim.api.insim.packets.flags.LclFlag;
 import com.github.adrian99.javainsim.api.insim.packets.flags.LcsFlag;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Unsigned;
@@ -41,21 +42,32 @@ public class SmallPacket extends AbstractPacket implements InstructionPacket, Re
 
     /**
      * Creates small packet.
+     * @param reqI 0 unless it is an info request or a reply to an info request
      * @param subT subtype
      * @param uVal value
      * @throws PacketValidationException if validation of any field in packet fails
      */
-    public SmallPacket(SmallSubtype subT, long uVal) throws PacketValidationException {
-        super(8, PacketType.SMALL, 0);
+    public SmallPacket(int reqI, SmallSubtype subT, long uVal) throws PacketValidationException {
+        super(8, PacketType.SMALL, reqI);
         this.subT = subT;
         this.uVal = uVal;
         PacketValidator.validate(this);
     }
 
     /**
+     * Creates small packet.
+     * @param subT subtype
+     * @param uVal value
+     * @throws PacketValidationException if validation of any field in packet fails
+     */
+    public SmallPacket(SmallSubtype subT, long uVal) throws PacketValidationException {
+        this(0, subT, uVal);
+    }
+
+    /**
      * Creates small packet. Constructor used only internally.
-     * @param reqI 0 unless this is a reply to an {@link TinySubtype#ALC Tiny ALC}
-     *             or {@link TinySubtype#GTH Tiny GTH} request
+     * @param reqI 0 unless this is a reply to an {@link TinySubtypes#ALC Tiny ALC}
+     *             or {@link TinySubtypes#GTH Tiny GTH} request
      * @param packetDataBytes packet data bytes
      * @throws PacketValidationException if validation of any field in packet fails
      */
@@ -71,7 +83,7 @@ public class SmallPacket extends AbstractPacket implements InstructionPacket, Re
      * @throws PacketValidationException if validation of any field in packet fails
      */
     public SmallPacket(LcsFlag... lcsFlags) throws PacketValidationException {
-        this(SmallSubtype.LCS, new Flags<>(lcsFlags).getUnsignedValue());
+        this(SmallSubtypes.LCS, new Flags<>(lcsFlags).getUnsignedValue());
     }
 
     /**
@@ -80,7 +92,7 @@ public class SmallPacket extends AbstractPacket implements InstructionPacket, Re
      * @throws PacketValidationException if validation of any field in packet fails
      */
     public SmallPacket(LclFlag... lclFlags) throws PacketValidationException {
-        this(SmallSubtype.LCL, new Flags<>(lclFlags).getUnsignedValue());
+        this(SmallSubtypes.LCL, new Flags<>(lclFlags).getUnsignedValue());
     }
 
     /**
@@ -89,7 +101,7 @@ public class SmallPacket extends AbstractPacket implements InstructionPacket, Re
      * @throws PacketValidationException if validation of any field in packet fails
      */
     public SmallPacket(DefaultCar... cars) throws PacketValidationException {
-        this(SmallSubtype.ALC, new Flags<>(cars).getUnsignedValue());
+        this(SmallSubtypes.ALC, new Flags<>(cars).getUnsignedValue());
     }
 
     /**
@@ -98,13 +110,13 @@ public class SmallPacket extends AbstractPacket implements InstructionPacket, Re
      * @throws PacketValidationException if validation of any field in packet fails
      */
     public SmallPacket(long interval) throws PacketValidationException {
-        this(SmallSubtype.NLI, interval);
+        this(SmallSubtypes.NLI, interval);
     }
 
     @Override
     public byte[] getBytes() {
         return new PacketBuilder(size, type, reqI)
-                .writeByte(subT.ordinal())
+                .writeByte(subT.getByteValue())
                 .writeUnsigned(uVal)
                 .getBytes();
     }
@@ -125,10 +137,10 @@ public class SmallPacket extends AbstractPacket implements InstructionPacket, Re
 
     /**
      * @return vote action, or empty optional if {@link #getSubT() subtype} is
-     * not equal to {@link SmallSubtype#VTA}
+     * not equal to {@link SmallSubtypes#VTA}
      */
     public Optional<VoteAction> getVoteAction() {
-        if (subT.equals(SmallSubtype.VTA)) {
+        if (subT.equals(SmallSubtypes.VTA)) {
             return Optional.of(VoteAction.fromOrdinal((int) uVal));
         } else {
             return Optional.empty();
@@ -137,10 +149,10 @@ public class SmallPacket extends AbstractPacket implements InstructionPacket, Re
 
     /**
      * @return allowed cars, or empty optional if {@link #getSubT() subtype} is
-     * not equal to {@link SmallSubtype#ALC}
+     * not equal to {@link SmallSubtypes#ALC}
      */
     public Optional<Flags<DefaultCar>> getCars() {
-        if (subT.equals(SmallSubtype.ALC)) {
+        if (subT.equals(SmallSubtypes.ALC)) {
             return Optional.of(new Flags<>(DefaultCar.class, (int) uVal));
         } else {
             return Optional.empty();

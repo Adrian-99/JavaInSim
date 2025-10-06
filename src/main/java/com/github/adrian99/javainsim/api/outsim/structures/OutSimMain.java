@@ -8,11 +8,13 @@
 
 package com.github.adrian99.javainsim.api.outsim.structures;
 
+import com.github.adrian99.javainsim.api.insim.packets.AiiPacket;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.api.common.structures.Vec;
 
 /**
- * Structure for main data - like old OutSimPack but without Time (first element) or ID (last element).
+ * Structure for main data - like old OutSimPack but without Time (first element) or ID (last element).<br>
+ * Structure used also in {@link AiiPacket}.
  */
 public class OutSimMain {
     /**

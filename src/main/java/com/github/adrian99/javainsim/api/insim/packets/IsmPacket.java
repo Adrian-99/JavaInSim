@@ -10,7 +10,7 @@ package com.github.adrian99.javainsim.api.insim.packets;
 
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Array;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Byte;
@@ -31,7 +31,7 @@ public class IsmPacket extends AbstractPacket implements RequestablePacket {
 
     /**
      * Creates InSim multi packet. Constructor used only internally.
-     * @param reqI usually 0 / or if a reply: ReqI as received in the {@link TinySubtype#ISM Tiny ISM}
+     * @param reqI usually 0 / or if a reply: ReqI as received in the {@link TinySubtypes#ISM Tiny ISM}
      * @param packetDataBytes packet data bytes
      */
     public IsmPacket(short reqI, PacketDataBytes packetDataBytes) {
@@ -62,6 +62,6 @@ public class IsmPacket extends AbstractPacket implements RequestablePacket {
      * @return packet request builder
      */
     public static SingleTinyPacketRequestBuilder<IsmPacket> request(InSimConnection inSimConnection) {
-        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.ISM);
+        return new SingleTinyPacketRequestBuilder<>(inSimConnection, TinySubtypes.ISM);
     }
 }

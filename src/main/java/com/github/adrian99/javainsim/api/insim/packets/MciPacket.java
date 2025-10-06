@@ -10,13 +10,13 @@ package com.github.adrian99.javainsim.api.insim.packets;
 
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
-import com.github.adrian99.javainsim.api.insim.packets.enums.TinySubtype;
 import com.github.adrian99.javainsim.api.insim.packets.flags.IsiFlag;
 import com.github.adrian99.javainsim.api.insim.packets.structures.CompCar;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
 import com.github.adrian99.javainsim.internal.common.util.PacketDataBytes;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Array;
 import com.github.adrian99.javainsim.internal.insim.packets.annotations.Structure;
-import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.BasicTinyPacketRequestBuilder;
+import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.TinyPacketRequestBuilder;
 import com.github.adrian99.javainsim.internal.insim.packets.util.Constants;
 import com.github.adrian99.javainsim.internal.insim.packets.base.AbstractPacket;
 import com.github.adrian99.javainsim.internal.insim.packets.base.RequestablePacket;
@@ -39,7 +39,7 @@ public class MciPacket extends AbstractPacket implements RequestablePacket {
     /**
      * Creates multi car info packet.
      * @param size packet size
-     * @param reqI 0 unless this is a reply to an {@link TinySubtype#MCI Tiny MCI} request
+     * @param reqI 0 unless this is a reply to an {@link TinySubtypes#MCI Tiny MCI} request
      * @param packetDataBytes pakcet data bytes
      */
     public MciPacket(short size, short reqI, PacketDataBytes packetDataBytes) {
@@ -71,7 +71,7 @@ public class MciPacket extends AbstractPacket implements RequestablePacket {
      * @param inSimConnection InSim connection to request packet from
      * @return packet request builder
      */
-    public static BasicTinyPacketRequestBuilder<MciPacket> request(InSimConnection inSimConnection) {
-        return new BasicTinyPacketRequestBuilder<>(inSimConnection, TinySubtype.MCI);
+    public static TinyPacketRequestBuilder<MciPacket> request(InSimConnection inSimConnection) {
+        return new TinyPacketRequestBuilder<>(inSimConnection, TinySubtypes.MCI);
     }
 }

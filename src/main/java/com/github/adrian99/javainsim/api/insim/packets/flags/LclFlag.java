@@ -9,11 +9,11 @@
 package com.github.adrian99.javainsim.api.insim.packets.flags;
 
 import com.github.adrian99.javainsim.api.insim.packets.SmallPacket;
-import com.github.adrian99.javainsim.api.insim.packets.enums.SmallSubtype;
+import com.github.adrian99.javainsim.api.insim.packets.subtypes.small.SmallSubtypes;
 import com.github.adrian99.javainsim.internal.common.flags.FlagWithCustomValue;
 
 /**
- * Flags used in {@link SmallSubtype#LCL} {@link SmallPacket SmallPacket}.
+ * Flags used in {@link SmallSubtypes#LCL} {@link SmallPacket SmallPacket}.
  */
 public enum LclFlag implements FlagWithCustomValue {
     /**

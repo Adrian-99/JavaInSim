@@ -8,10 +8,7 @@
 
 package com.github.adrian99.javainsim.internal.insim.packets.util;
 
-import com.github.adrian99.javainsim.api.insim.packets.AxmPacket;
-import com.github.adrian99.javainsim.api.insim.packets.MciPacket;
-import com.github.adrian99.javainsim.api.insim.packets.NlpPacket;
-import com.github.adrian99.javainsim.api.insim.packets.PlhPacket;
+import com.github.adrian99.javainsim.api.insim.packets.*;
 
 /**
  * This class contains constant values used in library
@@ -53,6 +50,10 @@ public class Constants {
      * Maximum value of clickID of the button.
      */
     public static final short BUTTON_MAX_CLICK_ID = 239;
+    /**
+     * Maximum number of AI inputs that can be sent in single {@link AicPacket}.
+     */
+    public static final short AIC_MAX_INPUTS = 20;
 
     private Constants() {}
 }
