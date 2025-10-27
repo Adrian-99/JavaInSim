@@ -16,9 +16,8 @@ import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static com.github.adrian99.javainsim.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class IsmPacketTest {
     @Test
@@ -35,7 +34,7 @@ class IsmPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof IsmPacket);
+        assertInstanceOf(IsmPacket.class, readPacket);
 
         var castedReadPacket = (IsmPacket) readPacket;
 
@@ -51,6 +50,6 @@ class IsmPacketTest {
         IsmPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
 
         var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 10 };
-        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 }

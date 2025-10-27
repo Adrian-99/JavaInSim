@@ -33,7 +33,7 @@ class RipPacketRequestBuilderTest {
                 .setRequestTimeout(500)
                 .listen((inSimConnection, packet) -> {});
 
-        var packetRequest = inSimConnectionMock.assertAndGetPacketRequest();
+        var packetRequest = inSimConnectionMock.assertAndPopPacketRequest();
 
         assertConditionMet(packetRequest::isTimedOut, 1000, 100);
     }
@@ -66,7 +66,7 @@ class RipPacketRequestBuilderTest {
                     receivedRipPacketsCount.getAndIncrement();
                 });
 
-        var requestPacketBytes = inSimConnectionMock.assertAndGetSentPacketBytes();
+        var requestPacketBytes = inSimConnectionMock.assertAndPopSentPacketBytes();
         var reqI = requestPacketBytes[2];
         var expectedRequestPacketBytes = new byte[] {
                 20, 48, reqI, 0, 0, 1, 5, 0, -99, -92, 9, 0, 0, 0, 0, 0,
@@ -77,7 +77,7 @@ class RipPacketRequestBuilderTest {
         };
         assertArrayEquals(expectedRequestPacketBytes, requestPacketBytes);
 
-        var packetRequest = inSimConnectionMock.assertAndGetPacketRequest();
+        var packetRequest = inSimConnectionMock.assertAndPopPacketRequest();
         packetRequest.handleReceivedPacket(
                 inSimConnectionMock,
                 new RipPacket(byteToShort(reqI), new PacketDataBytes(new byte[] {

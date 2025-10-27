@@ -47,12 +47,12 @@ class TtcPacketRequestBuilderTest {
                     receivedAxmPacketsCount.getAndIncrement();
                 });
 
-        var requestPacketBytes = inSimConnectionMock.assertAndGetSentPacketBytes();
+        var requestPacketBytes = inSimConnectionMock.assertAndPopSentPacketBytes();
         var reqI = requestPacketBytes[2];
         var expectedRequestPacketBytes = new byte[] { 2, 61, reqI, 1, 29, 0, 0, 0 };
         assertArrayEquals(expectedRequestPacketBytes, requestPacketBytes);
 
-        var packetRequest = inSimConnectionMock.assertAndGetPacketRequest();
+        var packetRequest = inSimConnectionMock.assertAndPopPacketRequest();
         packetRequest.handleReceivedPacket(
                 inSimConnectionMock,
                 new AxmPacket((short) 8, byteToShort(reqI), new PacketDataBytes(new byte[] { 0, 0, 5, 0, 0 }))
@@ -68,12 +68,12 @@ class TtcPacketRequestBuilderTest {
         var packetCompletableFuture = new TtcPacketRequestBuilder<>(inSimConnectionMock, TtcSubtypes.SEL, 29, 0, 0, 0)
                 .asCompletableFuture();
 
-        var requestPacketBytes = inSimConnectionMock.assertAndGetSentPacketBytes();
+        var requestPacketBytes = inSimConnectionMock.assertAndPopSentPacketBytes();
         var reqI = requestPacketBytes[2];
         var expectedRequestPacketBytes = new byte[] { 2, 61, reqI, 1, 29, 0, 0, 0 };
         assertArrayEquals(expectedRequestPacketBytes, requestPacketBytes);
 
-        var packetRequest = inSimConnectionMock.assertAndGetPacketRequest();
+        var packetRequest = inSimConnectionMock.assertAndPopPacketRequest();
         packetRequest.handleReceivedPacket(
                 inSimConnectionMock,
                 new AxmPacket((short) 8, byteToShort(reqI), new PacketDataBytes(new byte[] { 0, 0, 5, 0, 0 }))

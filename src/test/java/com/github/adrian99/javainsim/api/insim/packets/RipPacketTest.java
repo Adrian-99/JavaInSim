@@ -62,7 +62,7 @@ class RipPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof RipPacket);
+        assertInstanceOf(RipPacket.class, readPacket);
 
         var castedReadPacket = (RipPacket) readPacket;
 
@@ -83,7 +83,7 @@ class RipPacketTest {
         RipPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
 
         var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 22 };
-        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 
     @Test
@@ -108,6 +108,6 @@ class RipPacketTest {
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         };
-        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 }

@@ -75,6 +75,6 @@ class PlhPacketTest {
         PlhPacket.request(inSimConnectionMock).listen((inSimConnection, packet) -> {});
 
         var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 28 };
-        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 }

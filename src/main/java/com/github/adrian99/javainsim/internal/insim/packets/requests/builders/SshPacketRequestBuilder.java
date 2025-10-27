@@ -13,7 +13,7 @@ import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.PacketListener;
 import com.github.adrian99.javainsim.api.insim.packets.SshPacket;
 import com.github.adrian99.javainsim.internal.insim.packets.requests.PacketRequest;
-import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.base.BasePacketRequestBuilder;
+import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.base.NonRecurringPacketRequestBuilder;
 import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.base.SinglePacketRequestBuilder;
 
 /**
@@ -21,7 +21,7 @@ import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.ba
  * can be requested this way.
  */
 public class SshPacketRequestBuilder
-        extends BasePacketRequestBuilder<SshPacket>
+        extends NonRecurringPacketRequestBuilder<SshPacket>
         implements SinglePacketRequestBuilder<SshPacket> {
     private final SshPacket requestPacket;
 

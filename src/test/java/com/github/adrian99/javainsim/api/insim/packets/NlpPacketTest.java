@@ -16,9 +16,8 @@ import com.github.adrian99.javainsim.api.insim.packets.enums.PacketType;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static com.github.adrian99.javainsim.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class NlpPacketTest {
     @Test
@@ -34,7 +33,7 @@ class NlpPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof NlpPacket);
+        assertInstanceOf(NlpPacket.class, readPacket);
 
         var castedReadPacket = (NlpPacket) readPacket;
 
@@ -62,6 +61,6 @@ class NlpPacketTest {
         NlpPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
 
         var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 16 };
-        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 }

@@ -18,9 +18,8 @@ import com.github.adrian99.javainsim.api.insim.packets.flags.CompCarFlag;
 import java.io.IOException;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static com.github.adrian99.javainsim.testutil.AssertionUtils.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class MciPacketTest {
     @Test
@@ -39,7 +38,7 @@ class MciPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof MciPacket);
+        assertInstanceOf(MciPacket.class, readPacket);
 
         var castedReadPacket = (MciPacket) readPacket;
 
@@ -87,6 +86,6 @@ class MciPacketTest {
         MciPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
 
         var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 17 };
-        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 }

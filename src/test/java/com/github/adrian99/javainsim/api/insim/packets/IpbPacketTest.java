@@ -65,6 +65,6 @@ class IpbPacketTest {
         IpbPacket.request(inSimConnectionMock).listen((inSimConnection, packet) -> {});
 
         var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 29 };
-        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 }

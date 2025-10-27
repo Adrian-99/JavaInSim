@@ -157,7 +157,7 @@ class SmallPacketTest {
                 .listen(((inSimConnection, packet) -> {}));
 
         var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 24 };
-        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 
     @Test
@@ -169,6 +169,6 @@ class SmallPacketTest {
                 .listen(((inSimConnection, packet) -> {}));
 
         var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 8 };
-        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 }

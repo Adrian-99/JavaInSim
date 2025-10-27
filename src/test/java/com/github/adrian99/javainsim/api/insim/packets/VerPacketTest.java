@@ -17,9 +17,8 @@ import com.github.adrian99.javainsim.api.insim.packets.enums.Product;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static com.github.adrian99.javainsim.testutil.AssertionUtils.assertPacketHeaderEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class VerPacketTest {
     @Test
@@ -32,7 +31,7 @@ class VerPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof VerPacket);
+        assertInstanceOf(VerPacket.class, readPacket);
 
         var castedReadPacket = (VerPacket) readPacket;
 
@@ -49,6 +48,6 @@ class VerPacketTest {
         VerPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
 
         var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 1 };
-        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 }

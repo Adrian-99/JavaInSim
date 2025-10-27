@@ -39,7 +39,7 @@ class RstPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof RstPacket);
+        assertInstanceOf(RstPacket.class, readPacket);
 
         var castedReadPacket = (RstPacket) readPacket;
 
@@ -78,7 +78,7 @@ class RstPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof RstPacket);
+        assertInstanceOf(RstPacket.class, readPacket);
 
         var castedReadPacket = (RstPacket) readPacket;
 
@@ -117,7 +117,7 @@ class RstPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof RstPacket);
+        assertInstanceOf(RstPacket.class, readPacket);
 
         var castedReadPacket = (RstPacket) readPacket;
 
@@ -150,6 +150,6 @@ class RstPacketTest {
         RstPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
 
         var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 19 };
-        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 }

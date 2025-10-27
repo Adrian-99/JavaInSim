@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2023, Adrian-99
+ * Copyright (c) 2025, Adrian-99
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.github.adrian99.javainsim.internal.insim.packets.requests.builders;
+package com.github.adrian99.javainsim.internal.insim.packets.requests.builders.helpers;
 
 import com.github.adrian99.javainsim.api.insim.InSimConnection;
 import com.github.adrian99.javainsim.api.insim.packets.SmallPacket;
 import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinySubtypes;
+import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.SingleTinyPacketRequestBuilder;
 
 /**
  * Builder for {@link SmallPacket} request.

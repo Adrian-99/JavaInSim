@@ -14,14 +14,14 @@ import com.github.adrian99.javainsim.api.insim.packets.AiiPacket;
 import com.github.adrian99.javainsim.api.insim.packets.requests.SmallPacketRequest;
 import com.github.adrian99.javainsim.api.insim.packets.subtypes.small.SmallSubtypes;
 import com.github.adrian99.javainsim.internal.insim.packets.requests.PacketRequest;
-import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.base.BasePacketRequestBuilder;
+import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.base.NonRecurringPacketRequestBuilder;
 import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.base.SinglePacketRequestBuilder;
 
 /**
  * Builder for {@link AiiPacket} request.
  */
 public class AiiPacketRequestBuilder
-        extends BasePacketRequestBuilder<AiiPacket>
+        extends NonRecurringPacketRequestBuilder<AiiPacket>
         implements SinglePacketRequestBuilder<AiiPacket> {
     private final short plid;
 

@@ -15,14 +15,14 @@ import com.github.adrian99.javainsim.api.insim.packets.subtypes.tiny.TinyRequest
 import com.github.adrian99.javainsim.api.insim.packets.requests.TinyPacketRequest;
 import com.github.adrian99.javainsim.internal.insim.packets.base.RequestablePacket;
 import com.github.adrian99.javainsim.internal.insim.packets.requests.PacketRequest;
-import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.base.BasePacketRequestBuilder;
+import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.base.NonRecurringPacketRequestBuilder;
 
 /**
  * Basic builder of packet request where {@link TinyPacket} serves as a request. Both single and multiple packet
  * responses are allowed.
  * @param <T> type of packet to be requested
  */
-public class TinyPacketRequestBuilder<T extends RequestablePacket> extends BasePacketRequestBuilder<T> {
+public class TinyPacketRequestBuilder<T extends RequestablePacket> extends NonRecurringPacketRequestBuilder<T> {
     private final TinyRequestingSubtype<T> tinySubtype;
 
     /**

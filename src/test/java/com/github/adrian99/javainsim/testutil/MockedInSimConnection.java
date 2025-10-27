@@ -42,13 +42,17 @@ public class MockedInSimConnection extends InSimConnection {
     @Override
     protected void connect(String hostname, int port, IsiPacket initializationPacket) {}
 
-    public byte[] assertAndGetSentPacketBytes() {
+    public byte[] assertAndPopSentPacketBytes() {
         assertEquals(1, caughtSentPackets.size(), "Unexpected size of caught sent packets");
-        return caughtSentPackets.get(0).getBytes();
+        var packetBytes = caughtSentPackets.get(0).getBytes();
+        caughtSentPackets.clear();
+        return packetBytes;
     }
 
-    public PacketRequest assertAndGetPacketRequest() {
+    public PacketRequest assertAndPopPacketRequest() {
         assertEquals(1, caughtPacketRequests.size(), "Unexpected size of caught packet requests");
-        return caughtPacketRequests.get(0);
+        var packetRequest = caughtPacketRequests.get(0);
+        caughtPacketRequests.clear();
+        return packetRequest;
     }
 }

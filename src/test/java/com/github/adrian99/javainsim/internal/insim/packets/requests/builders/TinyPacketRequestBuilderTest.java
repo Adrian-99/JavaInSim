@@ -41,12 +41,12 @@ class TinyPacketRequestBuilderTest {
                 });
 
 
-        var requestPacketBytes = inSimConnectionMock.assertAndGetSentPacketBytes();
+        var requestPacketBytes = inSimConnectionMock.assertAndPopSentPacketBytes();
         var reqI = requestPacketBytes[2];
         var expectedRequestPacketBytes = new byte[] { 1, 3, reqI, 8 };
         assertArrayEquals(expectedRequestPacketBytes, requestPacketBytes);
 
-        var packetRequest = inSimConnectionMock.assertAndGetPacketRequest();
+        var packetRequest = inSimConnectionMock.assertAndPopPacketRequest();
         packetRequest.handleReceivedPacket(
                 inSimConnectionMock,
                 new SmallPacket(TestUtils.byteToShort(reqI), new PacketDataBytes(new byte[] { 6, -80, 100, 5, 0 }))

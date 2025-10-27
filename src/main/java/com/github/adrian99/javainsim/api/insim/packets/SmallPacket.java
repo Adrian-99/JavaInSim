@@ -24,7 +24,7 @@ import com.github.adrian99.javainsim.internal.insim.packets.annotations.Unsigned
 import com.github.adrian99.javainsim.internal.insim.packets.base.AbstractPacket;
 import com.github.adrian99.javainsim.internal.insim.packets.base.InstructionPacket;
 import com.github.adrian99.javainsim.internal.insim.packets.exceptions.PacketValidationException;
-import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.SmallPacketRequestBuilder;
+import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.helpers.SmallPacketRequestBuilder;
 import com.github.adrian99.javainsim.internal.insim.packets.util.PacketBuilder;
 import com.github.adrian99.javainsim.internal.insim.packets.util.PacketValidator;
 import com.github.adrian99.javainsim.internal.insim.packets.base.RequestablePacket;

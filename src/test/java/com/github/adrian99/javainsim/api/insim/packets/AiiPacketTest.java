@@ -78,6 +78,6 @@ class AiiPacketTest {
         AiiPacket.request(inSimConnectionMock, 74).listen(((inSimConnection, packet) -> {}));
 
         var expectedRequestPacketBytes = new byte[] { 2, 4, 0, 11, 74, 0, 0, 0 };
-        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 }

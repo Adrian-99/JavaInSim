@@ -91,6 +91,18 @@ public class PacketRequests implements Closeable {
         }
     }
 
+    /**
+     * Cancels all pending recurring packet requests.
+     * @throws IOException if I/O error occurs when cancelling recurring packet request
+     */
+    public void cancelAllRecurringPacketRequests() throws IOException {
+        for (var packetRequest : pendingPacketRequests) {
+            if (packetRequest instanceof RecurringPacketRequest<?> recurringPacketRequest && !recurringPacketRequest.isTimedOut()) {
+                recurringPacketRequest.getActiveSubscription().cancel();
+            }
+        }
+    }
+
     private short getFreeReqI(PacketType packetType) {
         var allowedReqIs = IntStream.range(1, 256).filter(
                 reqI -> pendingPacketRequests.stream().noneMatch(

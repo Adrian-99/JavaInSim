@@ -383,7 +383,7 @@ class AxmPacketTest {
                 .listen((connection, packet) -> {});
 
         var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 25 };
-        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 
     @Test
@@ -395,6 +395,25 @@ class AxmPacketTest {
                 .listen((connection, packet) -> {});
 
         var expectedRequestPacketBytes = new byte[] { 2, 61, 0, 1, 36, 0, 0, 0 };
-        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
+    }
+
+    @Test
+    void requestAndCancelRecurringAxmPacketForConnectionLayoutEditorSelection() throws IOException {
+        var inSimConnectionMock = new MockedInSimConnection();
+
+        var subscription = AxmPacket.request(inSimConnectionMock)
+                .forConnectionLayoutEditorSelection(36)
+                .forEverySelectionChange()
+                .subscribe((connection, packet) -> {});
+
+        var expectedRequestPacketBytes = new byte[] { 2, 61, 0, 2, 36, 0, 0, 0 };
+        var actualRequestPacketBytes = inSimConnectionMock.assertAndPopSentPacketBytes();
+        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, actualRequestPacketBytes);
+
+        subscription.cancel();
+
+        var expectedCancellingPacketBytes = new byte[] { 2, 61, actualRequestPacketBytes[2], 3, 36, 0, 0, 0 };
+        assertArrayEquals(expectedCancellingPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 }

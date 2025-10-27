@@ -16,7 +16,7 @@ import com.github.adrian99.javainsim.api.insim.packets.TtcPacket;
 import com.github.adrian99.javainsim.api.insim.packets.subtypes.ttc.TtcRequestingSubtype;
 import com.github.adrian99.javainsim.internal.insim.packets.base.RequestablePacket;
 import com.github.adrian99.javainsim.internal.insim.packets.requests.PacketRequest;
-import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.base.BasePacketRequestBuilder;
+import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.base.NonRecurringPacketRequestBuilder;
 import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.base.SinglePacketRequestBuilder;
 
 /**
@@ -24,7 +24,7 @@ import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.ba
  * can be requested this way.
  */
 public class TtcPacketRequestBuilder<T extends RequestablePacket>
-        extends BasePacketRequestBuilder<T>
+        extends NonRecurringPacketRequestBuilder<T>
         implements SinglePacketRequestBuilder<T> {
     private final TtcRequestingSubtype<T> subtype;
     private final int ucid;

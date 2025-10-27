@@ -44,7 +44,7 @@ class MalPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof MalPacket);
+        assertInstanceOf(MalPacket.class, readPacket);
 
         var castedReadPacket = (MalPacket) readPacket;
 
@@ -64,6 +64,6 @@ class MalPacketTest {
         MalPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
 
         var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 27 };
-        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 }

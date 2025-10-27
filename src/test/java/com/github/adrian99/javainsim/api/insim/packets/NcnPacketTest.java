@@ -18,9 +18,8 @@ import com.github.adrian99.javainsim.api.insim.packets.flags.NcnFlag;
 import java.io.IOException;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static com.github.adrian99.javainsim.testutil.AssertionUtils.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class NcnPacketTest {
     @Test
@@ -38,7 +37,7 @@ class NcnPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof NcnPacket);
+        assertInstanceOf(NcnPacket.class, readPacket);
 
         var castedReadPacket = (NcnPacket) readPacket;
 
@@ -58,6 +57,6 @@ class NcnPacketTest {
         NcnPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
 
         var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 13 };
-        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 }

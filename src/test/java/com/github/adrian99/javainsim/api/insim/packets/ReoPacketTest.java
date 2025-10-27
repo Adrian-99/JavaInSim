@@ -52,7 +52,7 @@ class ReoPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof ReoPacket);
+        assertInstanceOf(ReoPacket.class, readPacket);
 
         var castedReadPacket = (ReoPacket) readPacket;
 
@@ -95,6 +95,6 @@ class ReoPacketTest {
         ReoPacket.request(inSimConnectionMock).listen(((inSimConnection, packet) -> {}));
 
         var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 18 };
-        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 }

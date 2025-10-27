@@ -26,7 +26,7 @@ import com.github.adrian99.javainsim.internal.insim.packets.base.InstructionPack
 import com.github.adrian99.javainsim.internal.insim.packets.base.AbstractPacket;
 import com.github.adrian99.javainsim.internal.insim.packets.base.RequestablePacket;
 import com.github.adrian99.javainsim.internal.insim.packets.exceptions.PacketValidationException;
-import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.AxmPacketRequestBuilder;
+import com.github.adrian99.javainsim.internal.insim.packets.requests.builders.helpers.AxmPacketRequestBuilder;
 import com.github.adrian99.javainsim.internal.insim.packets.util.Constants;
 import com.github.adrian99.javainsim.internal.insim.packets.util.PacketBuilder;
 import com.github.adrian99.javainsim.internal.insim.packets.util.PacketUtils;

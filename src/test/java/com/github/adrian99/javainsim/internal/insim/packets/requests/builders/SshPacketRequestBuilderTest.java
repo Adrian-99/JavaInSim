@@ -40,7 +40,7 @@ class SshPacketRequestBuilderTest {
                     receivedSshPacketsCount.getAndIncrement();
                 });
 
-        var requestPacketBytes = inSimConnectionMock.assertAndGetSentPacketBytes();
+        var requestPacketBytes = inSimConnectionMock.assertAndPopSentPacketBytes();
         var reqI = requestPacketBytes[2];
         var expectedRequestPacketBytes = new byte[] {
                 10, 49, reqI, 0, 0, 0, 0, 0, 110, 101, 119, 95, 115, 99, 114, 101,
@@ -49,7 +49,7 @@ class SshPacketRequestBuilderTest {
         };
         assertArrayEquals(expectedRequestPacketBytes, requestPacketBytes);
 
-        var packetRequest = inSimConnectionMock.assertAndGetPacketRequest();
+        var packetRequest = inSimConnectionMock.assertAndPopPacketRequest();
         packetRequest.handleReceivedPacket(
                 inSimConnectionMock,
                 new SshPacket(TestUtils.byteToShort(reqI), new PacketDataBytes(new byte[] {
@@ -70,7 +70,7 @@ class SshPacketRequestBuilderTest {
                 new SshPacket(0, "new_screenshot")
         ).asCompletableFuture();
 
-        var requestPacketBytes = inSimConnectionMock.assertAndGetSentPacketBytes();
+        var requestPacketBytes = inSimConnectionMock.assertAndPopSentPacketBytes();
         var reqI = requestPacketBytes[2];
         var expectedRequestPacketBytes = new byte[] {
                 10, 49, reqI, 0, 0, 0, 0, 0, 110, 101, 119, 95, 115, 99, 114, 101,
@@ -79,7 +79,7 @@ class SshPacketRequestBuilderTest {
         };
         assertArrayEquals(expectedRequestPacketBytes, requestPacketBytes);
 
-        var packetRequest = inSimConnectionMock.assertAndGetPacketRequest();
+        var packetRequest = inSimConnectionMock.assertAndPopPacketRequest();
         packetRequest.handleReceivedPacket(
                 inSimConnectionMock,
                 new SshPacket(TestUtils.byteToShort(reqI), new PacketDataBytes(new byte[] {

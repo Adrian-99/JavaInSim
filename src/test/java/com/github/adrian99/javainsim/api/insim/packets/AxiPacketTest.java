@@ -34,7 +34,7 @@ class AxiPacketTest {
 
         var readPacket = packetReader.read(dataBytes);
 
-        assertTrue(readPacket instanceof AxiPacket);
+        assertInstanceOf(AxiPacket.class, readPacket);
 
         var castedReadPacket = (AxiPacket) readPacket;
 
@@ -52,6 +52,6 @@ class AxiPacketTest {
         AxiPacket.request(inSimConnectionMock).listen((connection, packet) -> {});
 
         var expectedRequestPacketBytes = new byte[] { 1, 3, 0, 20 };
-        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndGetSentPacketBytes());
+        AssertionUtils.assertRequestPacketBytesEqual(expectedRequestPacketBytes, inSimConnectionMock.assertAndPopSentPacketBytes());
     }
 }

@@ -47,6 +47,12 @@ class InSimConnectionTest {
     private static final byte[] CLOSE_PACKET_BYTES = new byte[] {
             1, 3, 0, 2
     };
+    private static final byte[] REQUESTING_PACKET = new byte[] {
+            2, 61, 0, 2, 15, 0, 0, 0
+    };
+    private static final byte[] CANCELLING_PACKET = new byte[] {
+            2, 61, 0, 3, 15, 0, 0, 0
+    };
     private static final byte[] KEEP_ALIVE_PACKET_BYTES = new byte[] {
             1, 3, 0, 0
     };
@@ -84,6 +90,33 @@ class InSimConnectionTest {
         lfsReceivedPackets = lfsTcpMock.awaitReceivedPackets(2);
         assertEquals(2, lfsReceivedPackets.size());
         assertArrayEquals(CLOSE_PACKET_BYTES, lfsReceivedPackets.get(1));
+    }
+
+    @Test
+    void closeInSimConnectionAndCancelRecurringRequests() throws IOException {
+        var lfsReceivedPackets = lfsTcpMock.awaitReceivedPackets(1);
+        assertEquals(1, lfsReceivedPackets.size());
+        assertArrayEquals(INIT_PACKET_BYTES, lfsReceivedPackets.get(0));
+
+        assertTrue(inSimConnection.isConnected());
+
+        AxmPacket.request(inSimConnection)
+                .forConnectionLayoutEditorSelection(15)
+                .forEverySelectionChange()
+                .subscribe(((ic, packet) -> {}));
+
+        lfsReceivedPackets = lfsTcpMock.awaitReceivedPackets(2);
+        assertEquals(2, lfsReceivedPackets.size());
+        AssertionUtils.assertRequestPacketBytesEqual(REQUESTING_PACKET, lfsReceivedPackets.get(1));
+
+        inSimConnection.close();
+
+        assertFalse(inSimConnection.isConnected());
+
+        lfsReceivedPackets = lfsTcpMock.awaitReceivedPackets(4);
+        assertEquals(4, lfsReceivedPackets.size());
+        AssertionUtils.assertRequestPacketBytesEqual(CANCELLING_PACKET, lfsReceivedPackets.get(2));
+        assertArrayEquals(CLOSE_PACKET_BYTES, lfsReceivedPackets.get(3));
     }
 
     @Test
